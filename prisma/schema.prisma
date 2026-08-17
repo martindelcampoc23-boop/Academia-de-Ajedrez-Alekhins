@@ -1,0 +1,492 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String?
+  passwordHash  String?
+  role          String   @default("CUSTOMER") // SUPERADMIN, ADMIN, OPERACIONES, STUDENT, CUSTOMER
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  customer         Customer?
+  student          Student?
+  guardian         Guardian?
+  addresses        Address[]
+  carts            Cart[]
+  orders           Order[]
+  wishlists        Wishlist[]
+  reviews          Review[]
+  subscriptions    Subscription[]
+  videoAccess      VideoAccess[]
+  legalAcceptances LegalAcceptance[]
+  auditLogs        AuditLog[]
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phone     String?
+  notes     String?
+  createdAt DateTime @default(now())
+}
+
+model Student {
+  id          String       @id @default(uuid())
+  userId      String       @unique
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guardianId  String?
+  guardian    Guardian?    @relation(fields: [guardianId], references: [id])
+  level       String?
+  birthDate   DateTime?
+  notes       String?
+  enrollments Enrollment[]
+}
+
+model Guardian {
+  id           String    @id @default(uuid())
+  userId       String    @unique
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phone        String?
+  relationship String?
+  students     Student[]
+}
+
+model Coach {
+  id             String   @id @default(uuid())
+  name           String
+  title          String
+  bio            String
+  rating         Float    @default(5.0)
+  specialization String
+  avatarUrl      String?
+}
+
+model Address {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipientName String
+  street        String
+  neighborhood  String?
+  city          String
+  state         String
+  postalCode    String
+  country       String   @default("México")
+  references    String?
+  isDefault     Boolean  @default(false)
+}
+
+model Category {
+  id            String     @id @default(uuid())
+  name          String
+  slug          String     @unique
+  description   String?
+  image         String?
+  parentId      String?
+  parent        Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  subCategories Category[] @relation("SubCategories")
+  products      Product[]
+}
+
+model Product {
+  id                   String           @id @default(uuid())
+  name                 String
+  slug                 String           @unique
+  sku                  String           @unique
+  description          String
+  shortDescription     String?
+  price                Float
+  compareAtPrice       Float?
+  isAcademyRecommended Boolean          @default(false)
+  masterComment        String?
+  categoryId           String
+  category             Category         @relation(fields: [categoryId], references: [id])
+  images               ProductImage[]
+  variants             ProductVariant[]
+  reviews              Review[]
+  wishlists            Wishlist[]
+  isPublished          Boolean          @default(true)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+}
+
+model ProductVariant {
+  id            String                 @id @default(uuid())
+  productId     String
+  product       Product                @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku           String                 @unique
+  name          String
+  price         Float
+  stock         Int                    @default(0)
+  reservedStock Int                    @default(0)
+  minStockAlert Int                    @default(5)
+  weightKg      Float?
+  lengthCm      Float?
+  widthCm       Float?
+  heightCm      Float?
+  color         String?
+  material      String?
+  image         String?
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+  transactions  InventoryTransaction[]
+}
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  sortOrder Int      @default(0)
+}
+
+model InventoryTransaction {
+  id             String         @id @default(uuid())
+  variantId      String
+  variant        ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  quantityChange Int
+  previousStock  Int
+  newStock       Int
+  reason         String
+  userId         String?
+  createdAt      DateTime       @default(now())
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String?
+  user      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sessionId String?    @unique
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String         @id @default(uuid())
+  cartId    String
+  cart      Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  quantity  Int            @default(1)
+  addedAt   DateTime       @default(now())
+}
+
+model Order {
+  id                    String      @id @default(uuid())
+  orderNumber           String      @unique
+  userId                String?
+  user                  User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  guestEmail            String?
+  status                String      @default("PENDING") // PENDING, PAID, PREPARING, READY_FOR_SHIPMENT, SHIPPED, DELIVERED, CANCELLED, REFUNDED, PARTIALLY_REFUNDED
+  totalAmount           Float
+  subtotal              Float
+  taxAmount             Float       @default(0)
+  shippingCost          Float       @default(0)
+  discountAmount        Float       @default(0)
+  shippingAddress       String
+  billingAddress        String?
+  couponCode            String?
+  stripePaymentIntentId String?     @unique
+  items                 OrderItem[]
+  payments              Payment[]
+  shipments             Shipment[]
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+}
+
+model OrderItem {
+  id          String          @id @default(uuid())
+  orderId     String
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variantId   String?
+  variant     ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  productName String
+  variantName String
+  sku         String
+  unitPrice   Float
+  quantity    Int
+  totalPrice  Float
+}
+
+model Payment {
+  id                    String   @id @default(uuid())
+  orderId               String?
+  order                 Order?   @relation(fields: [orderId], references: [id])
+  subscriptionId        String?
+  stripePaymentIntentId String
+  amount                Float
+  currency              String   @default("MXN")
+  status                String
+  paymentMethod         String   @default("card")
+  createdAt             DateTime @default(now())
+}
+
+model Shipment {
+  id             String          @id @default(uuid())
+  orderId        String
+  order          Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  carrier        String
+  trackingNumber String?
+  status         String          @default("PREPARING")
+  shippingCost   Float           @default(0)
+  labelUrl       String?
+  events         ShipmentEvent[]
+  createdAt      DateTime        @default(now())
+}
+
+model ShipmentEvent {
+  id          String   @id @default(uuid())
+  shipmentId  String
+  shipment    Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+  status      String
+  description String
+  location    String?
+  timestamp   DateTime @default(now())
+}
+
+model Coupon {
+  id            String    @id @default(uuid())
+  code          String    @unique
+  discountType  String    @default("PERCENTAGE") // PERCENTAGE, FIXED
+  discountValue Float
+  minPurchase   Float     @default(0)
+  maxDiscount   Float?
+  validFrom     DateTime  @default(now())
+  validUntil    DateTime?
+  usageLimit    Int?
+  timesUsed     Int       @default(0)
+  isActive      Boolean   @default(true)
+}
+
+model Wishlist {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userName   String
+  rating     Int
+  comment    String
+  isApproved Boolean  @default(true)
+  createdAt  DateTime @default(now())
+}
+
+model TrainingPlan {
+  id            String         @id @default(uuid())
+  name          String
+  slug          String         @unique
+  description   String
+  level         String
+  ageGroup      String
+  modality      String
+  duration      String
+  classCount    Int
+  syllabus      String
+  benefits      String
+  price         Float
+  billingPeriod String         @default("MONTHLY") // MONTHLY, ANNUAL, ONE_TIME
+  maxCapacity   Int            @default(15)
+  includes      String
+  isPublished   Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  enrollments   Enrollment[]
+  subscriptions Subscription[]
+  lessons       Lesson[]
+}
+
+model Enrollment {
+  id             String       @id @default(uuid())
+  planId         String
+  plan           TrainingPlan @relation(fields: [planId], references: [id])
+  studentId      String
+  student        Student      @relation(fields: [studentId], references: [id])
+  status         String       @default("ACTIVE")
+  startDate      DateTime     @default(now())
+  endDate        DateTime?
+  subscriptionId String?
+}
+
+model Subscription {
+  id                   String       @id @default(uuid())
+  userId               String
+  user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId               String
+  plan                 TrainingPlan @relation(fields: [planId], references: [id])
+  stripeSubscriptionId String       @unique
+  status               String
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean      @default(false)
+  createdAt            DateTime     @default(now())
+}
+
+model Lesson {
+  id          String       @id @default(uuid())
+  planId      String
+  plan        TrainingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  videoUrl    String?
+  pgnData     String?
+  sortOrder   Int          @default(0)
+}
+
+model VideoCategory {
+  id     String  @id @default(uuid())
+  name   String
+  slug   String  @unique
+  videos Video[]
+}
+
+model Video {
+  id              String        @id @default(uuid())
+  title           String
+  slug            String        @unique
+  thumbnail       String
+  instructorName  String        @default("MI Roberto Martín del Campo")
+  categoryId      String
+  category        VideoCategory @relation(fields: [categoryId], references: [id])
+  level           String
+  durationMinutes Int
+  description     String
+  tags            String
+  videoUrl        String
+  isPremium       Boolean       @default(false)
+  publishedAt     DateTime      @default(now())
+  accesses        VideoAccess[]
+}
+
+model VideoAccess {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoId   String
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  grantedAt DateTime @default(now())
+}
+
+model Article {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  content     String
+  excerpt     String
+  category    String
+  authorName  String   @default("MI Roberto Martín del Campo")
+  coverImage  String
+  isPublished Boolean  @default(true)
+  publishedAt DateTime @default(now())
+}
+
+model Lead {
+  id                  String               @id @default(uuid())
+  name                String
+  email               String
+  phone               String
+  entityType          String               @default("INDIVIDUAL")
+  studentAge          String?
+  notes               String?
+  status              String               @default("NEW") // NEW, CONTACTED, QUALIFIED, ENROLLED, CUSTOMER, LOST
+  assignedTo          String?
+  createdAt           DateTime             @default(now())
+  institutionalQuotes InstitutionalQuote[]
+}
+
+model InstitutionalQuote {
+  id              String   @id @default(uuid())
+  leadId          String
+  lead            Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  institutionName String
+  playerCount     Int
+  requestedItems  String
+  status          String   @default("PENDING")
+  totalQuoted     Float?
+  notes           String?
+  createdAt       DateTime @default(now())
+}
+
+model NewsletterSubscription {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  isSubscribed Boolean  @default(true)
+  createdAt    DateTime @default(now())
+}
+
+model MarketingConsent {
+  id           String   @id @default(uuid())
+  userId       String?
+  email        String
+  consentGiven Boolean  @default(false)
+  consentDate  DateTime @default(now())
+}
+
+model LegalDocument {
+  id          String            @id @default(uuid())
+  type        String            @unique
+  title       String
+  content     String
+  version     String            @default("1.0")
+  updatedAt   DateTime          @updatedAt
+  acceptances LegalAcceptance[]
+}
+
+model LegalAcceptance {
+  id         String        @id @default(uuid())
+  userId     String
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documentId String
+  document   LegalDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  acceptedAt DateTime      @default(now())
+  ipAddress  String?
+}
+
+model SiteSettings {
+  id               String   @id @default("default")
+  heroTitle        String   @default("Lleva tu ajedrez al siguiente nivel")
+  heroSubtitle     String   @default("Entrenamiento especializado, conocimiento de alto nivel y material seleccionado para jugadores, familias, clubes y escuelas.")
+  heroCtaPrimary   String   @default("Conoce nuestros planes")
+  heroCtaSecondary String   @default("Comprar material de ajedrez")
+  whatsappNumber   String   @default("525500000000")
+  contactEmail     String   @default("contacto@alekhins.com")
+  footerLegalText  String   @default("© 2026 Academia de Ajedrez Alekhins. Todos los derechos reservados.")
+  updatedAt        DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userEmail String?
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
+  timestamp DateTime @default(now())
+}
+
+model ProcessedWebhookEvent {
+  id          String   @id @default(uuid())
+  eventId     String   @unique
+  eventType   String
+  processedAt DateTime @default(now())
+}
