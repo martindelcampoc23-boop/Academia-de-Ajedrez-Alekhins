@@ -239,7 +239,14 @@ export function Header() {
                   </div>
                 )}
               </div>
+            ) : status === 'loading' ? (
+              /* Skeleton placeholder mientras carga la sesión */
+              <div className="flex items-center gap-2">
+                <div className="hidden sm:block h-8 w-24 rounded-lg bg-[#1C3328] animate-pulse" />
+                <div className="h-8 w-24 rounded-lg bg-[#1C3328] animate-pulse" />
+              </div>
             ) : (
+              /* No autenticado — siempre visible */
               <div className="flex items-center gap-2">
                 <Link
                   href="/login"
@@ -258,6 +265,7 @@ export function Header() {
                 </Link>
               </div>
             )}
+
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

@@ -82,9 +82,29 @@ export default async function HomePage() {
                 <ShoppingBag className="w-4 h-4" />
               </Link>
             </div>
+
+            {/* Auth CTA — siempre visible como HTML estático */}
+            <div className="flex items-center gap-3 pt-2 justify-center lg:justify-start">
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1.5 text-xs text-gray-300 hover:text-[#D8B155] underline underline-offset-2 transition"
+              >
+                <User className="w-3.5 h-3.5" />
+                Iniciar sesión
+              </Link>
+              <span className="text-gray-600 text-xs">·</span>
+              <Link
+                href="/registro"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D8B155] hover:text-[#E8C865] transition"
+              >
+                <GraduationCap className="w-3.5 h-3.5" />
+                Crear cuenta de alumno →
+              </Link>
+            </div>
           </div>
         </div>
       </section>
+
 
       {/* 2. FEATURE HIGHLIGHTS BAR (Light Cream Background #F6F3EC) */}
       <section className="bg-[#F6F3EC] text-[#0F1713] py-10 border-b border-[#E5DEC9]">
