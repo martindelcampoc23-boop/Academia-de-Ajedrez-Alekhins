@@ -179,7 +179,7 @@ export function Header() {
                       <p className="text-xs font-bold text-white truncate">{user.name || 'Usuario'}</p>
                       <p className="text-[10px] text-[#A8B2A6] truncate">{user.email}</p>
                       <span className="inline-block mt-1 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase bg-[#1B4D3E] text-[#D8B155] border border-[#D8B155]/30">
-                        {role === 'SUPERADMIN' || role === 'ADMIN' ? '👑 Admin' : '♟️ Alumno'}
+                        {role === 'SUPERADMIN' ? '👑 Admin & Maestro' : role === 'ADMIN' ? '👑 Administrador' : role === 'COACH' ? '🎓 Maestro / Coach' : '♟️ Alumno'}
                       </span>
                     </div>
 
@@ -191,6 +191,26 @@ export function Header() {
                       >
                         <User className="w-3.5 h-3.5 text-[#D8B155]" />
                         <span>Mi Portal de Usuario</span>
+                      </Link>
+
+                      {(role === 'SUPERADMIN' || role === 'ADMIN' || role === 'COACH' || role?.includes('COACH') || role?.includes('MAESTRO')) && (
+                        <Link
+                          href="/maestro"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-amber-300 hover:bg-[#1B4D3E]/40 transition"
+                        >
+                          <BookOpen className="w-3.5 h-3.5 text-amber-300" />
+                          <span>Panel del Maestro (Tareas)</span>
+                        </Link>
+                      )}
+
+                      <Link
+                        href="/mi-cuenta/tareas"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2 text-xs text-gray-200 hover:bg-[#1B4D3E]/40 hover:text-[#D8B155] transition"
+                      >
+                        <BookOpen className="w-3.5 h-3.5 text-[#D8B155]" />
+                        <span>Mis Tareas de Ajedrez</span>
                       </Link>
 
                       <Link
@@ -211,7 +231,7 @@ export function Header() {
                         <span>Mis Pedidos & Guías</span>
                       </Link>
 
-                      {(role === 'SUPERADMIN' || role === 'ADMIN') && (
+                      {(role === 'SUPERADMIN' || role === 'ADMIN' || role?.includes('ADMIN')) && (
                         <Link
                           href="/admin"
                           onClick={() => setUserDropdownOpen(false)}
@@ -291,7 +311,16 @@ export function Header() {
                   >
                     Mi Cuenta
                   </Link>
-                  {(role === 'SUPERADMIN' || role === 'ADMIN') && (
+                  {(role === 'SUPERADMIN' || role === 'ADMIN' || role === 'COACH' || role?.includes('COACH')) && (
+                    <Link
+                      href="/maestro"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-xs text-amber-300 underline font-bold"
+                    >
+                      Panel Maestro
+                    </Link>
+                  )}
+                  {(role === 'SUPERADMIN' || role === 'ADMIN' || role?.includes('ADMIN')) && (
                     <Link
                       href="/admin"
                       onClick={() => setMobileMenuOpen(false)}

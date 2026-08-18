@@ -23,14 +23,34 @@ export default async function AccountPage() {
           <p className="text-xs text-ivory-dim">{user?.email || 'alumno@alekhins.com'}</p>
         </div>
 
-        {user?.role === 'SUPERADMIN' || user?.role === 'ADMIN' ? (
-          <Link href="/admin" className="btn-champagne text-xs px-4 py-2">
-            Panel de Administración →
-          </Link>
-        ) : null}
+        <div className="flex flex-wrap gap-2">
+          {user?.role === 'SUPERADMIN' || user?.role === 'ADMIN' || user?.role === 'COACH' ? (
+            <Link href="/maestro" className="bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/40 text-xs font-bold px-4 py-2 rounded transition">
+              🎓 Panel del Maestro
+            </Link>
+          ) : null}
+          {user?.role === 'SUPERADMIN' || user?.role === 'ADMIN' ? (
+            <Link href="/admin" className="btn-champagne text-xs px-4 py-2">
+              👑 Panel de Administración →
+            </Link>
+          ) : null}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {user?.role === 'SUPERADMIN' || user?.role === 'ADMIN' || user?.role === 'COACH' ? (
+          <Link href="/maestro" className="card-carbon p-6 space-y-4 hover:border-amber-400 transition group border-amber-800/40">
+            <div className="w-10 h-10 rounded bg-[#1B4D3E] border border-amber-400 flex items-center justify-center text-amber-300">
+              <BookOpen className="w-5 h-5" />
+            </div>
+            <h3 className="font-serif-editorial text-lg font-bold text-ivory group-hover:text-amber-300 transition">
+              Panel del Maestro
+            </h3>
+            <p className="text-xs text-ivory-muted">
+              Crea ejercicios y tareas con posiciones FEN y califica las entregas de tus alumnos.
+            </p>
+          </Link>
+        ) : null}
         <Link href="/mi-cuenta/academia" className="card-carbon p-6 space-y-4 hover:border-champagne transition group">
           <div className="w-10 h-10 rounded bg-walnut border border-champagne flex items-center justify-center text-champagne">
             <BookOpen className="w-5 h-5" />
