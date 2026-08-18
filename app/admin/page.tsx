@@ -53,8 +53,11 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="flex flex-wrap gap-2 text-xs">
-          <Link href="/admin/finanzas" className="bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/40 font-bold py-2 px-3 rounded">
-            📊 Finanzas & Métricas
+          <Link href="/admin/alumnos" className="bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/40 font-bold py-2 px-3 rounded">
+            👥 Alumnos & Admisiones
+          </Link>
+          <Link href="/admin/finanzas" className="bg-carbon-card hover:bg-stone-gray text-ivory border border-stone-border font-bold py-2 px-3 rounded">
+            📊 Finanzas
           </Link>
           <Link href="/admin/pedidos" className="btn-outline-gold py-2 px-3">
             Pedidos ({ordersCount})

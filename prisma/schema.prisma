@@ -42,16 +42,22 @@ model Customer {
 }
 
 model Student {
-  id          String       @id @default(uuid())
-  userId      String       @unique
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  guardianId  String?
-  guardian    Guardian?    @relation(fields: [guardianId], references: [id])
-  level       String?
-  birthDate   DateTime?
-  notes       String?
-  enrollments Enrollment[]
-  submissions Submission[]
+  id              String       @id @default(uuid())
+  userId          String       @unique
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guardianId      String?
+  guardian        Guardian?    @relation(fields: [guardianId], references: [id])
+  level           String?      @default("Principiante")
+  status          String       @default("PENDING") // PENDING, APPROVED, REJECTED, SUSPENDED
+  approvedAt      DateTime?
+  approvedBy      String?
+  rejectionReason String?
+  birthDate       DateTime?
+  notes           String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now()) @updatedAt
+  enrollments     Enrollment[]
+  submissions     Submission[]
 }
 
 model Guardian {
