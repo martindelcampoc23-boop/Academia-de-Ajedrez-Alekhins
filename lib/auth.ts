@@ -1,3 +1,5 @@
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth-options';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/db';
 
@@ -5,12 +7,30 @@ export interface UserSession {
   id: string;
   email: string;
   name: string | null;
-  role: 'SUPERADMIN' | 'ADMIN' | 'OPERACIONES' | 'STUDENT' | 'CUSTOMER';
+  image?: string | null;
+  role: 'SUPERADMIN' | 'ADMIN' | 'COACH' | 'OPERACIONES' | 'STUDENT' | 'CUSTOMER';
 }
 
 const AUTH_COOKIE_NAME = 'alekhins_auth_token';
 
 export async function getCurrentUser(): Promise<UserSession | null> {
+  try {
+    // 1. Intentar obtener sesión estándar de NextAuth
+    const session = await getServerSession(authOptions);
+    if (session?.user?.email) {
+      return {
+        id: (session.user as any).id || '',
+        email: session.user.email,
+        name: session.user.name || null,
+        image: session.user.image || null,
+        role: ((session.user as any).role as UserSession['role']) || 'CUSTOMER',
+      };
+    }
+  } catch (err) {
+    // Fallback a cookie directa si NextAuth no está disponible
+  }
+
+  // 2. Fallback a cookie de sesión directa
   const cookieStore = cookies();
   const token = cookieStore.get(AUTH_COOKIE_NAME)?.value;
 
@@ -23,6 +43,7 @@ export async function getCurrentUser(): Promise<UserSession | null> {
         id: true,
         email: true,
         name: true,
+        image: true,
         role: true,
       },
     });
@@ -33,6 +54,7 @@ export async function getCurrentUser(): Promise<UserSession | null> {
       id: user.id,
       email: user.email,
       name: user.name,
+      image: user.image,
       role: user.role as UserSession['role'],
     };
   } catch (error) {
@@ -60,6 +82,7 @@ export async function loginDemoUser(email: string): Promise<UserSession | null> 
     id: user.id,
     email: user.email,
     name: user.name,
+    image: user.image,
     role: user.role as UserSession['role'],
   };
 }

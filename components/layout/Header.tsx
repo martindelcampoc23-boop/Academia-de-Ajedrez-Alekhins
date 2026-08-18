@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
 import { useCart } from '@/components/providers/CartProvider';
 import { GlobalSearch } from '@/components/ui/GlobalSearch';
 import {
@@ -13,16 +14,36 @@ import {
   UserPlus,
   Menu,
   X,
-  ChevronDown
+  ChevronDown,
+  LogOut,
+  BookOpen,
+  Package,
+  ShieldAlert,
 } from 'lucide-react';
 
 export function Header() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
   const { cart, setIsOpen: setCartOpen } = useCart();
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const cartCount = cart.items.reduce((acc, item) => acc + item.quantity, 0);
+  const user = session?.user;
+  const role = (user as any)?.role || 'CUSTOMER';
+
+  // Cerrar menú desplegable al hacer clic fuera
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setUserDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <>
@@ -43,7 +64,7 @@ export function Header() {
             </div>
           </Link>
 
-          {/* Center Navigation Links (Exact from Screenshot) */}
+          {/* Center Navigation Links */}
           <nav className="hidden lg:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider">
             <Link
               href="/"
@@ -103,12 +124,12 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Right Action Buttons (Exact Screenshot Styling) */}
+          {/* Right Action Buttons */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSearchOpen(true)}
               aria-label="Buscar"
-              className="p-2 text-gray-300 hover:text-[#D8B155] transition"
+              className="p-2 text-gray-300 hover:text-[#D8B155] transition cursor-pointer"
             >
               <Search className="w-5 h-5" />
             </button>
@@ -116,7 +137,7 @@ export function Header() {
             <button
               onClick={() => setCartOpen(true)}
               aria-label="Carrito"
-              className="relative p-2 text-gray-300 hover:text-[#D8B155] transition"
+              className="relative p-2 text-gray-300 hover:text-[#D8B155] transition cursor-pointer"
             >
               <ShoppingBag className="w-5 h-5" />
               {cartCount > 0 && (
@@ -126,25 +147,121 @@ export function Header() {
               )}
             </button>
 
-            <Link
-              href="/mi-cuenta"
-              className="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 border border-stone-600 rounded hover:border-[#D8B155] hover:text-[#D8B155] transition text-white"
-            >
-              <User className="w-4 h-4" />
-              <span>Iniciar sesión</span>
-            </Link>
+            {/* Usuario Autenticado / Login */}
+            {status === 'authenticated' && user ? (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0F2E1E] border border-[#2B3E34] hover:border-[#D8B155] text-white transition text-xs font-semibold cursor-pointer"
+                >
+                  {user.image ? (
+                    <img
+                      src={user.image}
+                      alt={user.name || 'Usuario'}
+                      className="w-6 h-6 rounded-full object-cover border border-[#D8B155]"
+                    />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-[#D8B155] text-[#0B1510] font-bold flex items-center justify-center text-xs">
+                      {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                  )}
+                  <span className="max-w-[100px] truncate hidden sm:inline-block">
+                    {user.name?.split(' ')[0] || 'Mi Cuenta'}
+                  </span>
+                  <ChevronDown className="w-3.5 h-3.5 text-[#D8B155]" />
+                </button>
 
-            <Link
-              href="/entrenamiento"
-              className="btn-gold-solid text-xs py-2 px-4 shadow-md"
-            >
-              <UserPlus className="w-4 h-4" />
-              <span>Inscribirse</span>
-            </Link>
+                {/* Dropdown Menu */}
+                {userDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-[#121E17] border border-[#2B3E34] rounded-xl shadow-2xl py-2 z-50 animate-fadeIn">
+                    <div className="px-4 py-2.5 border-b border-[#2B3E34]/80">
+                      <p className="text-xs font-bold text-white truncate">{user.name || 'Usuario'}</p>
+                      <p className="text-[10px] text-[#A8B2A6] truncate">{user.email}</p>
+                      <span className="inline-block mt-1 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase bg-[#1B4D3E] text-[#D8B155] border border-[#D8B155]/30">
+                        {role === 'SUPERADMIN' || role === 'ADMIN' ? '👑 Admin' : '♟️ Alumno'}
+                      </span>
+                    </div>
+
+                    <div className="py-1">
+                      <Link
+                        href="/mi-cuenta"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2 text-xs text-gray-200 hover:bg-[#1B4D3E]/40 hover:text-[#D8B155] transition"
+                      >
+                        <User className="w-3.5 h-3.5 text-[#D8B155]" />
+                        <span>Mi Portal de Usuario</span>
+                      </Link>
+
+                      <Link
+                        href="/mi-cuenta/academia"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2 text-xs text-gray-200 hover:bg-[#1B4D3E]/40 hover:text-[#D8B155] transition"
+                      >
+                        <BookOpen className="w-3.5 h-3.5 text-[#D8B155]" />
+                        <span>Mis Cursos & Clases</span>
+                      </Link>
+
+                      <Link
+                        href="/rastrear-pedido"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2 text-xs text-gray-200 hover:bg-[#1B4D3E]/40 hover:text-[#D8B155] transition"
+                      >
+                        <Package className="w-3.5 h-3.5 text-[#D8B155]" />
+                        <span>Mis Pedidos & Guías</span>
+                      </Link>
+
+                      {(role === 'SUPERADMIN' || role === 'ADMIN') && (
+                        <Link
+                          href="/admin"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-[#D8B155] hover:bg-[#1B4D3E]/40 transition border-t border-[#2B3E34]/50"
+                        >
+                          <ShieldAlert className="w-3.5 h-3.5 text-[#D8B155]" />
+                          <span>Panel de Administración</span>
+                        </Link>
+                      )}
+                    </div>
+
+                    <div className="border-t border-[#2B3E34]/80 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          signOut({ callbackUrl: '/' });
+                        }}
+                        className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-red-400 hover:bg-red-950/40 hover:text-red-300 transition text-left cursor-pointer"
+                      >
+                        <LogOut className="w-3.5 h-3.5 text-red-400" />
+                        <span>Cerrar Sesión</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/login"
+                  className="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 border border-stone-600 rounded-lg hover:border-[#D8B155] hover:text-[#D8B155] transition text-white"
+                >
+                  <User className="w-4 h-4" />
+                  <span>Iniciar sesión</span>
+                </Link>
+
+                <Link
+                  href="/registro"
+                  className="btn-gold-solid text-xs py-2 px-3.5 shadow-md rounded-lg"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>Registrarse</span>
+                </Link>
+              </div>
+            )}
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-gray-300 hover:text-[#D8B155] lg:hidden"
+              className="p-2 text-gray-300 hover:text-[#D8B155] lg:hidden cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -154,6 +271,40 @@ export function Header() {
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-[#1C3328] bg-[#0F1E17] px-4 py-6 space-y-4 text-sm animate-in slide-in-from-top duration-200">
+            {status === 'authenticated' && user && (
+              <div className="p-3 rounded-lg bg-[#121E17] border border-[#2B3E34] mb-3">
+                <p className="text-xs font-bold text-white">{user.name}</p>
+                <p className="text-[10px] text-[#A8B2A6]">{user.email}</p>
+                <div className="mt-2 flex gap-2">
+                  <Link
+                    href="/mi-cuenta"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-xs text-[#D8B155] underline"
+                  >
+                    Mi Cuenta
+                  </Link>
+                  {(role === 'SUPERADMIN' || role === 'ADMIN') && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-xs text-[#D8B155] underline font-bold"
+                    >
+                      Panel Admin
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      signOut({ callbackUrl: '/' });
+                    }}
+                    className="text-xs text-red-400 underline ml-auto"
+                  >
+                    Salir
+                  </button>
+                </div>
+              </div>
+            )}
+
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
@@ -192,10 +343,29 @@ export function Header() {
             <Link
               href="/clubes-y-escuelas"
               onClick={() => setMobileMenuOpen(false)}
-              className="block text-white py-2"
+              className="block text-white py-2 border-b border-stone-800"
             >
               Contacto
             </Link>
+
+            {status !== 'authenticated' && (
+              <div className="pt-2 flex flex-col gap-2 sm:hidden">
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full text-center py-2 px-4 rounded border border-stone-600 text-white text-xs font-semibold"
+                >
+                  Iniciar sesión
+                </Link>
+                <Link
+                  href="/registro"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full text-center py-2 px-4 rounded bg-[#D8B155] text-[#0B1510] text-xs font-bold"
+                >
+                  Registrarse
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </header>

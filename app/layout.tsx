@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
 import { CookieManager } from '@/components/ui/CookieManager';
+import AuthProvider from '@/components/providers/AuthProvider';
 
 export const metadata: Metadata = {
   title: {
@@ -30,14 +31,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <body className="min-h-screen flex flex-col" style={{ backgroundColor: '#0B1510', color: '#F6F3EC' }}>
-        <CartProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <CartDrawer />
-          <WhatsAppButton />
-          <CookieManager />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <CartDrawer />
+            <WhatsAppButton />
+            <CookieManager />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );
