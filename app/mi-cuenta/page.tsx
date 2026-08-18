@@ -66,6 +66,18 @@ export default async function AccountPage() {
             Historial de compras de material de ajedrez y rastreo de envíos.
           </p>
         </Link>
+
+        <Link href="/mi-cuenta/tareas" className="card-carbon p-6 space-y-4 hover:border-champagne transition group">
+          <div className="w-10 h-10 rounded bg-walnut border border-champagne flex items-center justify-center text-champagne">
+            <BookOpen className="w-5 h-5" />
+          </div>
+          <h3 className="font-serif-editorial text-lg font-bold text-ivory group-hover:text-champagne transition">
+            Mis Tareas de Ajedrez
+          </h3>
+          <p className="text-xs text-ivory-muted">
+            Resuelve ejercicios con tableros asignados por tu maestro y recibe retroalimentación.
+          </p>
+        </Link>
       </div>
     </div>
   );
