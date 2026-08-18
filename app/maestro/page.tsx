@@ -21,33 +21,31 @@ import {
   Shield,
   GraduationCap,
   Sparkles,
-  Edit,
   Phone,
   Mail,
-  AlertTriangle
+  ShieldAlert,
+  Crown,
+  ShoppingBag
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
-interface StudentData {
+interface UserRecord {
   id: string;
   userId: string;
+  name: string | null;
+  email: string;
+  role: string;
+  image: string | null;
+  createdAt: string;
+  phone: string | null;
+  studentId: string | null;
   level: string | null;
   status: string;
   approvedAt: string | null;
   approvedBy: string | null;
   rejectionReason: string | null;
   notes: string | null;
-  createdAt: string;
-  user: {
-    id: string;
-    name: string | null;
-    email: string;
-    image: string | null;
-    role: string;
-    createdAt: string;
-    customer: { phone: string | null } | null;
-  };
   enrollments: { plan: { id: string; name: string; level: string | null } }[];
   submissions: { id: string; status: string; grade: number | null }[];
 }
@@ -87,9 +85,17 @@ const STATUS_MAP: Record<string, { label: string; color: string }> = {
   SUSPENDED: { label: 'Pausado', color: 'bg-gray-800 text-gray-300 border-gray-700' },
 };
 
+const ROLES_MAP: Record<string, { label: string; icon: any; color: string }> = {
+  SUPERADMIN: { label: '👑 Superadmin', icon: Crown, color: 'text-[#D8B155]' },
+  ADMIN: { label: '🛡️ Administrador', icon: Shield, color: 'text-amber-400' },
+  COACH: { label: '🎓 Maestro / Coach', icon: GraduationCap, color: 'text-purple-400' },
+  STUDENT: { label: '♟️ Alumno', icon: BookOpen, color: 'text-emerald-400' },
+  CUSTOMER: { label: '🛒 Cliente Tienda', icon: ShoppingBag, color: 'text-blue-400' },
+};
+
 export default function MaestroPage() {
   const { data: session, status } = useSession();
-  const [activeTab, setActiveTab] = useState<'tareas' | 'alumnos'>('alumnos');
+  const [activeTab, setActiveTab] = useState<'usuarios' | 'tareas'>('usuarios');
 
   // Homework State
   const [homeworks, setHomeworks] = useState<Homework[]>([]);
@@ -110,20 +116,21 @@ export default function MaestroPage() {
   const [hwMsg, setHwMsg] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Students State
-  const [students, setStudents] = useState<StudentData[]>([]);
-  const [loadingStudents, setLoadingStudents] = useState(true);
-  const [studentSearch, setStudentSearch] = useState('');
-  const [studentFilter, setStudentFilter] = useState('ALL');
+  // Users State
+  const [users, setUsers] = useState<UserRecord[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [roleFilter, setRoleFilter] = useState('ALL');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [studentMsg, setStudentMsg] = useState('');
+  const [userMsg, setUserMsg] = useState('');
 
-  const role = (session?.user as any)?.role;
+  const currentUserRole = (session?.user as any)?.role || 'CUSTOMER';
 
   useEffect(() => {
     if (status === 'authenticated') {
       fetchHomeworks();
-      fetchStudents();
+      fetchUsers();
     }
   }, [status]);
 
@@ -135,12 +142,12 @@ export default function MaestroPage() {
     setLoadingHw(false);
   }
 
-  async function fetchStudents() {
-    setLoadingStudents(true);
+  async function fetchUsers() {
+    setLoadingUsers(true);
     const res = await fetch('/api/admin/alumnos');
     const data = await res.json();
-    setStudents(data.students || []);
-    setLoadingStudents(false);
+    setUsers(data.users || []);
+    setLoadingUsers(false);
   }
 
   // Manejo de archivo adjunto para tareas
@@ -222,56 +229,75 @@ export default function MaestroPage() {
     setSubmittingGrade(null);
   }
 
-  // Aceptar o Rechazar Alumno
-  async function handleUpdateStudentStatus(studentId: string, newStatus: 'APPROVED' | 'REJECTED' | 'PENDING', level?: string) {
-    setActionLoading(studentId);
-    setStudentMsg('');
+  // Asignar Rol a un Usuario
+  async function handleUpdateRole(userId: string, newRole: string) {
+    setActionLoading(userId);
+    setUserMsg('');
     const res = await fetch('/api/admin/alumnos', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ studentId, status: newStatus, level }),
+      body: JSON.stringify({ userId, role: newRole }),
     });
     const data = await res.json();
     if (res.ok) {
-      setStudentMsg(
+      setUserMsg(`✅ Rol actualizado a ${newRole} con éxito.`);
+      fetchUsers();
+    } else {
+      setUserMsg(`❌ ${data.error}`);
+    }
+    setActionLoading(null);
+  }
+
+  // Aceptar o Rechazar Alumno
+  async function handleUpdateUserStatus(userId: string, newStatus: 'APPROVED' | 'REJECTED' | 'PENDING') {
+    setActionLoading(userId);
+    setUserMsg('');
+    const res = await fetch('/api/admin/alumnos', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, status: newStatus }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setUserMsg(
         newStatus === 'APPROVED'
-          ? '✅ Alumno aceptado en la academia.'
+          ? '✅ Usuario aceptado en la academia.'
           : newStatus === 'REJECTED'
-          ? '❌ Alumno rechazado.'
+          ? '❌ Usuario rechazado.'
           : '🔄 Estado actualizado.'
       );
-      fetchStudents();
+      fetchUsers();
     } else {
-      setStudentMsg(`❌ ${data.error}`);
+      setUserMsg(`❌ ${data.error}`);
     }
     setActionLoading(null);
   }
 
   // Cambiar Nivel del Alumno
-  async function handleUpdateStudentLevel(studentId: string, newLevel: string) {
-    setActionLoading(studentId);
+  async function handleUpdateUserLevel(userId: string, newLevel: string) {
+    setActionLoading(userId);
     const res = await fetch('/api/admin/alumnos', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ studentId, level: newLevel }),
+      body: JSON.stringify({ userId, level: newLevel }),
     });
     if (res.ok) {
-      setStudentMsg('✅ Nivel del alumno actualizado.');
-      fetchStudents();
+      setUserMsg('✅ Nivel del alumno actualizado.');
+      fetchUsers();
     }
     setActionLoading(null);
   }
 
   if (status === 'loading') {
-    return <div className="min-h-screen flex items-center justify-center text-[#D8B155]">Cargando panel del maestro...</div>;
+    return <div className="min-h-screen flex items-center justify-center text-[#D8B155]">Cargando panel...</div>;
   }
 
-  if (status === 'unauthenticated' || !['SUPERADMIN', 'ADMIN', 'COACH'].includes(role)) {
+  if (status === 'unauthenticated' || !['SUPERADMIN', 'ADMIN', 'COACH'].includes(currentUserRole)) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-center px-4">
         <div className="text-4xl">🔒</div>
         <h1 className="text-xl font-bold text-[#F6F3EC]">Acceso restringido</h1>
-        <p className="text-sm text-[#A8B2A6]">Esta sección es exclusiva para maestros y administradores.</p>
+        <p className="text-sm text-[#A8B2A6]">Esta sección es exclusiva para administradores y maestros.</p>
         <Link href="/login" className="px-4 py-2 bg-[#D8B155] text-[#0B1510] font-bold text-xs rounded">
           Iniciar Sesión
         </Link>
@@ -279,22 +305,24 @@ export default function MaestroPage() {
     );
   }
 
-  const pendingStudents = students.filter((s) => s.status === 'PENDING').length;
-  const approvedStudents = students.filter((s) => s.status === 'APPROVED').length;
+  const pendingUsers = users.filter((u) => u.status === 'PENDING').length;
+  const approvedUsers = users.filter((u) => u.status === 'APPROVED').length;
+  const coachesCount = users.filter((u) => u.role === 'COACH').length;
   const pendingHwReviews = homeworks.reduce(
     (acc, hw) => acc + hw.submissions.filter((s) => s.status === 'SUBMITTED').length,
     0
   );
 
-  const filteredStudents = students.filter((s) => {
-    const matchStatus = studentFilter === 'ALL' || s.status === studentFilter;
-    const query = studentSearch.toLowerCase();
+  const filteredUsers = users.filter((u) => {
+    const matchStatus = statusFilter === 'ALL' || u.status === statusFilter;
+    const matchRole = roleFilter === 'ALL' || u.role === roleFilter;
+    const query = searchQuery.toLowerCase();
     const matchSearch =
       !query ||
-      (s.user.name || '').toLowerCase().includes(query) ||
-      s.user.email.toLowerCase().includes(query) ||
-      (s.user.customer?.phone || '').includes(query);
-    return matchStatus && matchSearch;
+      (u.name || '').toLowerCase().includes(query) ||
+      u.email.toLowerCase().includes(query) ||
+      (u.phone || '').includes(query);
+    return matchStatus && matchRole && matchSearch;
   });
 
   return (
@@ -303,13 +331,13 @@ export default function MaestroPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#2B3E34] pb-6 gap-4">
         <div>
           <span className="text-xs uppercase font-bold tracking-widest text-[#D8B155] block mb-1">
-            Panel Pedagógico & Docente
+            Panel de Administración & Control Docente
           </span>
           <h1 className="text-3xl font-serif font-bold text-[#F6F3EC]">
-            Gestión Integral de Alumnos y Tareas
+            Gestión de Usuarios, Roles y Tareas
           </h1>
           <p className="text-sm text-[#A8B2A6] mt-1">
-            Acepta o rechaza alumnos registrados, asigna niveles, crea tareas con documentos y califica ejercicios.
+            Asigna roles a usuarios registrados (Superadmin, Maestro, Alumno, Cliente), aprueba solicitudes y gestiona tareas escolares.
           </p>
         </div>
 
@@ -326,18 +354,18 @@ export default function MaestroPage() {
       {/* Tabs Selector */}
       <div className="flex border-b border-[#2B3E34] gap-4 text-sm font-semibold">
         <button
-          onClick={() => setActiveTab('alumnos')}
+          onClick={() => setActiveTab('usuarios')}
           className={`pb-3 px-2 flex items-center gap-2 transition border-b-2 ${
-            activeTab === 'alumnos'
+            activeTab === 'usuarios'
               ? 'border-[#D8B155] text-[#D8B155] font-bold'
               : 'border-transparent text-gray-400 hover:text-white'
           }`}
         >
           <Users className="w-4 h-4" />
-          <span>Gestión & Admisión de Alumnos</span>
-          {pendingStudents > 0 && (
+          <span>Gestión de Usuarios & Asignación de Roles</span>
+          {pendingUsers > 0 && (
             <span className="px-2 py-0.5 rounded-full bg-amber-900 text-amber-300 text-[10px] font-bold">
-              {pendingStudents} nuevos
+              {pendingUsers} pendientes
             </span>
           )}
         </button>
@@ -351,7 +379,7 @@ export default function MaestroPage() {
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          <span>Tareas Escolares & Calificaciones</span>
+          <span>Tareas Escolares & Documentos</span>
           {pendingHwReviews > 0 && (
             <span className="px-2 py-0.5 rounded-full bg-blue-900 text-blue-300 text-[10px] font-bold">
               {pendingHwReviews} entregas
@@ -361,19 +389,19 @@ export default function MaestroPage() {
       </div>
 
       {/* ============================================================ */}
-      {/* TAB 1: GESTIÓN DE ALUMNOS & ADMISIÓN */}
+      {/* TAB 1: GESTIÓN DE USUARIOS & ASIGNACIÓN DE ROLES */}
       {/* ============================================================ */}
-      {activeTab === 'alumnos' && (
+      {activeTab === 'usuarios' && (
         <div className="space-y-6">
-          {/* KPIs Alumnos */}
+          {/* KPIs Usuarios */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-5 space-y-1">
               <div className="flex items-center justify-between text-xs text-[#A8B2A6]">
                 <span>Total Registrados</span>
                 <Users className="w-4 h-4 text-[#D8B155]" />
               </div>
-              <p className="text-2xl font-bold text-white">{students.length}</p>
-              <p className="text-[11px] text-[#A8B2A6]">Alumnos en base de datos</p>
+              <p className="text-2xl font-bold text-white">{users.length}</p>
+              <p className="text-[11px] text-[#A8B2A6]">Usuarios en el sistema</p>
             </div>
 
             <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-5 space-y-1">
@@ -381,8 +409,17 @@ export default function MaestroPage() {
                 <span>Por Aceptar (Pendientes)</span>
                 <Clock className="w-4 h-4 text-amber-400" />
               </div>
-              <p className="text-2xl font-bold text-amber-300">{pendingStudents}</p>
-              <p className="text-[11px] text-amber-400/80">Requieren aprobación</p>
+              <p className="text-2xl font-bold text-amber-300">{pendingUsers}</p>
+              <p className="text-[11px] text-amber-400/80">Esperando aprobación</p>
+            </div>
+
+            <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-5 space-y-1">
+              <div className="flex items-center justify-between text-xs text-purple-400">
+                <span>Maestros / Coaches</span>
+                <GraduationCap className="w-4 h-4 text-purple-400" />
+              </div>
+              <p className="text-2xl font-bold text-purple-300">{coachesCount}</p>
+              <p className="text-[11px] text-purple-400/80">Con acceso docente</p>
             </div>
 
             <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-5 space-y-1">
@@ -390,25 +427,14 @@ export default function MaestroPage() {
                 <span>Alumnos Aprobados</span>
                 <UserCheck className="w-4 h-4 text-emerald-400" />
               </div>
-              <p className="text-2xl font-bold text-emerald-300">{approvedStudents}</p>
-              <p className="text-[11px] text-emerald-400/80">Activos en la academia</p>
-            </div>
-
-            <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-5 space-y-1">
-              <div className="flex items-center justify-between text-xs text-red-400">
-                <span>Rechazados / Inactivos</span>
-                <UserX className="w-4 h-4 text-red-400" />
-              </div>
-              <p className="text-2xl font-bold text-red-300">
-                {students.filter((s) => s.status === 'REJECTED').length}
-              </p>
-              <p className="text-[11px] text-red-400/80">Sin acceso a clases</p>
+              <p className="text-2xl font-bold text-emerald-300">{approvedUsers}</p>
+              <p className="text-[11px] text-emerald-400/80">Activos en plataforma</p>
             </div>
           </div>
 
-          {studentMsg && (
+          {userMsg && (
             <p className="text-sm p-3 rounded-lg bg-[#121E17] border border-[#2B3E34] text-[#D8B155]">
-              {studentMsg}
+              {userMsg}
             </p>
           )}
 
@@ -417,99 +443,139 @@ export default function MaestroPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A8B2A6]" />
               <input
-                value={studentSearch}
-                onChange={(e) => setStudentSearch(e.target.value)}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar por nombre, correo o teléfono..."
                 className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-[#121E17] border border-[#2B3E34] text-[#F6F3EC] text-xs focus:outline-none focus:border-[#D8B155]"
               />
             </div>
 
-            <div className="flex items-center gap-2">
-              {['ALL', 'PENDING', 'APPROVED', 'REJECTED'].map((st) => (
-                <button
-                  key={st}
-                  onClick={() => setStudentFilter(st)}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold border transition ${
-                    studentFilter === st
-                      ? 'bg-[#D8B155] text-[#0B1510] border-[#D8B155]'
-                      : 'bg-[#121E17] text-[#A8B2A6] border-[#2B3E34] hover:text-white'
-                  }`}
-                >
-                  {st === 'ALL' ? 'Todos' : st === 'PENDING' ? 'Pendientes' : st === 'APPROVED' ? 'Aprobados' : 'Rechazados'}
-                </button>
-              ))}
-            </div>
+            {/* Filtro por Rol */}
+            <select
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value)}
+              className="px-3 py-2 rounded-lg bg-[#121E17] border border-[#2B3E34] text-xs text-[#F6F3EC] focus:outline-none focus:border-[#D8B155]"
+            >
+              <option value="ALL">Todos los Roles</option>
+              <option value="SUPERADMIN">Superadmin 👑</option>
+              <option value="ADMIN">Administrador 🛡️</option>
+              <option value="COACH">Maestro / Coach 🎓</option>
+              <option value="STUDENT">Alumno ♟️</option>
+              <option value="CUSTOMER">Cliente Tienda 🛒</option>
+            </select>
+
+            {/* Filtro por Estado */}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-2 rounded-lg bg-[#121E17] border border-[#2B3E34] text-xs text-[#F6F3EC] focus:outline-none focus:border-[#D8B155]"
+            >
+              <option value="ALL">Todos los Estados</option>
+              <option value="PENDING">⏳ Pendientes</option>
+              <option value="APPROVED">✓ Aprobados</option>
+              <option value="REJECTED">✕ Rechazados</option>
+            </select>
           </div>
 
-          {/* Tabla de Alumnos */}
+          {/* Tabla de Usuarios & Asignación de Roles */}
           <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl overflow-hidden shadow-xl">
-            {loadingStudents ? (
-              <div className="p-12 text-center text-[#A8B2A6] text-xs">Cargando lista de alumnos...</div>
-            ) : filteredStudents.length === 0 ? (
+            {loadingUsers ? (
+              <div className="p-12 text-center text-[#A8B2A6] text-xs">Cargando usuarios...</div>
+            ) : filteredUsers.length === 0 ? (
               <div className="p-12 text-center text-[#A8B2A6] text-xs space-y-2">
                 <Users className="w-8 h-8 mx-auto text-[#2B3E34]" />
-                <p>No se encontraron alumnos con los filtros seleccionados.</p>
+                <p>No se encontraron usuarios con los filtros seleccionados.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="border-b border-[#2B3E34] text-[10px] uppercase tracking-wider text-[#A8B2A6] bg-[#0B1510]/60">
-                      <th className="text-left py-3.5 px-4">Alumno</th>
+                      <th className="text-left py-3.5 px-4">Usuario</th>
                       <th className="text-left py-3.5 px-4">Contacto</th>
+                      <th className="text-left py-3.5 px-4">Rol Asignado</th>
                       <th className="text-left py-3.5 px-4">Nivel Ajedrez</th>
                       <th className="text-left py-3.5 px-4">Estado</th>
-                      <th className="text-left py-3.5 px-4">Fecha Registro</th>
-                      <th className="text-left py-3.5 px-4">Acciones de Aprobación</th>
+                      <th className="text-left py-3.5 px-4">Fecha</th>
+                      <th className="text-left py-3.5 px-4">Admisión / Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredStudents.map((st) => {
-                      const statusMeta = STATUS_MAP[st.status] || STATUS_MAP.PENDING;
-                      const isActing = actionLoading === st.id;
+                    {filteredUsers.map((u) => {
+                      const statusMeta = STATUS_MAP[u.status] || STATUS_MAP.PENDING;
+                      const isActing = actionLoading === u.id;
+                      const canEditRole = currentUserRole === 'SUPERADMIN' || currentUserRole === 'ADMIN';
 
                       return (
                         <tr
-                          key={st.id}
+                          key={u.id}
                           className="border-b border-[#1C3328]/60 hover:bg-[#1B4D3E]/20 transition"
                         >
+                          {/* Usuario */}
                           <td className="py-3.5 px-4">
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-full bg-[#1B4D3E] border border-[#D8B155]/40 flex items-center justify-center font-bold text-[#D8B155] text-xs shrink-0">
-                                {st.user.name ? st.user.name.charAt(0).toUpperCase() : 'A'}
+                                {u.name ? u.name.charAt(0).toUpperCase() : 'U'}
                               </div>
                               <div>
-                                <p className="font-semibold text-white">{st.user.name || 'Sin nombre'}</p>
-                                <p className="text-[10px] text-[#A8B2A6]">{st.user.email}</p>
+                                <p className="font-semibold text-white">{u.name || 'Sin nombre'}</p>
+                                <p className="text-[10px] text-[#A8B2A6]">{u.email}</p>
                               </div>
                             </div>
                           </td>
 
+                          {/* Contacto */}
                           <td className="py-3.5 px-4 text-[#D2DBD0]">
-                            {st.user.customer?.phone ? (
+                            {u.phone ? (
                               <span className="flex items-center gap-1 font-mono text-[11px]">
                                 <Phone className="w-3 h-3 text-[#D8B155]" />
-                                {st.user.customer.phone}
+                                {u.phone}
                               </span>
                             ) : (
                               <span className="text-gray-500 italic text-[11px]">Sin teléfono</span>
                             )}
                           </td>
 
+                          {/* Selector de Rol */}
+                          <td className="py-3.5 px-4">
+                            {canEditRole ? (
+                              <select
+                                value={u.role}
+                                onChange={(e) => handleUpdateRole(u.id, e.target.value)}
+                                disabled={isActing}
+                                className="px-2.5 py-1.5 rounded-lg bg-[#0B1510] border border-[#2B3E34] text-xs font-semibold text-white focus:outline-none focus:border-[#D8B155]"
+                              >
+                                <option value="STUDENT">♟️ Alumno</option>
+                                <option value="COACH">🎓 Maestro / Coach</option>
+                                <option value="ADMIN">🛡️ Administrador</option>
+                                {currentUserRole === 'SUPERADMIN' && (
+                                  <option value="SUPERADMIN">👑 Superadmin</option>
+                                )}
+                                <option value="CUSTOMER">🛒 Cliente Tienda</option>
+                              </select>
+                            ) : (
+                              <span className="font-semibold text-white">
+                                {ROLES_MAP[u.role]?.label || u.role}
+                              </span>
+                            )}
+                          </td>
+
+                          {/* Nivel */}
                           <td className="py-3.5 px-4">
                             <select
-                              value={st.level || 'Principiante'}
-                              onChange={(e) => handleUpdateStudentLevel(st.id, e.target.value)}
+                              value={u.level || 'Principiante'}
+                              onChange={(e) => handleUpdateUserLevel(u.id, e.target.value)}
                               disabled={isActing}
                               className="px-2 py-1 rounded bg-[#0B1510] border border-[#2B3E34] text-xs text-white focus:outline-none focus:border-[#D8B155]"
                             >
-                              <option value="Principiante">Principiante (Iniciación)</option>
+                              <option value="Principiante">Principiante</option>
                               <option value="Intermedio">Intermedio (Club)</option>
                               <option value="Avanzado">Avanzado (Torneo)</option>
-                              <option value="Alto Rendimiento">Alto Rendimiento (Elo 1800+)</option>
+                              <option value="Alto Rendimiento">Alto Rendimiento (1800+)</option>
                             </select>
                           </td>
 
+                          {/* Estado */}
                           <td className="py-3.5 px-4">
                             <span
                               className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${statusMeta.color}`}
@@ -518,37 +584,39 @@ export default function MaestroPage() {
                             </span>
                           </td>
 
+                          {/* Fecha */}
                           <td className="py-3.5 px-4 text-[#A8B2A6]">
-                            {new Date(st.createdAt || st.user.createdAt).toLocaleDateString('es-MX')}
+                            {new Date(u.createdAt).toLocaleDateString('es-MX')}
                           </td>
 
+                          {/* Acciones */}
                           <td className="py-3.5 px-4">
                             <div className="flex items-center gap-2">
-                              {st.status !== 'APPROVED' && (
+                              {u.status !== 'APPROVED' && (
                                 <button
-                                  onClick={() => handleUpdateStudentStatus(st.id, 'APPROVED')}
+                                  onClick={() => handleUpdateUserStatus(u.id, 'APPROVED')}
                                   disabled={isActing}
                                   className="px-3 py-1.5 rounded bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold flex items-center gap-1 transition disabled:opacity-60 shadow cursor-pointer"
-                                  title="Aceptar alumno en la academia"
+                                  title="Aceptar usuario en la academia"
                                 >
                                   <UserCheck className="w-3.5 h-3.5" />
                                   <span>Aceptar</span>
                                 </button>
                               )}
 
-                              {st.status !== 'REJECTED' && (
+                              {u.status !== 'REJECTED' && (
                                 <button
-                                  onClick={() => handleUpdateStudentStatus(st.id, 'REJECTED')}
+                                  onClick={() => handleUpdateUserStatus(u.id, 'REJECTED')}
                                   disabled={isActing}
                                   className="px-3 py-1.5 rounded bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-300 text-xs font-bold flex items-center gap-1 transition disabled:opacity-60 cursor-pointer"
-                                  title="Rechazar solicitud de ingreso"
+                                  title="Rechazar solicitud"
                                 >
                                   <UserX className="w-3.5 h-3.5" />
                                   <span>Rechazar</span>
                                 </button>
                               )}
 
-                              {st.status === 'APPROVED' && (
+                              {u.status === 'APPROVED' && (
                                 <span className="text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
                                   <CheckCircle2 className="w-3.5 h-3.5" /> Activo
                                 </span>
@@ -567,7 +635,7 @@ export default function MaestroPage() {
       )}
 
       {/* ============================================================ */}
-      {/* TAB 2: TAREAS ESCOLARES & CALIFICACIONES */}
+      {/* TAB 2: TAREAS ESCOLARES & DOCUMENTOS */}
       {/* ============================================================ */}
       {activeTab === 'tareas' && (
         <div className="space-y-8">
@@ -627,7 +695,7 @@ export default function MaestroPage() {
                 {newHw.attachmentName ? (
                   <div className="flex items-center justify-between p-3 rounded-lg bg-[#121E17] border border-[#2B3E34] text-xs text-white">
                     <div className="flex items-center gap-2 truncate">
-                      <FileText className="w-4 h-4 text-[#D8B155] shrink-0" />
+                      <FileText className="w-4 h-4 text-[#D8B155]" />
                       <span className="truncate font-semibold">{newHw.attachmentName}</span>
                     </div>
                     <button
