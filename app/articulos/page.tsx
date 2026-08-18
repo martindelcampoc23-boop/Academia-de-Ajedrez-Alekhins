@@ -10,10 +10,15 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function ArticlesPage() {
-  const articles = await prisma.article.findMany({
-    where: { isPublished: true },
-    orderBy: { publishedAt: 'desc' },
-  });
+  let articles: any[] = [];
+  try {
+    articles = await prisma.article.findMany({
+      where: { isPublished: true },
+      orderBy: { publishedAt: 'desc' },
+    });
+  } catch (error) {
+    console.warn('⚠️ [ArticlesPage] Database query fallback:', error);
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 space-y-12">
@@ -30,7 +35,7 @@ export default async function ArticlesPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {articles.map((article) => (
+        {articles.map((article: any) => (
           <div key={article.id} className="card-carbon p-6 flex flex-col justify-between space-y-4 group">
             <div className="space-y-3">
               <div className="aspect-video bg-carbon-dark rounded overflow-hidden relative border border-stone-border">

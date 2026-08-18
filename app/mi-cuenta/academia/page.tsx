@@ -8,7 +8,12 @@ export const metadata = {
 };
 
 export default async function StudentAcademyPage() {
-  const videos = await prisma.video.findMany({ take: 3 });
+  let videos: any[] = [];
+  try {
+    videos = await prisma.video.findMany({ take: 3 });
+  } catch (error) {
+    console.warn('⚠️ [StudentAcademyPage] Database query fallback:', error);
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12 space-y-10">

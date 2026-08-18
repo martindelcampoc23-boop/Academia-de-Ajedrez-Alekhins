@@ -27,17 +27,26 @@ import {
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [featuredProducts, featuredPlans] = await Promise.all([
-    prisma.product.findMany({
-      where: { isPublished: true },
-      take: 5,
-      include: { images: true, variants: true, category: true },
-    }),
-    prisma.trainingPlan.findMany({
-      where: { isPublished: true },
-      take: 3,
-    }),
-  ]);
+  let featuredProducts: any[] = [];
+  let featuredPlans: any[] = [];
+
+  try {
+    const [products, plans] = await Promise.all([
+      prisma.product.findMany({
+        where: { isPublished: true },
+        take: 5,
+        include: { images: true, variants: true, category: true },
+      }),
+      prisma.trainingPlan.findMany({
+        where: { isPublished: true },
+        take: 3,
+      }),
+    ]);
+    featuredProducts = products;
+    featuredPlans = plans;
+  } catch (error) {
+    console.warn('⚠️ [HomePage] Database query fallback:', error);
+  }
 
   return (
     <div className="space-y-0 text-white font-sans">
@@ -275,8 +284,8 @@ export default async function HomePage() {
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {featuredProducts.map((p) => {
-              const image = p.images[0]?.url || '/ajedrez-club-special-ligero-con-tablero-de-vinil-y-bolso.jpg';
+            {featuredProducts.map((p: any) => {
+              const image = p.images?.[0]?.url || '/ajedrez-club-special-ligero-con-tablero-de-vinil-y-bolso.jpg';
               return (
                 <div key={p.id} className="bg-white rounded-lg p-4 border border-[#E2DDD2] flex flex-col justify-between shadow-sm group">
                   <div className="space-y-3 text-center">

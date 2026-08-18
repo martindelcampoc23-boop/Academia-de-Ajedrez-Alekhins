@@ -10,10 +10,15 @@ export const metadata = {
 export const revalidate = 0;
 
 export default async function AdminLeadsPage() {
-  const leads = await prisma.lead.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: { institutionalQuotes: true },
-  });
+  let leads: any[] = [];
+  try {
+    leads = await prisma.lead.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: { institutionalQuotes: true },
+    });
+  } catch (error) {
+    console.warn('⚠️ [AdminLeadsPage] Database query fallback:', error);
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 space-y-8">
@@ -33,7 +38,7 @@ export default async function AdminLeadsPage() {
       </div>
 
       <div className="space-y-4">
-        {leads.map((lead) => (
+        {leads.map((lead: any) => (
           <div key={lead.id} className="card-carbon p-6 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-stone-border pb-3 gap-2">
               <div>

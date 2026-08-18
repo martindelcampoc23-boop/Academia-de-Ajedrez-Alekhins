@@ -11,10 +11,15 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function TrainingPlansPage() {
-  const plans = await prisma.trainingPlan.findMany({
-    where: { isPublished: true },
-    orderBy: { price: 'asc' },
-  });
+  let plans: any[] = [];
+  try {
+    plans = await prisma.trainingPlan.findMany({
+      where: { isPublished: true },
+      orderBy: { price: 'asc' },
+    });
+  } catch (error) {
+    console.warn('⚠️ [TrainingPlansPage] Database query fallback:', error);
+  }
 
   return (
     <div className="space-y-16 py-12">
@@ -61,7 +66,7 @@ export default async function TrainingPlansPage() {
 
               <div className="space-y-2.5 text-xs text-ivory-muted pt-2">
                 <p className="font-semibold text-ivory">Qué incluye este plan:</p>
-                {plan.includes.split('+').map((inc, i) => (
+                {(plan.includes || '').split('+').map((inc: string, i: number) => (
                   <div key={i} className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 text-champagne shrink-0 mt-0.5" />
                     <span>{inc.trim()}</span>

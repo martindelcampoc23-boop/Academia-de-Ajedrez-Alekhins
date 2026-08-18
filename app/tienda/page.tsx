@@ -18,21 +18,30 @@ export default async function StorePage({
   const selectedCategory = searchParams?.categoria;
   const sortOrder = searchParams?.orden || 'popular';
 
-  const [categories, products] = await Promise.all([
-    prisma.category.findMany(),
-    prisma.product.findMany({
-      where: {
-        isPublished: true,
-        category: selectedCategory ? { slug: selectedCategory } : undefined,
-      },
-      include: {
-        images: true,
-        variants: true,
-        category: true,
-      },
-      orderBy: sortOrder === 'precio-asc' ? { price: 'asc' } : sortOrder === 'precio-desc' ? { price: 'desc' } : { createdAt: 'desc' },
-    }),
-  ]);
+  let categories: any[] = [];
+  let products: any[] = [];
+
+  try {
+    const [cats, prods] = await Promise.all([
+      prisma.category.findMany(),
+      prisma.product.findMany({
+        where: {
+          isPublished: true,
+          category: selectedCategory ? { slug: selectedCategory } : undefined,
+        },
+        include: {
+          images: true,
+          variants: true,
+          category: true,
+        },
+        orderBy: sortOrder === 'precio-asc' ? { price: 'asc' } : sortOrder === 'precio-desc' ? { price: 'desc' } : { createdAt: 'desc' },
+      }),
+    ]);
+    categories = cats;
+    products = prods;
+  } catch (error) {
+    console.warn('⚠️ [StorePage] Database query fallback:', error);
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 space-y-10">
@@ -60,7 +69,7 @@ export default async function StorePage({
           >
             Todos los Productos
           </Link>
-          {categories.map((cat) => (
+          {categories.map((cat: any) => (
             <Link
               key={cat.id}
               href={`/tienda?categoria=${cat.slug}`}
@@ -90,8 +99,8 @@ export default async function StorePage({
 
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map((product) => {
-          const image = product.images[0]?.url || '/ajedrez-club-special-ligero-con-tablero-de-vinil-y-bolso.jpg';
+        {products.map((product: any) => {
+          const image = product.images?.[0]?.url || '/ajedrez-club-special-ligero-con-tablero-de-vinil-y-bolso.jpg';
           return (
             <div key={product.id} className="card-carbon p-4 flex flex-col justify-between group space-y-4">
               <div className="space-y-3">

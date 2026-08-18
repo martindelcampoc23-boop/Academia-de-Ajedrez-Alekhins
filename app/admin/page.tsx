@@ -10,19 +10,33 @@ export const metadata = {
 export const revalidate = 0; // Fresh admin dashboard
 
 export default async function AdminDashboardPage() {
-  const [ordersCount, ordersSum, leadsCount, productsCount, lowStockVariants] = await Promise.all([
-    prisma.order.count(),
-    prisma.order.aggregate({ _sum: { totalAmount: true } }),
-    prisma.lead.count({ where: { status: 'NEW' } }),
-    prisma.product.count(),
-    prisma.productVariant.findMany({
-      where: { stock: { lte: 5 } },
-      include: { product: true },
-      take: 5,
-    }),
-  ]);
+  let ordersCount = 0;
+  let totalRevenue = 0;
+  let leadsCount = 0;
+  let productsCount = 0;
+  let lowStockVariants: any[] = [];
 
-  const totalRevenue = ordersSum._sum.totalAmount || 0;
+  try {
+    const [oCount, ordersSum, lCount, pCount, lowStock] = await Promise.all([
+      prisma.order.count(),
+      prisma.order.aggregate({ _sum: { totalAmount: true } }),
+      prisma.lead.count({ where: { status: 'NEW' } }),
+      prisma.product.count(),
+      prisma.productVariant.findMany({
+        where: { stock: { lte: 5 } },
+        include: { product: true },
+        take: 5,
+      }),
+    ]);
+    ordersCount = oCount;
+    totalRevenue = ordersSum._sum.totalAmount || 0;
+    leadsCount = lCount;
+    productsCount = pCount;
+    lowStockVariants = lowStock;
+  } catch (error) {
+    console.warn('⚠️ [AdminDashboardPage] Database query fallback:', error);
+  }
+
   const avgTicket = ordersCount > 0 ? totalRevenue / ordersCount : 0;
 
   return (

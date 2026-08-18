@@ -8,7 +8,12 @@ export const metadata = {
 };
 
 export default async function SubscriptionsPage() {
-  const plans = await prisma.trainingPlan.findMany({ take: 1 });
+  let plans: any[] = [];
+  try {
+    plans = await prisma.trainingPlan.findMany({ take: 1 });
+  } catch (error) {
+    console.warn('⚠️ [SubscriptionsPage] Database query fallback:', error);
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 space-y-8">

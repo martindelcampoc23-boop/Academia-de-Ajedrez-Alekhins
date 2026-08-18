@@ -17,14 +17,23 @@ export default async function VideosPage({
 }) {
   const selectedCategory = searchParams?.categoria;
 
-  const [categories, videos] = await Promise.all([
-    prisma.videoCategory.findMany(),
-    prisma.video.findMany({
-      where: selectedCategory ? { category: { slug: selectedCategory } } : undefined,
-      include: { category: true },
-      orderBy: { publishedAt: 'desc' },
-    }),
-  ]);
+  let categories: any[] = [];
+  let videos: any[] = [];
+
+  try {
+    const [cats, vids] = await Promise.all([
+      prisma.videoCategory.findMany(),
+      prisma.video.findMany({
+        where: selectedCategory ? { category: { slug: selectedCategory } } : undefined,
+        include: { category: true },
+        orderBy: { publishedAt: 'desc' },
+      }),
+    ]);
+    categories = cats;
+    videos = vids;
+  } catch (error) {
+    console.warn('⚠️ [VideosPage] Database query fallback:', error);
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 space-y-10">
@@ -52,7 +61,7 @@ export default async function VideosPage({
           Todas las Categorías
         </Link>
 
-        {categories.map((cat) => (
+        {categories.map((cat: any) => (
           <Link
             key={cat.id}
             href={`/videos?categoria=${cat.slug}`}
@@ -69,7 +78,7 @@ export default async function VideosPage({
 
       {/* Videos Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {videos.map((video) => (
+        {videos.map((video: any) => (
           <div key={video.id} className="card-carbon p-4 flex flex-col justify-between space-y-4 group">
             <div className="space-y-3">
               <div className="aspect-video bg-carbon-dark rounded overflow-hidden relative border border-stone-border group-hover:border-champagne/50 transition">

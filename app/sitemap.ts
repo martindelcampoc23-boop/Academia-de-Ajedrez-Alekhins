@@ -4,11 +4,19 @@ import { prisma } from '@/lib/db';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://alekhins.com';
 
-  const [products, plans, articles] = await Promise.all([
-    prisma.product.findMany({ select: { slug: true, updatedAt: true } }),
-    prisma.trainingPlan.findMany({ select: { slug: true, createdAt: true } }),
-    prisma.article.findMany({ select: { slug: true, publishedAt: true } }),
-  ]);
+  let products: { slug: string; updatedAt: Date }[] = [];
+  let plans: { slug: string; createdAt: Date }[] = [];
+
+  try {
+    const [pList, planList] = await Promise.all([
+      prisma.product.findMany({ select: { slug: true, updatedAt: true } }),
+      prisma.trainingPlan.findMany({ select: { slug: true, createdAt: true } }),
+    ]);
+    products = pList;
+    plans = planList;
+  } catch (error) {
+    console.warn('⚠️ [Sitemap] Could not query database during sitemap build, using fallback paths:', error);
+  }
 
   const productUrls = products.map((p) => ({
     url: `${baseUrl}/producto/${p.slug}`,
@@ -27,6 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/roberto-martin-del-campo`, lastModified: new Date() },
     { url: `${baseUrl}/roberto-martin-del-campo/curriculum`, lastModified: new Date() },
     { url: `${baseUrl}/videos`, lastModified: new Date() },
+    { url: `${baseUrl}/articulos`, lastModified: new Date() },
     { url: `${baseUrl}/clubes-y-escuelas`, lastModified: new Date() },
     ...productUrls,
     ...planUrls,
