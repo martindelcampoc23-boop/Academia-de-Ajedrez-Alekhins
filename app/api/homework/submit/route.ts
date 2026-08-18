@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { homeworkId, solutionText, solutionMoves } = body;
+    const { homeworkId, solutionText, solutionMoves, attachmentUrl, attachmentName } = body;
 
     if (!homeworkId || !solutionText) {
       return NextResponse.json({ error: 'Faltan datos de la solución.' }, { status: 400 });
@@ -45,6 +45,8 @@ export async function POST(req: Request) {
         data: {
           solutionText: solutionText.trim(),
           solutionMoves: solutionMoves?.trim() || null,
+          attachmentUrl: attachmentUrl || existingSubmission.attachmentUrl,
+          attachmentName: attachmentName || existingSubmission.attachmentName,
           status: 'SUBMITTED',
           submittedAt: new Date(),
         },
@@ -56,6 +58,8 @@ export async function POST(req: Request) {
           studentId: student.id,
           solutionText: solutionText.trim(),
           solutionMoves: solutionMoves?.trim() || null,
+          attachmentUrl: attachmentUrl || null,
+          attachmentName: attachmentName?.trim() || null,
           status: 'SUBMITTED',
         },
       });

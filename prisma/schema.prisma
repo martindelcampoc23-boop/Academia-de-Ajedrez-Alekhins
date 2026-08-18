@@ -496,33 +496,37 @@ model ProcessedWebhookEvent {
 }
 
 model Homework {
-  id          String         @id @default(uuid())
-  title       String
-  description String
-  fen         String?        // Posición FEN de ajedrez
-  pgn         String?        // PGN de la partida/ejercicio
-  solution    String?        // Solución oficial del maestro
-  dueDate     DateTime?
-  planId      String?
-  plan        TrainingPlan?  @relation(fields: [planId], references: [id], onDelete: SetNull)
-  coachName   String         @default("MI Roberto Martín del Campo")
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  submissions Submission[]
+  id             String         @id @default(uuid())
+  title          String
+  description    String
+  fen            String?        // Posición FEN de ajedrez
+  pgn            String?        // PGN de la partida/ejercicio
+  solution       String?        // Solución oficial del maestro
+  dueDate        DateTime?
+  planId         String?
+  plan           TrainingPlan?  @relation(fields: [planId], references: [id], onDelete: SetNull)
+  coachName      String         @default("MI Roberto Martín del Campo")
+  attachmentUrl  String?        // Documento o archivo adjunto (PDF, PGN, imagen, etc.)
+  attachmentName String?        // Nombre del archivo adjunto
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  submissions    Submission[]
 }
 
 model Submission {
-  id            String    @id @default(uuid())
-  homeworkId    String
-  homework      Homework  @relation(fields: [homeworkId], references: [id], onDelete: Cascade)
-  studentId     String
-  student       Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  solutionText  String
-  solutionMoves String?
-  status        String    @default("SUBMITTED") // SUBMITTED, REVIEWED
-  grade         Float?
-  feedback      String?
-  submittedAt   DateTime  @default(now())
-  reviewedAt    DateTime?
+  id             String    @id @default(uuid())
+  homeworkId     String
+  homework       Homework  @relation(fields: [homeworkId], references: [id], onDelete: Cascade)
+  studentId      String
+  student        Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  solutionText   String
+  solutionMoves  String?
+  attachmentUrl  String?   // Archivo o documento adjunto por el alumno
+  attachmentName String?   // Nombre del archivo del alumno
+  status         String    @default("SUBMITTED") // SUBMITTED, REVIEWED
+  grade          Float?
+  feedback       String?
+  submittedAt    DateTime  @default(now())
+  reviewedAt     DateTime?
 }
 

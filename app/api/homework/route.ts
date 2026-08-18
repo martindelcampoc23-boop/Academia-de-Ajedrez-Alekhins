@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, description, fen, pgn, solution, dueDate, planId } = body;
+    const { title, description, fen, pgn, solution, dueDate, planId, attachmentUrl, attachmentName } = body;
 
     if (!title || !description) {
       return NextResponse.json({ error: 'El título y la descripción son obligatorios.' }, { status: 400 });
@@ -59,6 +59,8 @@ export async function POST(req: Request) {
         dueDate: dueDate ? new Date(dueDate) : null,
         planId: planId || null,
         coachName: user.name || 'MI Roberto Martín del Campo',
+        attachmentUrl: attachmentUrl || null,
+        attachmentName: attachmentName?.trim() || null,
       },
     });
 
