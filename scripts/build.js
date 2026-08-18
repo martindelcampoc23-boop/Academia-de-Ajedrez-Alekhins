@@ -1,8 +1,6 @@
 const { execSync } = require('child_process');
 
-if (!process.env.DATABASE_URL || process.env.DATABASE_URL.trim() === '') {
-  process.env.DATABASE_URL = 'file:./dev.db';
-}
+
 
 console.log('🚀 [Build] Ensuring Prisma Client is generated...');
 try {
