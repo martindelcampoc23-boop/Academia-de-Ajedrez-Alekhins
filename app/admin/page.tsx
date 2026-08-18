@@ -53,11 +53,14 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="flex flex-wrap gap-2 text-xs">
-          <Link href="/admin/leads" className="btn-champagne py-2 px-3">
-            CRM Leads ({leadsCount})
+          <Link href="/admin/finanzas" className="bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/40 font-bold py-2 px-3 rounded">
+            📊 Finanzas & Métricas
           </Link>
           <Link href="/admin/pedidos" className="btn-outline-gold py-2 px-3">
             Pedidos ({ordersCount})
+          </Link>
+          <Link href="/admin/leads" className="btn-champagne py-2 px-3">
+            CRM Leads ({leadsCount})
           </Link>
           <Link href="/admin/fundador" className="bg-carbon-card hover:bg-stone-gray text-ivory border border-stone-border py-2 px-3 rounded">
             CMS Fundador
