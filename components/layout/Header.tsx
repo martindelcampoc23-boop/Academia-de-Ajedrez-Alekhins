@@ -120,6 +120,15 @@ export function Header() {
                 pathname === '/clubes-y-escuelas' ? 'text-[#D8B155] font-bold' : 'text-gray-200'
               }`}
             >
+              Escuelas y Colegios
+            </Link>
+
+            <Link
+              href="/contacto"
+              className={`py-7 transition hover:text-[#D8B155] ${
+                pathname === '/contacto' ? 'text-[#D8B155] font-bold' : 'text-gray-200'
+              }`}
+            >
               Contacto
             </Link>
           </nav>
@@ -379,6 +388,13 @@ export function Header() {
             </Link>
             <Link
               href="/clubes-y-escuelas"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-white py-2 border-b border-stone-800"
+            >
+              Escuelas y Colegios
+            </Link>
+            <Link
+              href="/contacto"
               onClick={() => setMobileMenuOpen(false)}
               className="block text-white py-2 border-b border-stone-800"
             >

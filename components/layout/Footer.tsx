@@ -82,8 +82,8 @@ export function Footer() {
             <li><Link href="/entrenamiento" className="hover:text-[#D8B155] transition">Clases</Link></li>
             <li><Link href="/tienda" className="hover:text-[#D8B155] transition">Tienda</Link></li>
             <li><Link href="/roberto-martin-del-campo" className="hover:text-[#D8B155] transition">Nosotros</Link></li>
-            <li><Link href="/videos" className="hover:text-[#D8B155] transition">Blog</Link></li>
-            <li><Link href="/clubes-y-escuelas" className="hover:text-[#D8B155] transition">Contacto</Link></li>
+            <li><Link href="/clubes-y-escuelas" className="hover:text-[#D8B155] transition">Escuelas y Colegios</Link></li>
+            <li><Link href="/contacto" className="hover:text-[#D8B155] transition">Contacto</Link></li>
           </ul>
         </div>
 
