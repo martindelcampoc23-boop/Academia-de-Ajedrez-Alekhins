@@ -17,7 +17,11 @@ function LoginFormContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(
-    errorParam ? 'Hubo un error al iniciar sesión. Por favor verifica tus datos.' : ''
+    errorParam === 'OAuthSignin' || errorParam === 'OAuthCallback'
+      ? '⚠️ Para habilitar el botón de Google se requiere configurar GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET en las variables de entorno.'
+      : errorParam
+      ? 'Hubo un error al iniciar sesión. Por favor verifica tus credenciales.'
+      : ''
   );
 
   const handleCredentialsSubmit = async (e: React.FormEvent) => {
