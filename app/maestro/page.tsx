@@ -25,7 +25,8 @@ import {
   Mail,
   ShieldAlert,
   Crown,
-  ShoppingBag
+  ShoppingBag,
+  RefreshCw
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -342,6 +343,17 @@ export default function MaestroPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              fetchUsers();
+              fetchHomeworks();
+            }}
+            className="px-3 py-2 rounded-lg bg-[#0B1510] hover:bg-[#1B3028] text-[#D8B155] border border-[#2B3E34] text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+            title="Recargar lista de usuarios"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Actualizar</span>
+          </button>
           <Link
             href="/admin"
             className="px-4 py-2 rounded-lg bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/30 text-xs font-bold transition"
@@ -514,11 +526,19 @@ export default function MaestroPage() {
                           {/* Usuario */}
                           <td className="py-3.5 px-4">
                             <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-full bg-[#1B4D3E] border border-[#D8B155]/40 flex items-center justify-center font-bold text-[#D8B155] text-xs shrink-0">
-                                {u.name ? u.name.charAt(0).toUpperCase() : 'U'}
-                              </div>
+                              {u.image ? (
+                                <img
+                                  src={u.image}
+                                  alt={u.name || u.email}
+                                  className="w-8 h-8 rounded-full border border-[#D8B155]/40 object-cover shrink-0"
+                                />
+                              ) : (
+                                <div className="w-8 h-8 rounded-full bg-[#1B4D3E] border border-[#D8B155]/40 flex items-center justify-center font-bold text-[#D8B155] text-xs shrink-0">
+                                  {u.name ? u.name.charAt(0).toUpperCase() : u.email.charAt(0).toUpperCase()}
+                                </div>
+                              )}
                               <div>
-                                <p className="font-semibold text-white">{u.name || 'Sin nombre'}</p>
+                                <p className="font-semibold text-white">{u.name || u.email.split('@')[0]}</p>
                                 <p className="text-[10px] text-[#A8B2A6]">{u.email}</p>
                               </div>
                             </div>

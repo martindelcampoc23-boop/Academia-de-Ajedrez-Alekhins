@@ -76,13 +76,14 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       if (account?.provider === 'google' && user.email) {
         try {
-          const email = user.email.toLowerCase();
-          const existingUser = await prisma.user.findUnique({
+          const email = user.email.trim().toLowerCase();
+          let dbUser = await prisma.user.findUnique({
             where: { email },
+            include: { student: true, customer: true },
           });
 
-          if (!existingUser) {
-            await prisma.user.create({
+          if (!dbUser) {
+            dbUser = await prisma.user.create({
               data: {
                 email,
                 name: user.name || 'Usuario Google',
@@ -94,48 +95,78 @@ export const authOptions: NextAuthOptions = {
                 student: {
                   create: {
                     level: 'Principiante',
+                    status: 'PENDING',
                   },
                 },
               },
+              include: { student: true, customer: true },
             });
-          } else if (user.image && !existingUser.image) {
-            await prisma.user.update({
-              where: { email },
-              data: { image: user.image },
-            });
+          } else {
+            // Asegurar que tenga registros de student y customer si no los tenía
+            if (!dbUser.student) {
+              await prisma.student.create({
+                data: {
+                  userId: dbUser.id,
+                  level: 'Principiante',
+                  status: 'PENDING',
+                },
+              });
+            }
+            if (!dbUser.customer) {
+              await prisma.customer.create({
+                data: {
+                  userId: dbUser.id,
+                },
+              });
+            }
+            // Actualizar imagen o nombre si no los tenía
+            const updateData: Record<string, any> = {};
+            if (user.image && !dbUser.image) updateData.image = user.image;
+            if (user.name && !dbUser.name) updateData.name = user.name;
+            if (Object.keys(updateData).length > 0) {
+              await prisma.user.update({
+                where: { id: dbUser.id },
+                data: updateData,
+              });
+            }
           }
           return true;
         } catch (error) {
-          console.error('Error al sincronizar usuario de Google:', error);
+          console.error('Error al sincronizar usuario de Google en BD:', error);
           return true;
         }
       }
       return true;
     },
     async jwt({ token, user, trigger, session }) {
+      // 1. Si viene del login inicial de Credentials o Google
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role || 'CUSTOMER';
+        token.role = (user as any).role || 'STUDENT';
         token.picture = user.image;
       }
 
-      // Si se ejecuta una actualización de sesión del cliente
+      // 2. Si se ejecuta una actualización de sesión del cliente
       if (trigger === 'update' && session) {
         if (session.name) token.name = session.name;
         if (session.role) token.role = session.role;
       }
 
-      // Asegurar que el rol siempre esté actualizado desde DB
-      if (token.email && !token.role) {
-        const dbUser = await prisma.user.findUnique({
-          where: { email: token.email },
-          select: { id: true, role: true, name: true, image: true },
-        });
-        if (dbUser) {
-          token.id = dbUser.id;
-          token.role = dbUser.role;
-          if (dbUser.name) token.name = dbUser.name;
-          if (dbUser.image) token.picture = dbUser.image;
+      // 3. Siempre sincronizar con la base de datos real para garantizar ID de Postgres y Rol correcto
+      if (token.email) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { email: token.email.trim().toLowerCase() },
+            select: { id: true, role: true, name: true, image: true },
+          });
+          if (dbUser) {
+            token.id = dbUser.id; // UUID real de PostgreSQL
+            token.role = dbUser.role;
+            if (dbUser.name) token.name = dbUser.name;
+            if (dbUser.image) token.picture = dbUser.image;
+          }
+        } catch (err) {
+          console.error('Error sincronizando JWT con BD:', err);
         }
       }
 
@@ -143,7 +174,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.id as string;
+        (session.user as any).id = (token.id as string) || '';
         (session.user as any).role = (token.role as string) || 'CUSTOMER';
         if (token.picture) session.user.image = token.picture as string;
       }
