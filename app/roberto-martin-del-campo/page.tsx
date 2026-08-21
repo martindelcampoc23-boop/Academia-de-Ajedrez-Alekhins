@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Award, BookOpen, Crown, ChevronRight, Calendar, GraduationCap, Trophy, Sparkles } from 'lucide-react';
 
 export const metadata = {
@@ -41,19 +42,14 @@ export default function FounderPage() {
 
         <div className="lg:col-span-5">
           <div className="card-carbon p-6 space-y-6 border-champagne/40 shadow-2xl relative overflow-hidden">
-            <div className="aspect-square bg-carbon-dark rounded border border-stone-border overflow-hidden relative flex items-center justify-center">
-              <div className="text-center p-6 space-y-3">
-                <div className="w-20 h-20 mx-auto rounded-full bg-walnut border-2 border-champagne flex items-center justify-center font-serif-editorial text-champagne text-2xl font-bold">
-                  MI
-                </div>
-                <h3 className="font-serif-editorial font-bold text-ivory text-lg">
-                  Roberto Martín del Campo Cárdenas
-                </h3>
-                <p className="text-xs text-champagne">Maestro Internacional (FIDE)</p>
-                <p className="text-[11px] text-ivory-dim max-w-xs mx-auto">
-                  Fotografía oficial y biografía docente disponible para verificación institucional.
-                </p>
-              </div>
+            <div className="aspect-square bg-carbon-dark rounded border border-stone-border overflow-hidden relative">
+              <Image
+                src="/maestro-roberto.jpg"
+                alt="MI Roberto Martín del Campo Cárdenas — Maestro Internacional de Ajedrez"
+                fill
+                className="object-cover object-top"
+                priority
+              />
             </div>
 
             <div className="space-y-2 text-xs text-ivory-muted border-t border-stone-border pt-4">

@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { prisma } from '@/lib/db';
 import {
   Crown,
@@ -395,19 +396,14 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-5 text-center">
             <div className="relative inline-block">
-              <div className="w-64 h-80 sm:w-72 sm:h-96 rounded-2xl overflow-hidden border-2 border-[#D8B155] shadow-2xl mx-auto bg-[#0B1510] flex items-center justify-center p-6">
-                <div className="text-center space-y-4">
-                  <div className="w-24 h-24 mx-auto rounded-full bg-[#1A3D2B] border-2 border-[#D8B155] flex items-center justify-center font-serif text-[#D8B155] text-3xl font-bold shadow-xl">
-                    MI
-                  </div>
-                  <div>
-                    <h3 className="font-serif-editorial font-bold text-white text-xl">
-                      Roberto Martín del Campo
-                    </h3>
-                    <p className="text-xs text-[#D8B155] font-semibold mt-1">Maestro Internacional FIDE</p>
-                    <p className="text-[11px] text-gray-400 mt-2">Fundador & Director Técnico</p>
-                  </div>
-                </div>
+              <div className="w-64 h-80 sm:w-72 sm:h-96 rounded-2xl overflow-hidden border-2 border-[#D8B155] shadow-2xl mx-auto relative">
+                <Image
+                  src="/maestro-roberto.jpg"
+                  alt="MI Roberto Martín del Campo Cárdenas — Maestro Internacional de Ajedrez"
+                  fill
+                  className="object-cover object-top"
+                  priority
+                />
               </div>
               <div className="absolute -bottom-4 -right-2 sm:right-4 bg-[#D8B155] text-[#0B1510] font-bold text-xs px-4 py-2 rounded-lg shadow-xl uppercase tracking-wider">
                 👑 Maestro Internacional
