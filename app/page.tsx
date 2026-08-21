@@ -152,6 +152,7 @@ export default async function HomePage() {
               <h4 className="font-serif-editorial text-sm font-bold text-[#0F1713]">Aula Virtual Interactiva</h4>
               <p className="text-xs text-gray-600 mt-1 leading-relaxed">
                 Clases en vivo, tableros interactivos, análisis de partidas con motores y tareas calificadas.
+                Plataforma de clases: <strong className="text-[#1B4D3E]">chessgora.com</strong>
               </p>
             </div>
           </div>
@@ -467,6 +468,15 @@ export default async function HomePage() {
             <p className="text-xs sm:text-sm text-gray-400">
               Una plataforma diseñada para acelerar tu aprendizaje antes, durante y después de cada clase.
             </p>
+            <a
+              href="https://chessgora.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1A3D2B] border border-[#D8B155]/60 text-[#D8B155] text-sm font-bold hover:bg-[#1B4D3E] transition shadow-lg"
+            >
+              <Laptop className="w-4 h-4" />
+              Acceder al Aula Virtual → chessgora.com
+            </a>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

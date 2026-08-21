@@ -53,6 +53,9 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="flex flex-wrap gap-2 text-xs">
+          <Link href="/admin/productos" className="bg-champagne hover:bg-champagne/90 text-[#0B1510] font-bold py-2 px-3 rounded flex items-center gap-1.5">
+            📦 Productos
+          </Link>
           <Link href="/admin/alumnos" className="bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/40 font-bold py-2 px-3 rounded">
             👥 Alumnos & Admisiones
           </Link>
@@ -100,13 +103,15 @@ export default async function AdminDashboardPage() {
           <p className="text-[11px] text-blue-400 font-medium">Pendientes de seguimiento</p>
         </div>
 
-        <div className="card-carbon p-6 space-y-2">
-          <div className="flex justify-between items-center text-ivory-dim">
-            <span className="text-xs font-semibold">Productos en Catálogo</span>
-            <Package className="w-5 h-5 text-amber-400" />
-          </div>
-          <span className="font-serif-editorial text-2xl font-bold text-ivory block">{productsCount}</span>
-          <p className="text-[11px] text-ivory-dim">Publicados en tienda</p>
+        <div className="card-carbon p-6 space-y-2 hover:border-champagne/40 transition cursor-pointer">
+          <Link href="/admin/productos" className="block">
+            <div className="flex justify-between items-center text-ivory-dim">
+              <span className="text-xs font-semibold">Productos en Catálogo</span>
+              <Package className="w-5 h-5 text-amber-400" />
+            </div>
+            <span className="font-serif-editorial text-2xl font-bold text-ivory block">{productsCount}</span>
+            <p className="text-[11px] text-champagne font-semibold">→ Gestionar productos</p>
+          </Link>
         </div>
       </div>
 
