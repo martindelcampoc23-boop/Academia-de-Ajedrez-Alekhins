@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { useCart } from '@/components/providers/CartProvider';
-import { ShoppingBag, Truck, ShieldCheck, CheckCircle, Award, Star, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
+import { ShoppingBag, Truck, ShieldCheck, CheckCircle, Award } from 'lucide-react';
 
 interface ProductDetailClientProps {
   product: {
@@ -17,7 +16,7 @@ interface ProductDetailClientProps {
     compareAtPrice: number | null;
     isAcademyRecommended: boolean;
     masterComment: string | null;
-    category: { name: string; slug: string };
+    category?: { name: string; slug: string } | null;
     images: { url: string; alt: string | null }[];
     variants: {
       id: string;
@@ -32,13 +31,29 @@ interface ProductDetailClientProps {
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const { addItem } = useCart();
-  const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id || '');
-  const [selectedImage, setSelectedImage] = useState(product.images[0]?.url || '/ajedrez-club-special-ligero-con-tablero-de-vinil-y-bolso.jpg');
+  
+  const fallbackVariants = product.variants && product.variants.length > 0
+    ? product.variants
+    : [
+        {
+          id: product.id,
+          sku: product.sku || 'ALE-DEFAULT',
+          name: product.name,
+          price: product.price || 0,
+          stock: 10,
+          color: null,
+        },
+      ];
+
+  const defaultImage = product.images?.[0]?.url || '/logo-alekhins.png';
+
+  const [selectedVariantId, setSelectedVariantId] = useState(fallbackVariants[0]?.id || '');
+  const [selectedImage, setSelectedImage] = useState(defaultImage);
   const [quantity, setQuantity] = useState(1);
   const [addedMsg, setAddedMsg] = useState(false);
 
-  const selectedVariant = product.variants.find((v) => v.id === selectedVariantId) || product.variants[0];
-  const price = selectedVariant ? selectedVariant.price : product.price;
+  const selectedVariant = fallbackVariants.find((v) => v.id === selectedVariantId) || fallbackVariants[0];
+  const price = selectedVariant ? selectedVariant.price : (product.price || 0);
 
   const handleAddToCart = () => {
     if (!selectedVariant) return;
@@ -56,6 +71,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
     setTimeout(() => setAddedMsg(false), 3000);
   };
 
+  const categoryLabel = product.category?.name || 'Material de Ajedrez';
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
       {/* Gallery Left */}
@@ -69,7 +86,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           )}
         </div>
 
-        {product.images.length > 1 && (
+        {product.images && product.images.length > 1 && (
           <div className="flex gap-3 overflow-x-auto pb-2">
             {product.images.map((img, i) => (
               <button
@@ -90,7 +107,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       <div className="lg:col-span-6 space-y-6">
         <div>
           <span className="text-xs text-champagne uppercase font-bold tracking-widest block mb-1">
-            {product.category.name} • SKU: {selectedVariant?.sku || product.sku}
+            {categoryLabel} • SKU: {selectedVariant?.sku || product.sku}
           </span>
           <h1 className="font-serif-editorial text-2xl md:text-4xl font-bold text-ivory">{product.name}</h1>
         </div>
@@ -121,11 +138,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         <p className="text-xs text-ivory-muted leading-relaxed">{product.shortDescription || product.description}</p>
 
         {/* Variant Selector */}
-        {product.variants.length > 1 && (
+        {fallbackVariants.length > 1 && (
           <div className="space-y-2">
             <label className="text-xs font-semibold text-ivory block">Seleccionar Variante / Color:</label>
             <div className="flex flex-wrap gap-2">
-              {product.variants.map((v) => (
+              {fallbackVariants.map((v) => (
                 <button
                   key={v.id}
                   onClick={() => setSelectedVariantId(v.id)}
