@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request) {
   try {
     const user = await getCurrentUser();
@@ -9,17 +11,49 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'No autorizado.' }, { status: 403 });
     }
 
-    const orders = await prisma.order.findMany({
+    const rawOrders = await prisma.order.findMany({
       include: {
         items: true,
         shipments: {
           include: { events: { orderBy: { timestamp: 'desc' } } },
         },
         user: {
-          select: { name: true, email: true },
+          select: { id: true, name: true, email: true },
         },
       },
       orderBy: { createdAt: 'desc' },
+    });
+
+    // Formatear para facilitar consumo por el cliente
+    const orders = rawOrders.map((o) => {
+      const primaryShipment = o.shipments[0];
+      return {
+        id: o.id,
+        orderNumber: o.orderNumber,
+        status: o.status,
+        totalAmount: o.totalAmount,
+        subtotal: o.subtotal,
+        shippingCost: o.shippingCost,
+        discountAmount: o.discountAmount,
+        shippingAddress: o.shippingAddress,
+        couponCode: o.couponCode,
+        createdAt: o.createdAt.toISOString(),
+        user: o.user ? { name: o.user.name, email: o.user.email } : null,
+        guestEmail: o.guestEmail || null,
+        trackingNumber: primaryShipment?.trackingNumber || null,
+        courier: primaryShipment?.carrier || null,
+        shipmentStatus: primaryShipment?.status || null,
+        shipments: o.shipments,
+        items: o.items.map((item) => ({
+          id: item.id,
+          productName: item.productName,
+          variantName: item.variantName,
+          sku: item.sku,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          totalPrice: item.totalPrice,
+        })),
+      };
     });
 
     return NextResponse.json({ orders });
@@ -56,14 +90,14 @@ export async function POST(req: Request) {
     });
 
     // Si viene información de paquetería o guía
-    if (finalCarrier || trackingNumber) {
+    if (finalCarrier || trackingNumber || status) {
       let shipment = order.shipments[0];
       if (shipment) {
         shipment = await prisma.shipment.update({
           where: { id: shipment.id },
           data: {
             carrier: finalCarrier || shipment.carrier,
-            trackingNumber: trackingNumber || shipment.trackingNumber,
+            trackingNumber: trackingNumber !== undefined ? trackingNumber : shipment.trackingNumber,
             status: status || shipment.status,
           },
         });
@@ -98,4 +132,3 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   return POST(req);
 }
-
