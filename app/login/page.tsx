@@ -151,6 +151,12 @@ function LoginFormContent() {
               <label className="block text-xs font-semibold text-[#D2DBD0]">
                 Contraseña
               </label>
+              <Link
+                href="/login/recuperar"
+                className="text-[11px] text-[#C8AA6E] hover:underline transition font-medium"
+              >
+                ¿Olvidaste tu contraseña?
+              </Link>
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#A8B2A6]">

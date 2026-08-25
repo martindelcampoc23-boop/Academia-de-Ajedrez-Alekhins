@@ -87,4 +87,35 @@ describe('Academia Alekhins - Core E-Commerce & Stripe Checkout Unit Tests', () 
     assert.strictEqual(lineItems[1].price_data.unit_amount, 45000);
     assert.strictEqual(lineItems[1].quantity, 2);
   });
+
+  test('Validates password reset token expiration correctly', () => {
+    const isTokenValid = (tokenRecord) => {
+      if (!tokenRecord) return false;
+      if (tokenRecord.usedAt !== null) return false;
+      if (new Date() > tokenRecord.expiresAt) return false;
+      return true;
+    };
+
+    const validRecord = {
+      token: 'valid-token-123',
+      expiresAt: new Date(Date.now() + 3600 * 1000),
+      usedAt: null,
+    };
+    const expiredRecord = {
+      token: 'expired-token-456',
+      expiresAt: new Date(Date.now() - 60 * 1000),
+      usedAt: null,
+    };
+    const usedRecord = {
+      token: 'used-token-789',
+      expiresAt: new Date(Date.now() + 3600 * 1000),
+      usedAt: new Date(),
+    };
+
+    assert.strictEqual(isTokenValid(validRecord), true);
+    assert.strictEqual(isTokenValid(expiredRecord), false);
+    assert.strictEqual(isTokenValid(usedRecord), false);
+    assert.strictEqual(isTokenValid(null), false);
+  });
 });
+
