@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { prisma } from '@/lib/db';
+import { AnimatedChessKnight } from '@/components/ui/AnimatedChessKnight';
 import {
   Crown,
   ChevronRight,
@@ -61,7 +62,14 @@ export default async function HomePage() {
         <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-[#0F2E1E]/50 via-[#0F2E1E]/20 to-transparent pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-8 space-y-6 text-center lg:text-left">
+          {/* Caballo animado visible en mobile arriba del texto */}
+          <div className="lg:hidden flex justify-center -mb-4">
+            <div className="w-48 h-48">
+              <AnimatedChessKnight />
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
             {/* Top Pill Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1A3D2B]/80 border border-[#D8B155]/50 text-[#D8B155] text-xs font-semibold shadow-md">
               <Crown className="w-3.5 h-3.5" />
@@ -125,6 +133,13 @@ export default async function HomePage() {
                 <ShieldCheck className="w-3 h-3 text-[#D8B155]" /> Material FIDE Oficial
               </span>
             </div>
+          </div>
+
+          {/* Caballo animado — columna derecha desktop */}
+          <div className="hidden lg:flex lg:col-span-5 items-center justify-center relative">
+            {/* Glow radial de fondo */}
+            <div className="absolute inset-0 rounded-full" style={{ background: 'radial-gradient(ellipse at center, rgba(200,170,110,0.12) 0%, transparent 70%)' }} />
+            <AnimatedChessKnight />
           </div>
         </div>
       </section>
