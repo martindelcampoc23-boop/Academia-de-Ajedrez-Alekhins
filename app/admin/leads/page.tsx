@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
+import { getCurrentUser } from '@/lib/auth';
 import { Users, Phone, Mail, Clock, ArrowLeft, CheckCircle } from 'lucide-react';
 
 export const metadata = {
@@ -10,7 +12,13 @@ export const metadata = {
 export const revalidate = 0;
 
 export default async function AdminLeadsPage() {
+  const user = await getCurrentUser();
+  if (!user || !['SUPERADMIN', 'ADMIN', 'OPERACIONES'].includes(user.role)) {
+    redirect('/login?callbackUrl=/admin/leads');
+  }
+
   let leads: any[] = [];
+
   try {
     leads = await prisma.lead.findMany({
       orderBy: { createdAt: 'desc' },

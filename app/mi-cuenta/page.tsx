@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { User, BookOpen, ShoppingBag, CreditCard, ShieldCheck, LogOut } from 'lucide-react';
 
@@ -9,6 +10,10 @@ export const metadata = {
 
 export default async function AccountPage() {
   const user = await getCurrentUser();
+  if (!user) {
+    redirect('/login?callbackUrl=/mi-cuenta');
+  }
+
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12 space-y-10">

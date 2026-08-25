@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
+import { getCurrentUser } from '@/lib/auth';
 import { ShoppingBag, Users, BookOpen, DollarSign, Package, AlertTriangle, ArrowRight, Activity } from 'lucide-react';
 
 export const metadata = {
@@ -10,6 +12,11 @@ export const metadata = {
 export const revalidate = 0; // Fresh admin dashboard
 
 export default async function AdminDashboardPage() {
+  const user = await getCurrentUser();
+  if (!user || !['SUPERADMIN', 'ADMIN', 'OPERACIONES'].includes(user.role)) {
+    redirect('/login?callbackUrl=/admin');
+  }
+
   let ordersCount = 0;
   let totalRevenue = 0;
   let leadsCount = 0;
@@ -68,8 +75,8 @@ export default async function AdminDashboardPage() {
           <Link href="/admin/leads" className="btn-champagne py-2 px-3">
             CRM Leads ({leadsCount})
           </Link>
-          <Link href="/admin/fundador" className="bg-carbon-card hover:bg-stone-gray text-ivory border border-stone-border py-2 px-3 rounded">
-            CMS Fundador
+          <Link href="/roberto-martin-del-campo" target="_blank" className="bg-carbon-card hover:bg-stone-gray text-ivory border border-stone-border py-2 px-3 rounded">
+            Ver Perfil Fundador ↗
           </Link>
         </div>
       </div>
