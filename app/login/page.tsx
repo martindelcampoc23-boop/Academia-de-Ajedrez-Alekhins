@@ -56,12 +56,6 @@ function LoginFormContent() {
     signIn('google', { callbackUrl });
   };
 
-  const fillDemoAccount = (demoEmail: string, demoPass: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-    setErrorMessage('');
-  };
-
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md space-y-8 bg-[#121E17] border border-[#2B3E34] rounded-2xl p-8 shadow-2xl relative overflow-hidden">
@@ -182,40 +176,6 @@ function LoginFormContent() {
             {!isLoading && <ArrowRight className="w-4 h-4" />}
           </button>
         </form>
-
-        {/* Acceso Rápido para Pruebas Demo */}
-        <div className="pt-2 border-t border-[#2B3E34]/80 space-y-2">
-          <span className="text-[10px] uppercase font-bold tracking-wider text-[#A8B2A6] block text-center">
-            Accesos de demostración (1-clic)
-          </span>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => fillDemoAccount('admin@alekhins.com', 'admin123_hash')}
-              className="px-2.5 py-1.5 rounded-lg bg-[#0B1510] border border-[#2B3E34] hover:border-[#C8AA6E] text-left text-xs transition group cursor-pointer"
-            >
-              <span className="block font-semibold text-[#F6F3EC] group-hover:text-[#C8AA6E]">
-                👑 Administrador
-              </span>
-              <span className="text-[10px] text-[#A8B2A6] block truncate">
-                admin@alekhins.com
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => fillDemoAccount('alumno@alekhins.com', 'alumno123_hash')}
-              className="px-2.5 py-1.5 rounded-lg bg-[#0B1510] border border-[#2B3E34] hover:border-[#C8AA6E] text-left text-xs transition group cursor-pointer"
-            >
-              <span className="block font-semibold text-[#F6F3EC] group-hover:text-[#C8AA6E]">
-                ♟️ Alumno
-              </span>
-              <span className="text-[10px] text-[#A8B2A6] block truncate">
-                alumno@alekhins.com
-              </span>
-            </button>
-          </div>
-        </div>
 
         {/* Pie de registro */}
         <div className="text-center pt-2 text-xs text-[#A8B2A6]">

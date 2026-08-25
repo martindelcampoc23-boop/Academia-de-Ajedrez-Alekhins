@@ -13,7 +13,26 @@ function calculateCartSummary(items, couponDiscount = 0) {
   return { subtotal, discount, shipping, tax, total };
 }
 
-describe('Academia Alekhins - Core E-Commerce Unit Tests', () => {
+// Order Number Generator helper
+function generateOrderNumber(count) {
+  return `ALE-2026-${String(count + 1).padStart(6, '0')}`;
+}
+
+// Stripe Line Items Builder helper
+function buildStripeLineItems(items) {
+  return items.map((item) => ({
+    price_data: {
+      currency: 'mxn',
+      product_data: {
+        name: item.name,
+      },
+      unit_amount: Math.round(item.price * 100), // convert to cents
+    },
+    quantity: item.quantity,
+  }));
+}
+
+describe('Academia Alekhins - Core E-Commerce & Stripe Checkout Unit Tests', () => {
   test('Calculates cart subtotal and shipping fee under $1500 threshold', () => {
     const items = [
       { variantId: 'v1', price: 899, quantity: 1 }
@@ -48,5 +67,24 @@ describe('Academia Alekhins - Core E-Commerce Unit Tests', () => {
     assert.strictEqual(summary.discount, 100);
     assert.strictEqual(summary.shipping, 150); // $900 after discount < $1500
     assert.strictEqual(summary.total, 900 + 150);
+  });
+
+  test('Generates consecutive 6-digit Order Numbers with ALE-2026 prefix', () => {
+    assert.strictEqual(generateOrderNumber(0), 'ALE-2026-000001');
+    assert.strictEqual(generateOrderNumber(42), 'ALE-2026-000043');
+    assert.match(generateOrderNumber(125), /^ALE-2026-\d{6}$/);
+  });
+
+  test('Converts product prices to Stripe cent amounts accurately', () => {
+    const items = [
+      { name: 'Reloj Digital DGT 2500', price: 1899.50, quantity: 1 },
+      { name: 'Libro El Método Yusupov', price: 450.00, quantity: 2 },
+    ];
+    const lineItems = buildStripeLineItems(items);
+
+    assert.strictEqual(lineItems[0].price_data.unit_amount, 189950);
+    assert.strictEqual(lineItems[0].quantity, 1);
+    assert.strictEqual(lineItems[1].price_data.unit_amount, 45000);
+    assert.strictEqual(lineItems[1].quantity, 2);
   });
 });
