@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { submitLeadAction } from '@/lib/actions';
 import {
   Mail,
   Phone,
@@ -36,21 +37,20 @@ export default function ContactoPage() {
     setErrorMsg('');
 
     try {
-      // Simulación de envío o llamada a lead/contacto
-      const res = await fetch('/api/admin/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          entityType: 'INDIVIDUAL',
-          notes: `[Asunto: ${formData.subject}] ${formData.message}`,
-        }),
-      }).catch(() => null);
+      const res = await submitLeadAction({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        entityType: 'INDIVIDUAL',
+        notes: `[Asunto: ${formData.subject}] ${formData.message}`,
+      });
 
-      setSuccessMsg('¡Mensaje recibido! Nuestro equipo se pondrá en contacto contigo a la brevedad.');
-      setFormData({ name: '', email: '', phone: '', subject: 'general', message: '' });
+      if (res.success) {
+        setSuccessMsg('¡Mensaje recibido! Nuestro equipo se pondrá en contacto contigo a la brevedad.');
+        setFormData({ name: '', email: '', phone: '', subject: 'general', message: '' });
+      } else {
+        setErrorMsg(res.error || 'Ocurrió un error al enviar tu mensaje. Intenta de nuevo.');
+      }
     } catch {
       setErrorMsg('Ocurrió un error al enviar tu mensaje. También puedes escribirnos por WhatsApp.');
     } finally {

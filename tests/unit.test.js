@@ -117,5 +117,13 @@ describe('Academia Alekhins - Core E-Commerce & Stripe Checkout Unit Tests', () 
     assert.strictEqual(isTokenValid(usedRecord), false);
     assert.strictEqual(isTokenValid(null), false);
   });
+
+  test('Validates email parameter sanitization and formatting', () => {
+    const sanitizeEmail = (email) => (email ? email.trim().toLowerCase() : '');
+    assert.strictEqual(sanitizeEmail('  Roberto@Alekhins.COM '), 'roberto@alekhins.com');
+    assert.strictEqual(sanitizeEmail('Alumno@Gmail.com'), 'alumno@gmail.com');
+    assert.strictEqual(sanitizeEmail(''), '');
+  });
 });
+
 

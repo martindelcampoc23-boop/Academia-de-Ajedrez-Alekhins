@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
 import Stripe from 'stripe';
+import { sendOrderConfirmationEmail } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -148,6 +149,23 @@ export async function POST(req: Request) {
               }
 
               console.log(`✅ [Stripe Webhook] Orden #${order.orderNumber} confirmada como PAGADA con éxito.`);
+
+              // Disparar correo de confirmación de pedido al cliente
+              const recipientEmail = session.customer_details?.email || order.guestEmail;
+              const customerName = session.customer_details?.name || 'Cliente Alekhins';
+              if (recipientEmail) {
+                sendOrderConfirmationEmail({
+                  to: recipientEmail,
+                  orderNumber: order.orderNumber,
+                  customerName,
+                  items: order.items,
+                  subtotal: order.subtotal,
+                  shippingCost: order.shippingCost,
+                  discountAmount: order.discountAmount,
+                  totalAmount: order.totalAmount,
+                  shippingAddress: order.shippingAddress,
+                }).catch((emailErr) => console.error('⚠️ [Webhook] Error enviando correo de pedido:', emailErr));
+              }
             }
           } else {
             console.warn(`⚠️ [Stripe Webhook] No se encontró orden para la sesión ${session.id}`);

@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth-options';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
+
 const productSchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres.'),
   slug: z.string().min(2, 'El slug es requerido.').regex(/^[a-z0-9-]+$/, 'El slug solo puede contener letras minúsculas, números y guiones.'),
@@ -16,7 +18,7 @@ const productSchema = z.object({
   isPublished: z.boolean().default(true),
   isAcademyRecommended: z.boolean().default(false),
   masterComment: z.string().optional().nullable(),
-  imageUrl: z.string().url().optional().nullable(),
+  imageUrl: z.string().optional().nullable(),
   // Variante principal
   variantName: z.string().default('Estándar'),
   variantSku: z.string().optional(),

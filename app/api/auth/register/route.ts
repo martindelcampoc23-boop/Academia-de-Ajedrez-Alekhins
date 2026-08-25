@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+import { sendWelcomeEmail } from '@/lib/email';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres.'),
@@ -62,6 +63,11 @@ export async function POST(req: Request) {
         role: true,
         createdAt: true,
       },
+    });
+
+    // Enviar correo de bienvenida (asíncrono, no bloquea respuesta si falla)
+    sendWelcomeEmail(cleanEmail, name.trim()).catch((err) => {
+      console.error('⚠️ [Register] Error al enviar correo de bienvenida:', err);
     });
 
     return NextResponse.json(

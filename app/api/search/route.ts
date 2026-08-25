@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get('q') || '';
@@ -9,15 +11,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ results: [] });
   }
 
-  const q = query.trim().toLowerCase();
+  const q = query.trim();
 
   const [products, plans, videos, articles] = await Promise.all([
     prisma.product.findMany({
       where: {
         OR: [
-          { name: { contains: q } },
-          { sku: { contains: q } },
-          { description: { contains: q } },
+          { name: { contains: q, mode: 'insensitive' } },
+          { sku: { contains: q, mode: 'insensitive' } },
+          { description: { contains: q, mode: 'insensitive' } },
         ],
         isPublished: true,
       },
@@ -25,20 +27,29 @@ export async function GET(req: NextRequest) {
     }),
     prisma.trainingPlan.findMany({
       where: {
-        OR: [{ name: { contains: q } }, { level: { contains: q } }],
+        OR: [
+          { name: { contains: q, mode: 'insensitive' } },
+          { level: { contains: q, mode: 'insensitive' } },
+        ],
         isPublished: true,
       },
       take: 3,
     }),
     prisma.video.findMany({
       where: {
-        OR: [{ title: { contains: q } }, { tags: { contains: q } }],
+        OR: [
+          { title: { contains: q, mode: 'insensitive' } },
+          { tags: { contains: q, mode: 'insensitive' } },
+        ],
       },
       take: 3,
     }),
     prisma.article.findMany({
       where: {
-        OR: [{ title: { contains: q } }, { content: { contains: q } }],
+        OR: [
+          { title: { contains: q, mode: 'insensitive' } },
+          { content: { contains: q, mode: 'insensitive' } },
+        ],
         isPublished: true,
       },
       take: 3,
@@ -74,7 +85,7 @@ export async function GET(req: NextRequest) {
       id: a.id,
       title: a.title,
       subtitle: a.excerpt.slice(0, 50) + '...',
-      url: `/articulos`,
+      url: `/articulos/${a.slug}`,
     })),
   ];
 

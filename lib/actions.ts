@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { sendOrderConfirmationEmail, sendContactConfirmationEmail } from '@/lib/email';
 
 // 1. Coupon Validation
 export async function validateCouponAction(code: string, subtotal: number) {
@@ -199,6 +200,19 @@ export async function createOrderAction(formData: {
     revalidatePath('/admin');
     revalidatePath('/admin/pedidos');
 
+    // Enviar correo de confirmación de compra al cliente
+    sendOrderConfirmationEmail({
+      to: formData.customer.email,
+      orderNumber: newOrder.orderNumber,
+      customerName: `${formData.customer.firstName} ${formData.customer.lastName}`,
+      items: orderItemsToCreate,
+      subtotal,
+      shippingCost,
+      discountAmount,
+      totalAmount,
+      shippingAddress: shippingAddressJson,
+    }).catch((err) => console.error('⚠️ Error enviando correo de pedido:', err));
+
     return {
       success: true,
       orderNumber: newOrder.orderNumber,
@@ -247,6 +261,11 @@ export async function submitLeadAction(formData: {
       });
     }
 
+    // Enviar confirmación por correo al interesado
+    sendContactConfirmationEmail(formData.email, formData.name).catch((err) =>
+      console.error('⚠️ Error enviando correo de contacto:', err)
+    );
+
     revalidatePath('/admin/leads');
     return { success: true, message: '¡Gracias por contactarnos! Un asesor pedagógico se comunicará a la brevedad.' };
   } catch (error) {
@@ -258,13 +277,20 @@ export async function submitLeadAction(formData: {
 // 4. Track Order Lookup
 export async function trackOrderAction(orderNumber: string, email: string) {
   try {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanOrderNumber = orderNumber.trim().toUpperCase();
+
     const order = await prisma.order.findFirst({
       where: {
-        orderNumber: orderNumber.trim().toUpperCase(),
-        guestEmail: email.trim().toLowerCase(),
+        orderNumber: cleanOrderNumber,
+        OR: [
+          { guestEmail: { equals: cleanEmail, mode: 'insensitive' } },
+          { user: { email: { equals: cleanEmail, mode: 'insensitive' } } },
+        ],
       },
       include: {
         items: true,
+        user: { select: { name: true, email: true } },
         shipments: {
           include: {
             events: {
