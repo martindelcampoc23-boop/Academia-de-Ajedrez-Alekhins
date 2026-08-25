@@ -37,7 +37,8 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { orderId, status, carrier, trackingNumber, notes } = body;
+    const { orderId, status, carrier, courier, trackingNumber, notes } = body;
+    const finalCarrier = carrier || courier;
 
     if (!orderId) {
       return NextResponse.json({ error: 'ID de pedido requerido.' }, { status: 400 });
@@ -55,13 +56,13 @@ export async function POST(req: Request) {
     });
 
     // Si viene información de paquetería o guía
-    if (carrier || trackingNumber) {
+    if (finalCarrier || trackingNumber) {
       let shipment = order.shipments[0];
       if (shipment) {
         shipment = await prisma.shipment.update({
           where: { id: shipment.id },
           data: {
-            carrier: carrier || shipment.carrier,
+            carrier: finalCarrier || shipment.carrier,
             trackingNumber: trackingNumber || shipment.trackingNumber,
             status: status || shipment.status,
           },
@@ -70,7 +71,7 @@ export async function POST(req: Request) {
         shipment = await prisma.shipment.create({
           data: {
             orderId: order.id,
-            carrier: carrier || 'FedEx',
+            carrier: finalCarrier || 'FedEx',
             trackingNumber: trackingNumber || null,
             status: status || 'PREPARING',
           },
@@ -93,3 +94,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Error al actualizar el pedido.' }, { status: 500 });
   }
 }
+
+export async function PATCH(req: Request) {
+  return POST(req);
+}
+

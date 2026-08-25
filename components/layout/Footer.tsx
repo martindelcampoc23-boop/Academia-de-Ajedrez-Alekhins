@@ -127,7 +127,7 @@ export function Footer() {
               <span className="bg-[#13221B] border border-[#1C3328] text-gray-300 font-bold px-2.5 py-1 rounded">Mastercard</span>
               <span className="bg-[#13221B] border border-[#1C3328] text-gray-300 font-bold px-2.5 py-1 rounded">AMEX</span>
               <span className="bg-[#13221B] border border-[#1C3328] text-gray-300 font-bold px-2.5 py-1 rounded">PayPal</span>
-              <span className="bg-[#13221B] border border-[#1C3328] text-gray-300 font-bold px-2.5 py-1 rounded">OXO</span>
+              <span className="bg-[#13221B] border border-[#1C3328] text-gray-300 font-bold px-2.5 py-1 rounded">OXXO</span>
               <span className="bg-[#13221B] border border-[#1C3328] text-gray-300 font-bold px-2.5 py-1 rounded">SPEI</span>
             </div>
           </div>
@@ -136,7 +136,7 @@ export function Footer() {
 
       {/* Footer Bottom Bar */}
       <div className="max-w-7xl mx-auto px-4 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-        <p>© 2024 Academia de Ajedrez Alekhins. Todos los derechos reservados.</p>
+        <p>© 2026 Academia de Ajedrez Alekhins. Todos los derechos reservados.</p>
         <div className="flex items-center gap-4">
           <Link href="/legal/terminos" className="hover:text-[#D8B155] transition">Términos y condiciones</Link>
           <span className="text-[#1C3328]">|</span>
