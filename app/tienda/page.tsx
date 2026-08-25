@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { prisma } from '@/lib/db';
 import { Filter, ShoppingBag, Star, CheckCircle } from 'lucide-react';
 
@@ -105,10 +106,12 @@ export default async function StorePage({
             <div key={product.id} className="card-carbon p-4 flex flex-col justify-between group space-y-4">
               <div className="space-y-3">
                 <div className="aspect-square bg-carbon-dark rounded overflow-hidden relative border border-stone-border">
-                  <img
+                  <Image
                     src={image}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover group-hover:scale-105 transition duration-300"
                   />
                   {product.isAcademyRecommended && (
                     <span className="absolute top-2 left-2 bg-walnut/90 border border-champagne text-champagne text-[9px] font-bold px-2 py-0.5 rounded shadow">
