@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   ArrowRight
 } from 'lucide-react';
+import { buildPersonLD, buildBreadcrumbLD } from '@/lib/jsonld';
 
 export const metadata = {
   title: 'MI Roberto Abel Martín del Campo Cárdenas | Fundador & Director Técnico',
@@ -22,8 +23,22 @@ export const metadata = {
 };
 
 export default function FounderPage() {
+  const personLD = buildPersonLD();
+  const breadcrumbLD = buildBreadcrumbLD([
+    { name: 'Inicio', url: '/' },
+    { name: 'MI Roberto Martín del Campo', url: '/roberto-martin-del-campo' },
+  ]);
+
   return (
     <div className="space-y-16 py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLD) }}
+      />
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-7 space-y-6">

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db';
 import { CheckCircle, ShieldCheck, Calendar, Clock, CreditCard, Lock, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { buildCourseLD, buildBreadcrumbLD } from '@/lib/jsonld';
 
 export const revalidate = 60;
 
@@ -11,7 +12,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (!plan) return { title: 'Plan no encontrado' };
   return {
     title: `${plan.name} | Academia Alekhins`,
-    description: plan.description,
+    description: plan.description.slice(0, 155),
+    openGraph: {
+      title: `${plan.name} | Academia Alekhins`,
+      description: plan.description.slice(0, 155),
+      type: 'website',
+    },
+    twitter: { card: 'summary', title: plan.name },
   };
 }
 
@@ -22,8 +29,32 @@ export default async function PlanDetailPage({ params }: { params: { slug: strin
 
   if (!plan) notFound();
 
+  const courseLD = buildCourseLD({
+    name: plan.name,
+    description: plan.description,
+    slug: plan.slug,
+    price: plan.price,
+    level: plan.level,
+    modality: plan.modality,
+    duration: plan.duration,
+  });
+
+  const breadcrumbLD = buildBreadcrumbLD([
+    { name: 'Inicio', url: '/' },
+    { name: 'Entrenamiento', url: '/entrenamiento' },
+    { name: plan.name, url: `/entrenamiento/${plan.slug}` },
+  ]);
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-12 space-y-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseLD) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLD) }}
+      />
       <Link href="/entrenamiento" className="text-xs text-champagne hover:underline inline-flex items-center gap-1">
         <ArrowLeft className="w-3.5 h-3.5" /> Volver a todos los planes
       </Link>

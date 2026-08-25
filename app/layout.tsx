@@ -7,6 +7,7 @@ import { CartDrawer } from '@/components/cart/CartDrawer';
 import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
 import { CookieManager } from '@/components/ui/CookieManager';
 import AuthProvider from '@/components/providers/AuthProvider';
+import { buildOrganizationLD, buildWebSiteLD } from '@/lib/jsonld';
 
 export const metadata: Metadata = {
   title: {
@@ -28,8 +29,21 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const orgLD = buildOrganizationLD();
+  const websiteLD = buildWebSiteLD();
+
   return (
     <html lang="es">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLD) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLD) }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col" style={{ backgroundColor: '#0B1510', color: '#F6F3EC' }}>
         <AuthProvider>
           <CartProvider>
