@@ -61,23 +61,42 @@ export default function TareasAlumnoPage() {
     }
   }, [status]);
 
-  function handleStudentFileChange(hwId: string, e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleStudentFileChange(hwId: string, e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (file.size > 10 * 1024 * 1024) {
       alert('El archivo adjunto no debe superar los 10MB.');
+      e.target.value = '';
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
+    setMsg((p) => ({ ...p, [hwId]: '⏳ Subiendo archivo...' }));
+
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('folder', 'tareas');
+
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMsg((p) => ({ ...p, [hwId]: `❌ ${data.error || 'Error al subir el archivo.'}` }));
+        e.target.value = '';
+        return;
+      }
+
       setStudentFiles((p) => ({
         ...p,
-        [hwId]: { url: reader.result as string, name: file.name },
+        [hwId]: { url: data.url, name: file.name },
       }));
-    };
-    reader.readAsDataURL(file);
+      setMsg((p) => ({ ...p, [hwId]: `✅ Archivo "${file.name}" listo para entregar.` }));
+    } catch (err) {
+      console.error('[handleStudentFileChange]', err);
+      setMsg((p) => ({ ...p, [hwId]: '❌ Error de red al subir el archivo.' }));
+      e.target.value = '';
+    }
   }
 
   function handleRemoveStudentFile(hwId: string) {

@@ -151,31 +151,48 @@ export default function MaestroPage() {
     setLoadingUsers(false);
   }
 
-  // Manejo de archivo adjunto para tareas
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  // Manejo de archivo adjunto para tareas — sube a Supabase Storage
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (file.size > 10 * 1024 * 1024) {
       alert('El archivo no debe exceder los 10MB.');
+      if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
 
     setAttachmentLoading(true);
-    const reader = new FileReader();
-    reader.onload = () => {
+    setHwMsg('⏳ Subiendo archivo...');
+
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('folder', 'tareas');
+
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || 'Error al subir el archivo.');
+        setHwMsg('');
+        setAttachmentLoading(false);
+        return;
+      }
+
       setNewHw((prev) => ({
         ...prev,
-        attachmentUrl: reader.result as string,
+        attachmentUrl: data.url,
         attachmentName: file.name,
       }));
+      setHwMsg(`✅ Archivo "${file.name}" subido correctamente.`);
+    } catch (err) {
+      console.error('[handleFileChange]', err);
+      alert('Error de red al subir el archivo. Intenta de nuevo.');
+      setHwMsg('');
+    } finally {
       setAttachmentLoading(false);
-    };
-    reader.onerror = () => {
-      alert('Error al procesar el archivo.');
-      setAttachmentLoading(false);
-    };
-    reader.readAsDataURL(file);
+    }
   }
 
   function handleRemoveAttachment() {
@@ -185,6 +202,7 @@ export default function MaestroPage() {
       attachmentName: '',
     }));
     if (fileInputRef.current) fileInputRef.current.value = '';
+    setHwMsg('');
   }
 
   async function handleCreateHomework(e: React.FormEvent) {
