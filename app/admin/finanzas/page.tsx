@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {
@@ -10,18 +10,15 @@ import {
   ShoppingBag,
   Calendar,
   ArrowUpRight,
-  ArrowDownRight,
   Download,
-  Filter,
   Users,
+  RefreshCw,
   PieChart as PieIcon,
-  Layers
+  Layers,
 } from 'lucide-react';
 import {
   AreaChart,
   Area,
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -30,46 +27,112 @@ import {
   PieChart,
   Pie,
   Cell,
-  Legend
 } from 'recharts';
 
-const MONTHLY_DATA = [
-  { mes: 'Ene', tienda: 18500, academias: 24500, total: 43000 },
-  { mes: 'Feb', tienda: 22000, academias: 28000, total: 50000 },
-  { mes: 'Mar', tienda: 26400, academias: 31200, total: 57600 },
-  { mes: 'Abr', tienda: 31000, academias: 35000, total: 66000 },
-  { mes: 'May', tienda: 29500, academias: 38200, total: 67700 },
-  { mes: 'Jun', tienda: 36000, academias: 42000, total: 78000 },
-  { mes: 'Jul', tienda: 41200, academias: 46500, total: 87700 },
-  { mes: 'Ago', tienda: 48000, academias: 52000, total: 100000 },
-];
+interface FinanceKPIs {
+  totalIngresos: number;
+  totalTienda: number;
+  totalAcademia: number;
+  ticketPromedio: number;
+  ordersCount: number;
+}
 
-const CATEGORY_DATA = [
-  { name: 'Membresías Academia', value: 52000, color: '#D8B155' },
-  { name: 'Sets y Tableros', value: 24000, color: '#1B4D3E' },
-  { name: 'Relojes DGT', value: 16000, color: '#3B82F6' },
-  { name: 'Libros y Cursos', value: 8000, color: '#10B981' },
-];
+interface MonthlyDataItem {
+  mes: string;
+  tienda: number;
+  academias: number;
+  total: number;
+}
 
-const RECENT_TRANSACTIONS = [
-  { id: 'TX-8921', cliente: 'Roberto Gómez', tipo: 'Membresía Pro', monto: 1299, metodo: 'Stripe (Visa)', fecha: 'Hoy, 14:32', estado: 'Completado' },
-  { id: 'TX-8920', cliente: 'María Fernanda Ruiz', tipo: 'Set Torneo DGT + Bolso', monto: 2450, metodo: 'PayPal', fecha: 'Hoy, 12:15', estado: 'Completado' },
-  { id: 'TX-8919', cliente: 'Club Ajedrez CDMX', tipo: '10x Tableros Vinil', monto: 4990, metodo: 'SPEI', fecha: 'Ayer, 18:40', estado: 'Completado' },
-  { id: 'TX-8918', cliente: 'Diego Morales', tipo: 'Plan Iniciación', monto: 699, metodo: 'Stripe (Mastercard)', fecha: 'Ayer, 16:05', estado: 'Completado' },
-  { id: 'TX-8917', cliente: 'Héctor Salgado', tipo: 'Reloj DGT 2010', monto: 1850, metodo: 'OXXO Pay', fecha: '16 Ago, 11:20', estado: 'Completado' },
-];
+interface CategoryDataItem {
+  name: string;
+  value: number;
+  color: string;
+}
+
+interface TransactionItem {
+  id: string;
+  cliente: string;
+  tipo: string;
+  metodo: string;
+  monto: number;
+  fecha: string;
+  estado: string;
+}
 
 export default function AdminFinanzasPage() {
   const { data: session, status } = useSession();
   const [periodo, setPeriodo] = useState('2026');
+  const [loading, setLoading] = useState(true);
+  const [kpis, setKpis] = useState<FinanceKPIs>({
+    totalIngresos: 0,
+    totalTienda: 0,
+    totalAcademia: 0,
+    ticketPromedio: 0,
+    ordersCount: 0,
+  });
+  const [monthlyData, setMonthlyData] = useState<MonthlyDataItem[]>([]);
+  const [categoryData, setCategoryData] = useState<CategoryDataItem[]>([]);
+  const [recentTransactions, setRecentTransactions] = useState<TransactionItem[]>([]);
 
   const role = (session?.user as any)?.role;
+
+  const fetchFinanceData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/finanzas');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.kpis) setKpis(data.kpis);
+        if (data.monthlyData) setMonthlyData(data.monthlyData);
+        if (data.categoryData) setCategoryData(data.categoryData);
+        if (data.recentTransactions) setRecentTransactions(data.recentTransactions);
+      }
+    } catch (err) {
+      console.error('Error cargando finanzas:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      fetchFinanceData();
+    }
+  }, [status, fetchFinanceData]);
+
+  const handleExportCSV = () => {
+    if (recentTransactions.length === 0) {
+      alert('No hay transacciones disponibles para exportar.');
+      return;
+    }
+
+    const headers = ['ID Transaccion', 'Cliente', 'Concepto', 'Metodo', 'Monto (MXN)', 'Fecha', 'Estado'];
+    const rows = recentTransactions.map((tx) => [
+      `"${tx.id}"`,
+      `"${tx.cliente.replace(/"/g, '""')}"`,
+      `"${tx.tipo.replace(/"/g, '""')}"`,
+      `"${tx.metodo.replace(/"/g, '""')}"`,
+      tx.monto,
+      `"${tx.fecha}"`,
+      `"${tx.estado}"`,
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `reporte-financiero-alekhins-${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   if (status === 'loading') {
     return <div className="min-h-screen flex items-center justify-center text-[#D8B155]">Cargando finanzas...</div>;
   }
 
-  if (!['SUPERADMIN', 'ADMIN'].includes(role)) {
+  if (!['SUPERADMIN', 'ADMIN', 'OPERACIONES'].includes(role)) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-center px-4">
         <div className="text-4xl">🔒</div>
@@ -78,11 +141,6 @@ export default function AdminFinanzasPage() {
       </div>
     );
   }
-
-  const totalIngresos = MONTHLY_DATA.reduce((acc, curr) => acc + curr.total, 0);
-  const totalTienda = MONTHLY_DATA.reduce((acc, curr) => acc + curr.tienda, 0);
-  const totalAcademia = MONTHLY_DATA.reduce((acc, curr) => acc + curr.academias, 0);
-  const ticketPromedio = 1420;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 space-y-8">
@@ -96,20 +154,19 @@ export default function AdminFinanzasPage() {
             Panel Financiero & Análisis de Ingresos
           </h1>
           <p className="text-xs text-[#A8B2A6] mt-1">
-            Consolidado de ventas de la tienda, colegiaturas y suscripciones mensuales.
+            Consolidado verídico de ventas de tienda oficial, inscripciones y suscripciones mensuales.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <select
-            value={periodo}
-            onChange={(e) => setPeriodo(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-[#121E17] border border-[#2B3E34] text-xs text-[#F6F3EC] focus:outline-none focus:border-[#D8B155]"
+          <button
+            onClick={fetchFinanceData}
+            className="p-2 rounded-lg bg-[#121E17] border border-[#2B3E34] text-[#D8B155] hover:border-[#D8B155] transition flex items-center gap-1.5 text-xs font-semibold"
+            title="Actualizar datos"
           >
-            <option value="2026">Año en curso (2026)</option>
-            <option value="Q3">Tercer Trimestre (Q3)</option>
-            <option value="MES">Mes Actual (Agosto)</option>
-          </select>
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">Actualizar</span>
+          </button>
 
           <Link
             href="/admin"
@@ -127,10 +184,12 @@ export default function AdminFinanzasPage() {
             <span>Ingresos Totales Brutos</span>
             <DollarSign className="w-4 h-4 text-emerald-400" />
           </div>
-          <p className="text-2xl font-serif font-bold text-white">${totalIngresos.toLocaleString('es-MX')} MXN</p>
+          <p className="text-2xl font-serif font-bold text-white">
+            ${kpis.totalIngresos.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN
+          </p>
           <div className="flex items-center gap-1 text-[11px] text-emerald-400 font-semibold">
             <ArrowUpRight className="w-3.5 h-3.5" />
-            <span>+18.4% vs periodo anterior</span>
+            <span>Ingresos consolidados en BD</span>
           </div>
         </div>
 
@@ -139,9 +198,15 @@ export default function AdminFinanzasPage() {
             <span>Colegiaturas & Membresías</span>
             <Users className="w-4 h-4 text-[#D8B155]" />
           </div>
-          <p className="text-2xl font-serif font-bold text-[#D8B155]">${totalAcademia.toLocaleString('es-MX')} MXN</p>
+          <p className="text-2xl font-serif font-bold text-[#D8B155]">
+            ${kpis.totalAcademia.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN
+          </p>
           <div className="flex items-center gap-1 text-[11px] text-[#A8B2A6]">
-            <span>52.0% del ingreso consolidado</span>
+            <span>
+              {kpis.totalIngresos > 0
+                ? `${Math.round((kpis.totalAcademia / kpis.totalIngresos) * 100)}% del ingreso total`
+                : 'Suscripciones activas'}
+            </span>
           </div>
         </div>
 
@@ -150,10 +215,11 @@ export default function AdminFinanzasPage() {
             <span>Ventas Tienda de Ajedrez</span>
             <ShoppingBag className="w-4 h-4 text-purple-400" />
           </div>
-          <p className="text-2xl font-serif font-bold text-white">${totalTienda.toLocaleString('es-MX')} MXN</p>
-          <div className="flex items-center gap-1 text-[11px] text-emerald-400 font-semibold">
-            <ArrowUpRight className="w-3.5 h-3.5" />
-            <span>+22.1% en sets y relojes</span>
+          <p className="text-2xl font-serif font-bold text-white">
+            ${kpis.totalTienda.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN
+          </p>
+          <div className="flex items-center gap-1 text-[11px] text-[#A8B2A6]">
+            <span>{kpis.ordersCount} pedidos registrados</span>
           </div>
         </div>
 
@@ -162,9 +228,11 @@ export default function AdminFinanzasPage() {
             <span>Ticket Promedio</span>
             <CreditCard className="w-4 h-4 text-blue-400" />
           </div>
-          <p className="text-2xl font-serif font-bold text-white">${ticketPromedio.toLocaleString('es-MX')} MXN</p>
+          <p className="text-2xl font-serif font-bold text-white">
+            ${kpis.ticketPromedio.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN
+          </p>
           <div className="flex items-center gap-1 text-[11px] text-[#A8B2A6]">
-            <span>Basado en 386 transacciones</span>
+            <span>Por orden de compra</span>
           </div>
         </div>
       </div>
@@ -176,7 +244,7 @@ export default function AdminFinanzasPage() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="font-serif-editorial text-lg font-bold text-white">Evolución de Ingresos Mensuales</h2>
-              <p className="text-xs text-[#A8B2A6]">Comparativa de Academia vs Tienda Oficial en 2026</p>
+              <p className="text-xs text-[#A8B2A6]">Comparativa de Academia vs Tienda Oficial ({periodo})</p>
             </div>
             <div className="flex items-center gap-3 text-xs">
               <span className="flex items-center gap-1 text-[#D8B155]">● Academia</span>
@@ -186,7 +254,7 @@ export default function AdminFinanzasPage() {
 
           <div className="h-72 w-full pt-4">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={MONTHLY_DATA} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <AreaChart data={monthlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorAcademias" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#D8B155" stopOpacity={0.4} />
@@ -203,14 +271,36 @@ export default function AdminFinanzasPage() {
                   stroke="#A8B2A6"
                   fontSize={11}
                   tickLine={false}
-                  tickFormatter={(val) => `$${val / 1000}k`}
+                  tickFormatter={(val) => `$${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}`}
                 />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#0B1510', borderColor: '#2B3E34', borderRadius: '8px', fontSize: '12px', color: '#F6F3EC' }}
+                  contentStyle={{
+                    backgroundColor: '#0B1510',
+                    borderColor: '#2B3E34',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    color: '#F6F3EC',
+                  }}
                   formatter={(value: any) => [`$${Number(value).toLocaleString('es-MX')} MXN`]}
                 />
-                <Area type="monotone" dataKey="academias" stroke="#D8B155" strokeWidth={2} fillOpacity={1} fill="url(#colorAcademias)" name="Academia" />
-                <Area type="monotone" dataKey="tienda" stroke="#10B981" strokeWidth={2} fillOpacity={1} fill="url(#colorTienda)" name="Tienda" />
+                <Area
+                  type="monotone"
+                  dataKey="academias"
+                  stroke="#D8B155"
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#colorAcademias)"
+                  name="Academia"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="tienda"
+                  stroke="#10B981"
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#colorTienda)"
+                  name="Tienda"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -224,31 +314,40 @@ export default function AdminFinanzasPage() {
           </div>
 
           <div className="h-56 w-full flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={CATEGORY_DATA}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
-                  paddingAngle={4}
-                  dataKey="value"
-                >
-                  {CATEGORY_DATA.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#0B1510', borderColor: '#2B3E34', borderRadius: '8px', fontSize: '12px' }}
-                  formatter={(val: any) => [`$${Number(val).toLocaleString('es-MX')} MXN`]}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+            {categoryData.some((c) => c.value > 0) ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={categoryData.filter((c) => c.value > 0)}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={4}
+                    dataKey="value"
+                  >
+                    {categoryData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#0B1510',
+                      borderColor: '#2B3E34',
+                      borderRadius: '8px',
+                      fontSize: '12px',
+                    }}
+                    formatter={(val: any) => [`$${Number(val).toLocaleString('es-MX')} MXN`]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-xs text-[#A8B2A6] text-center">Sin transacciones registradas para graficar</p>
+            )}
           </div>
 
           <div className="space-y-2 pt-2 border-t border-[#2B3E34] text-xs">
-            {CATEGORY_DATA.map((cat, i) => (
+            {categoryData.map((cat, i) => (
               <div key={i} className="flex items-center justify-between">
                 <span className="flex items-center gap-2 text-[#D2DBD0]">
                   <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
@@ -262,15 +361,15 @@ export default function AdminFinanzasPage() {
       </div>
 
       {/* Tabla de Transacciones Recientes */}
-      <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl overflow-hidden space-y-4 p-6">
+      <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl overflow-hidden space-y-4 p-6 shadow-xl">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="font-serif-editorial text-lg font-bold text-white">Transacciones Recientes</h2>
-            <p className="text-xs text-[#A8B2A6]">Últimos pagos registrados vía Stripe, PayPal y SPEI</p>
+            <p className="text-xs text-[#A8B2A6]">Pagos registrados vía Stripe Checkout y órdenes de la tienda</p>
           </div>
           <button
-            onClick={() => alert('Exportando reporte contable a CSV/Excel...')}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0B1510] border border-[#2B3E34] hover:border-[#D8B155] text-xs font-semibold text-[#D8B155] transition"
+            onClick={handleExportCSV}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0B1510] border border-[#2B3E34] hover:border-[#D8B155] text-xs font-semibold text-[#D8B155] transition cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Exportar CSV</span>
@@ -278,36 +377,44 @@ export default function AdminFinanzasPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="border-b border-[#2B3E34] text-[10px] uppercase tracking-wider text-[#A8B2A6]">
-                <th className="text-left py-3 px-3">ID Transacción</th>
-                <th className="text-left py-3 px-3">Cliente</th>
-                <th className="text-left py-3 px-3">Concepto</th>
-                <th className="text-left py-3 px-3">Método</th>
-                <th className="text-left py-3 px-3">Monto</th>
-                <th className="text-left py-3 px-3">Fecha</th>
-                <th className="text-left py-3 px-3">Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {RECENT_TRANSACTIONS.map((tx, idx) => (
-                <tr key={idx} className="border-b border-[#1C3328]/60 hover:bg-[#1B4D3E]/20 transition">
-                  <td className="py-3 px-3 font-mono text-[#D8B155] font-bold">{tx.id}</td>
-                  <td className="py-3 px-3 font-medium text-white">{tx.cliente}</td>
-                  <td className="py-3 px-3 text-[#D2DBD0]">{tx.tipo}</td>
-                  <td className="py-3 px-3 text-[#A8B2A6]">{tx.metodo}</td>
-                  <td className="py-3 px-3 font-bold text-emerald-400">${tx.monto.toLocaleString('es-MX')} MXN</td>
-                  <td className="py-3 px-3 text-[#A8B2A6]">{tx.fecha}</td>
-                  <td className="py-3 px-3">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/70 border border-emerald-800 text-emerald-300">
-                      ✓ {tx.estado}
-                    </span>
-                  </td>
+          {recentTransactions.length === 0 ? (
+            <div className="text-center py-10 text-xs text-[#A8B2A6]">
+              No hay transacciones registradas en la base de datos actualmente.
+            </div>
+          ) : (
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-[#2B3E34] text-[10px] uppercase tracking-wider text-[#A8B2A6] bg-[#0B1510]/40">
+                  <th className="text-left py-3 px-3">ID Pedido / Ref</th>
+                  <th className="text-left py-3 px-3">Cliente</th>
+                  <th className="text-left py-3 px-3">Concepto</th>
+                  <th className="text-left py-3 px-3">Método</th>
+                  <th className="text-left py-3 px-3">Monto</th>
+                  <th className="text-left py-3 px-3">Fecha</th>
+                  <th className="text-left py-3 px-3">Estado</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {recentTransactions.map((tx, idx) => (
+                  <tr key={idx} className="border-b border-[#1C3328]/60 hover:bg-[#1B4D3E]/20 transition">
+                    <td className="py-3 px-3 font-mono text-[#D8B155] font-bold">{tx.id}</td>
+                    <td className="py-3 px-3 font-medium text-white">{tx.cliente}</td>
+                    <td className="py-3 px-3 text-[#D2DBD0] max-w-[200px] truncate">{tx.tipo}</td>
+                    <td className="py-3 px-3 text-[#A8B2A6]">{tx.metodo}</td>
+                    <td className="py-3 px-3 font-bold text-emerald-400">
+                      ${tx.monto.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN
+                    </td>
+                    <td className="py-3 px-3 text-[#A8B2A6]">{tx.fecha}</td>
+                    <td className="py-3 px-3">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/70 border border-emerald-800 text-emerald-300">
+                        ✓ {tx.estado}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
