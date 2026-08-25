@@ -1,225 +1,184 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
 /**
  * AnimatedChessKnight
- * Caballo de ajedrez (♞) animado en SVG puro con movimiento en L,
- * efecto de flotación, glows dorados y trayectoria de casillas.
- * Se usa como elemento visual en el Hero de la landing page.
+ * Caballo de ajedrez 3D real animado con CSS keyframes:
+ * - Flotación suave con leve balanceo
+ * - Brillo dorado pulsante alrededor
+ * - Sombra dinámica que se encoge/crece
+ * - Partículas de luz doradas ascendentes
+ * - Trayectoria en L decorativa
  */
 export function AnimatedChessKnight() {
   return (
-    <div className="relative w-full h-full flex items-center justify-center select-none" aria-hidden="true">
-      {/* Estilo de animaciones CSS inlineadas */}
+    <div className="relative flex items-center justify-center w-full h-full" aria-hidden="true">
       <style>{`
         @keyframes knight-float {
-          0%   { transform: translateY(0px) rotate(-2deg); }
-          25%  { transform: translateY(-12px) rotate(2deg); }
-          50%  { transform: translateY(-22px) rotate(-1deg); }
-          75%  { transform: translateY(-10px) rotate(3deg); }
-          100% { transform: translateY(0px) rotate(-2deg); }
+          0%   { transform: translateY(0px) rotate(-1.5deg) scale(1); }
+          30%  { transform: translateY(-16px) rotate(1.5deg) scale(1.02); }
+          60%  { transform: translateY(-26px) rotate(-1deg) scale(1.03); }
+          80%  { transform: translateY(-12px) rotate(2deg) scale(1.01); }
+          100% { transform: translateY(0px) rotate(-1.5deg) scale(1); }
         }
-        @keyframes knight-shadow-pulse {
-          0%, 100% { transform: scaleX(1); opacity: 0.35; }
-          50%       { transform: scaleX(0.75); opacity: 0.15; }
+        @keyframes shadow-breathe {
+          0%, 100% { transform: scaleX(1) scaleY(1); opacity: 0.5; }
+          60%       { transform: scaleX(0.6) scaleY(0.6); opacity: 0.15; }
         }
-        @keyframes glow-pulse {
-          0%, 100% { opacity: 0.5; filter: blur(18px); }
-          50%       { opacity: 1;   filter: blur(28px); }
+        @keyframes glow-ring {
+          0%, 100% { opacity: 0.35; transform: scale(0.95); }
+          50%       { opacity: 0.75; transform: scale(1.05); }
         }
-        @keyframes board-tile-fade {
-          0%, 100% { opacity: 0.06; }
-          50%       { opacity: 0.14; }
+        @keyframes glow-outer {
+          0%, 100% { opacity: 0.1; transform: scale(0.9); }
+          50%       { opacity: 0.28; transform: scale(1.1); }
         }
-        @keyframes trail-draw {
-          0%   { stroke-dashoffset: 320; opacity: 0; }
-          20%  { opacity: 0.8; }
-          80%  { opacity: 0.8; }
-          100% { stroke-dashoffset: 0; opacity: 0; }
+        @keyframes particle-a {
+          0%   { transform: translate(0px, 0px) scale(1); opacity: 0.9; }
+          100% { transform: translate(-8px, -48px) scale(0); opacity: 0; }
         }
-        @keyframes ring-expand {
-          0%   { r: 4; opacity: 0.9; }
-          100% { r: 24; opacity: 0; }
+        @keyframes particle-b {
+          0%   { transform: translate(0px, 0px) scale(1); opacity: 0.8; }
+          100% { transform: translate(10px, -52px) scale(0); opacity: 0; }
         }
-        @keyframes particle-rise {
-          0%   { transform: translateY(0) scale(1); opacity: 0.8; }
-          100% { transform: translateY(-40px) scale(0); opacity: 0; }
+        @keyframes particle-c {
+          0%   { transform: translate(0px, 0px) scale(1); opacity: 0.7; }
+          100% { transform: translate(-4px, -38px) scale(0); opacity: 0; }
         }
-        .knight-piece {
-          animation: knight-float 3.6s ease-in-out infinite;
-          filter: drop-shadow(0 0 12px rgba(216,177,85,0.55)) drop-shadow(0 4px 8px rgba(0,0,0,0.7));
+        @keyframes l-trail-h {
+          0%   { width: 0%; opacity: 0; }
+          20%  { opacity: 1; }
+          60%  { width: 100%; opacity: 1; }
+          100% { width: 100%; opacity: 0; }
         }
-        .knight-shadow {
-          animation: knight-shadow-pulse 3.6s ease-in-out infinite;
+        @keyframes l-trail-v {
+          0%, 55%  { height: 0%; opacity: 0; }
+          65%      { opacity: 1; }
+          90%      { height: 100%; opacity: 1; }
+          100%     { height: 100%; opacity: 0; }
         }
-        .glow-orb {
-          animation: glow-pulse 3s ease-in-out infinite;
+        @keyframes dot-pop {
+          0%, 60%  { transform: scale(0); opacity: 0; }
+          75%      { transform: scale(1.4); opacity: 1; }
+          100%     { transform: scale(1); opacity: 0.8; }
         }
-        .tile-flicker {
-          animation: board-tile-fade 3.6s ease-in-out infinite;
+        @keyframes shimmer-sweep {
+          0%   { background-position: -200% center; }
+          100% { background-position: 200% center; }
         }
-        .l-trail {
-          animation: trail-draw 4s ease-in-out infinite;
+        .knight-floating {
+          animation: knight-float 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
         }
-        .ring-anim {
-          animation: ring-expand 2.4s ease-out infinite;
+        .knight-shadow-el {
+          animation: shadow-breathe 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
         }
-        .particle-1 { animation: particle-rise 2s ease-out infinite 0.2s; }
-        .particle-2 { animation: particle-rise 2s ease-out infinite 0.8s; }
-        .particle-3 { animation: particle-rise 2s ease-out infinite 1.4s; }
+        .glow-ring-el {
+          animation: glow-ring 3s ease-in-out infinite;
+        }
+        .glow-outer-el {
+          animation: glow-outer 3s ease-in-out infinite 0.5s;
+        }
+        .pt-a { animation: particle-a 2.2s ease-out infinite 0.3s; }
+        .pt-b { animation: particle-b 2.2s ease-out infinite 1s; }
+        .pt-c { animation: particle-c 2.2s ease-out infinite 1.7s; }
+        .trail-h { animation: l-trail-h 3.5s ease-in-out infinite 0.5s; }
+        .trail-v { animation: l-trail-v 3.5s ease-in-out infinite 0.5s; }
+        .trail-dot { animation: dot-pop 3.5s ease-in-out infinite 0.5s; }
+        .knight-shimmer {
+          background: linear-gradient(105deg, transparent 30%, rgba(216,177,85,0.15) 50%, transparent 70%);
+          background-size: 200% 100%;
+          animation: shimmer-sweep 3s linear infinite;
+        }
       `}</style>
 
-      <svg
-        viewBox="0 0 300 320"
-        className="w-full max-w-[420px] h-auto"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* ── TABLERO DE FONDO ──────────────────────────────────── */}
-        <g opacity="0.45">
-          {[0, 1, 2, 3, 4].map((row) =>
-            [0, 1, 2, 3, 4].map((col) => {
-              const isLight = (row + col) % 2 === 0;
-              const x = 22 + col * 52;
-              const y = 180 + row * 26 - row * 6;
-              if (!isLight) return null;
-              return (
-                <rect
-                  key={`${row}-${col}`}
-                  x={x}
-                  y={y}
-                  width={50}
-                  height={24}
-                  rx={3}
-                  fill="#C8AA6E"
-                  className="tile-flicker"
-                  style={{ animationDelay: `${(row + col) * 0.18}s` }}
-                />
-              );
-            })
-          )}
-        </g>
+      {/* Contenedor principal de la animación */}
+      <div className="relative w-80 h-96 flex items-end justify-center">
 
-        {/* ── TRAYECTORIA EN L (movimiento del caballo) ─────────── */}
-        {/* Línea horizontal del movimiento en L */}
-        <polyline
-          points="150,260 230,260 230,200"
-          fill="none"
-          stroke="#C8AA6E"
-          strokeWidth="2"
-          strokeDasharray="320"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="l-trail"
-        />
-        {/* Puntos destino del movimiento */}
-        <circle cx="230" cy="200" r="5" fill="#C8AA6E" opacity="0">
-          <animate attributeName="opacity" values="0;0;1;0" dur="4s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="230" cy="200" r="5" fill="transparent" stroke="#C8AA6E" strokeWidth="1.5" className="ring-anim" />
-
-        {/* ── BRILLO / GLOW ORBE CENTRAL ────────────────────────── */}
-        <ellipse cx="150" cy="220" rx="60" ry="20" fill="#C8AA6E" opacity="0" className="glow-orb" />
-
-        {/* ── SOMBRA DEL CABALLO ────────────────────────────────── */}
-        <ellipse
-          cx="148"
-          cy="262"
-          rx="52"
-          ry="9"
-          fill="#000"
-          opacity="0.4"
-          className="knight-shadow"
+        {/* ── BRILLO EXTERIOR DIFUSO ─────────────────────────── */}
+        <div
+          className="absolute inset-0 rounded-full glow-outer-el pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse 60% 70% at 50% 55%, rgba(216,177,85,0.25) 0%, transparent 70%)',
+          }}
         />
 
-        {/* ── PARTÍCULAS DORADAS ────────────────────────────────── */}
-        <circle cx="120" cy="220" r="3" fill="#C8AA6E" className="particle-1" opacity="0.7" />
-        <circle cx="170" cy="215" r="2" fill="#E8C865" className="particle-2" opacity="0.7" />
-        <circle cx="145" cy="225" r="2.5" fill="#C8AA6E" className="particle-3" opacity="0.7" />
+        {/* ── BRILLO DORADO INTERNO (ring) ──────────────────── */}
+        <div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-52 h-52 rounded-full glow-ring-el pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(216,177,85,0.22) 0%, transparent 65%)',
+            filter: 'blur(12px)',
+          }}
+        />
 
-        {/* ── CABALLO DE AJEDREZ (SVG path) ─────────────────────── */}
-        <g className="knight-piece" transform="translate(80, 60)">
-          {/* Base del caballo */}
-          <rect x="25" y="143" width="86" height="13" rx="6" fill="#1B3A2E" />
-          <rect x="18" y="152" width="100" height="8" rx="4" fill="#152D24" />
+        {/* ── TRAYECTORIA EN L (movimiento del caballo) ─────── */}
+        <div className="absolute bottom-20 right-6 w-20 h-16 pointer-events-none">
+          {/* Línea horizontal */}
+          <div
+            className="absolute bottom-0 right-0 h-0.5 trail-h origin-right"
+            style={{ background: 'linear-gradient(to left, #C8AA6E, transparent)', width: '100%' }}
+          />
+          {/* Línea vertical */}
+          <div
+            className="absolute top-0 right-0 w-0.5 trail-v origin-bottom"
+            style={{ background: 'linear-gradient(to top, #C8AA6E, transparent)', height: '100%' }}
+          />
+          {/* Punto de destino */}
+          <div
+            className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-[#C8AA6E] trail-dot"
+            style={{ boxShadow: '0 0 8px 2px rgba(200,170,110,0.8)' }}
+          />
+        </div>
 
-          {/* Cuerpo y pecho */}
-          <path
-            d="M68,140 C68,140 50,130 42,110 C36,96 38,76 44,64 C50,52 60,44 65,35
-               C68,29 68,22 66,16 C74,20 80,28 84,38 C90,52 92,70 88,84
-               C86,92 80,100 78,108 C76,116 76,128 76,140 Z"
-            fill="#C8AA6E"
-          />
-          {/* Cabeza del caballo */}
-          <path
-            d="M66,16 C66,16 62,8 68,4 C74,0 82,2 86,8
-               C90,14 90,22 88,28 C86,34 82,38 78,40
-               C74,42 70,40 68,36 C64,30 66,22 66,16 Z"
-            fill="#C8AA6E"
-          />
-          {/* Oreja */}
-          <path
-            d="M74,4 C76,0 80,-2 84,2 C86,6 84,10 80,12 C76,14 72,12 74,4 Z"
-            fill="#D8C080"
-          />
-          {/* Crin */}
-          <path
-            d="M66,16 C60,22 56,32 58,42 C60,52 66,58 68,68
-               C70,78 68,88 66,96 C68,92 74,84 76,74
-               C78,64 76,54 74,44 C72,34 72,24 74,16 Z"
-            fill="#A8863A"
-            opacity="0.8"
-          />
-          {/* Ojo */}
-          <circle cx="80" cy="16" r="3.5" fill="#0B1510" />
-          <circle cx="81.2" cy="15" r="1.2" fill="white" opacity="0.9" />
-          {/* Fosa nasal */}
-          <ellipse cx="88" cy="26" rx="2.5" ry="1.8" fill="#8B6A2A" opacity="0.7" />
-          {/* Boca / mandíbula */}
-          <path
-            d="M84,34 C87,30 91,28 90,32 C89,36 84,38 84,34 Z"
-            fill="#A8863A"
-            opacity="0.6"
-          />
-          {/* Líneas de detalle del cuello */}
-          <path d="M60,80 C56,84 54,90 56,94" stroke="#A8863A" strokeWidth="1.2" fill="none" opacity="0.5" strokeLinecap="round" />
-          <path d="M58,100 C54,104 54,110 56,114" stroke="#A8863A" strokeWidth="1.2" fill="none" opacity="0.5" strokeLinecap="round" />
+        {/* ── PARTÍCULAS DORADAS ─────────────────────────────── */}
+        <div className="absolute left-1/2 top-1/3 pointer-events-none">
+          <div className="absolute -left-8 -top-2 w-2.5 h-2.5 rounded-full bg-[#C8AA6E] pt-a"
+            style={{ boxShadow: '0 0 6px 1px rgba(200,170,110,0.7)' }} />
+          <div className="absolute left-10 top-0 w-2 h-2 rounded-full bg-[#E8D080] pt-b"
+            style={{ boxShadow: '0 0 5px 1px rgba(232,208,128,0.7)' }} />
+          <div className="absolute left-2 top-4 w-1.5 h-1.5 rounded-full bg-[#C8AA6E] pt-c"
+            style={{ boxShadow: '0 0 4px 1px rgba(200,170,110,0.6)' }} />
+        </div>
 
-          {/* Reflejo dorado en el cuerpo */}
-          <path
-            d="M74,40 C78,46 80,56 80,68 C80,80 78,92 76,102"
-            stroke="#E8D090"
-            strokeWidth="2"
-            fill="none"
-            opacity="0.35"
-            strokeLinecap="round"
-          />
-        </g>
+        {/* ── IMAGEN DEL CABALLO + ANIMACIÓN ─────────────────── */}
+        <div className="knight-floating relative z-10 w-64 h-80 flex items-end justify-center">
+          {/* Overlay shimmer encima de la imagen */}
+          <div className="absolute inset-0 rounded-2xl knight-shimmer z-20 pointer-events-none" />
 
-        {/* ── ICONO ♞ FANTASMA (decorativo) ─────────────────────── */}
-        <text
-          x="240"
-          y="100"
-          fontSize="32"
-          fill="#C8AA6E"
-          opacity="0.07"
-          fontFamily="serif"
-          transform="rotate(15, 240, 100)"
-        >
-          ♞
-        </text>
-        <text
-          x="30"
-          y="200"
-          fontSize="24"
-          fill="#C8AA6E"
-          opacity="0.06"
-          fontFamily="serif"
-          transform="rotate(-10, 30, 200)"
-        >
-          ♞
-        </text>
-      </svg>
+          <Image
+            src="/chess-knight.jpg"
+            alt="Caballo de Ajedrez — Academia Alekhins"
+            width={320}
+            height={400}
+            className="object-contain w-full h-full drop-shadow-[0_0_32px_rgba(216,177,85,0.55)]"
+            style={{
+              filter: 'drop-shadow(0 0 24px rgba(216,177,85,0.5)) drop-shadow(0 8px 20px rgba(0,0,0,0.85))',
+            }}
+            priority
+          />
+        </div>
+
+        {/* ── SOMBRA DINÁMICA DEBAJO ─────────────────────────── */}
+        <div
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 w-40 h-5 rounded-full knight-shadow-el"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, transparent 75%)',
+            filter: 'blur(8px)',
+          }}
+        />
+
+        {/* Halo de suelo dorado */}
+        <div
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 w-36 h-3 rounded-full"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(216,177,85,0.3) 0%, transparent 75%)',
+            filter: 'blur(6px)',
+            animation: 'shadow-breathe 4s ease-in-out infinite',
+          }}
+        />
+      </div>
     </div>
   );
 }
