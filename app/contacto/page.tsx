@@ -78,16 +78,15 @@ export default function ContactoPage() {
         <div className="lg:col-span-5 space-y-6">
           {/* Card Principal */}
           <div className="card-carbon p-6 space-y-6 border-champagne/30">
-            <div className="flex items-center gap-3 border-b border-stone-border pb-4">
-              <div className="w-10 h-10 rounded-full bg-walnut/40 border border-champagne flex items-center justify-center text-champagne">
-                <Crown className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-serif-editorial text-base font-bold text-ivory">
-                  Academia de Ajedrez Alekhins
-                </h3>
-                <p className="text-xs text-champagne">Dirección Técnica MI Roberto Martín del Campo</p>
-              </div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-stone-border pb-4">
+              <img
+                src="/alekhins-logo-vector.svg"
+                alt="Academia de Ajedrez Alekhins"
+                className="h-10 w-auto brightness-110"
+              />
+              <span className="text-[10px] uppercase tracking-wider text-champagne bg-walnut/40 border border-champagne/40 px-2.5 py-1 rounded-full font-semibold">
+                Sede Central CDMX
+              </span>
             </div>
 
             <div className="space-y-4 text-xs text-ivory-muted">

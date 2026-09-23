@@ -301,6 +301,16 @@ export function Header() {
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-[#1C3328] bg-[#0F1E17] px-4 py-6 space-y-4 text-sm animate-in slide-in-from-top duration-200">
+            {/* Mobile Brand Header */}
+            <div className="pb-3 border-b border-[#1C3328]">
+              <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                <img
+                  src="/alekhins-logo-vector.svg"
+                  alt="Alekhins Academia de Ajedrez"
+                  className="h-10 w-auto brightness-110"
+                />
+              </Link>
+            </div>
             {status === 'authenticated' && user && (
               <div className="p-3 rounded-lg bg-[#121E17] border border-[#2B3E34] mb-3">
                 <p className="text-xs font-bold text-white">{user.name}</p>

@@ -140,6 +140,18 @@ export default function FounderPage() {
                 </div>
               </div>
 
+              {/* Sello Oficial Academia Alekhins */}
+              <div className="flex items-center justify-between p-3 rounded-lg bg-[#0F2E1E]/60 border border-[#D8B155]/30">
+                <img
+                  src="/alekhins-logo-vector.svg"
+                  alt="Academia de Ajedrez Alekhins"
+                  className="h-7 w-auto brightness-110"
+                />
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#D8B155]">
+                  Director Técnico
+                </span>
+              </div>
+
               {/* Ficha Técnica Rápida */}
               <div className="space-y-2.5 text-xs text-[#A8B2A6] border-t border-[#2B3E34] pt-4">
                 <div className="flex justify-between items-center py-1 border-b border-[#1C2C23]">

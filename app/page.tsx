@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { prisma } from '@/lib/db';
-import { AnimatedChessKnight } from '@/components/ui/AnimatedChessKnight';
+import { AnimatedLogoHero } from '@/components/ui/AnimatedLogoHero';
 import {
   Crown,
   ChevronRight,
@@ -64,9 +64,9 @@ export default async function HomePage() {
         <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-[#0F2E1E]/50 via-[#0F2E1E]/20 to-transparent pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Caballo animado visible en mobile arriba del texto */}
-          <div className="lg:hidden flex justify-center pb-2">
-            <AnimatedChessKnight />
+          {/* Logotipo animado visible en mobile arriba del texto */}
+          <div className="lg:hidden flex justify-center pb-2 w-full">
+            <AnimatedLogoHero />
           </div>
 
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
@@ -135,11 +135,11 @@ export default async function HomePage() {
             </div>
           </div>
 
-          {/* Caballo animado — columna derecha desktop */}
+          {/* Logotipo animado — columna derecha desktop */}
           <div className="hidden lg:flex lg:col-span-5 items-center justify-center relative">
             {/* Glow radial de fondo */}
             <div className="absolute inset-0 rounded-full" style={{ background: 'radial-gradient(ellipse at center, rgba(200,170,110,0.12) 0%, transparent 70%)' }} />
-            <AnimatedChessKnight />
+            <AnimatedLogoHero />
           </div>
         </div>
       </section>
@@ -814,9 +814,19 @@ export default async function HomePage() {
       </section>
 
       {/* 12. PRE-FOOTER CTA BANNER */}
-      <section className="bg-gradient-to-r from-[#0B1510] via-[#0F2E1E] to-[#0B1510] text-white py-16 border-t border-[#1C3328]">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="space-y-2 text-center md:text-left">
+      <section className="bg-gradient-to-r from-[#0B1510] via-[#0F2E1E] to-[#0B1510] text-white py-16 border-t border-[#1C3328] relative overflow-hidden">
+        {/* Marca de agua sutil del logotipo de fondo */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/6 opacity-5 pointer-events-none w-96 hidden md:block">
+          <img src="/alekhins-logo-vector.svg" alt="" className="w-full h-auto brightness-200" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+          <div className="space-y-3 text-center md:text-left">
+            <img
+              src="/alekhins-logo-vector.svg"
+              alt="Alekhins Academia de Ajedrez"
+              className="h-9 w-auto mx-auto md:mx-0 brightness-110 opacity-90"
+            />
             <h2 className="font-serif-editorial text-3xl sm:text-4xl font-bold">
               <span className="text-white block">Lleva tu ajedrez</span>
               <span className="text-[#D8B155] block">al siguiente nivel</span>

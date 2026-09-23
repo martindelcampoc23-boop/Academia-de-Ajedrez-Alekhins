@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Crown, Mail, Phone, MapPin, Send, Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
 
 export function Footer() {
   const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -22,18 +22,12 @@ export function Footer() {
 
         {/* Brand Column */}
         <div className="lg:col-span-2 space-y-5">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded border border-[#D8B155] bg-[#0F2E1E] flex items-center justify-center text-[#D8B155] shadow-md">
-              <Crown className="w-6 h-6" />
-            </div>
-            <div>
-              <span className="text-[10px] tracking-[0.2em] text-[#D8B155] uppercase font-bold block leading-none">
-                ACADEMIA DE AJEDREZ
-              </span>
-              <span className="font-serif-editorial text-xl font-bold tracking-wider text-white block leading-tight">
-                ALEKHINS
-              </span>
-            </div>
+          <Link href="/" className="inline-block group">
+            <img
+              src="/alekhins-logo-vector.svg"
+              alt="Alekhins Academia de Ajedrez"
+              className="h-11 md:h-12 w-auto brightness-110 group-hover:brightness-125 transition-all duration-300"
+            />
           </Link>
 
           <p className="text-xs leading-relaxed text-gray-400 max-w-xs">

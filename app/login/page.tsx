@@ -64,12 +64,16 @@ function LoginFormContent() {
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#1B4D3E]/10 rounded-full blur-3xl -z-10" />
 
         {/* Encabezado */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#1B4D3E]/30 border border-[#C8AA6E]/40 text-[#C8AA6E] mb-2 shadow-inner">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
-          <span className="text-xs uppercase font-bold tracking-widest text-[#C8AA6E] block">
-            Portal Oficial Alekhins
+        <div className="text-center space-y-3">
+          <Link href="/" className="inline-block hover:opacity-90 transition mb-1">
+            <img
+              src="/alekhins-logo-vector.svg"
+              alt="Alekhins Academia de Ajedrez"
+              className="h-11 w-auto mx-auto brightness-110"
+            />
+          </Link>
+          <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#D8B155] block">
+            Portal Oficial de Alumnos & Maestros
           </span>
           <h1 className="text-2xl font-serif font-bold text-[#F6F3EC]">
             Iniciar Sesión
