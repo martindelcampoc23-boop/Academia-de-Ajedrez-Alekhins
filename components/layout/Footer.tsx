@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Send, Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
+import { playLogoClickSound } from '@/lib/soundEffects';
 
 export function Footer() {
   const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -22,7 +23,7 @@ export function Footer() {
 
         {/* Brand Column */}
         <div className="lg:col-span-2 space-y-5">
-          <Link href="/" className="inline-block group">
+          <Link href="/" onClick={playLogoClickSound} className="inline-block group">
             <img
               src="/alekhins-logo-vector.svg"
               alt="Alekhins Academia de Ajedrez"

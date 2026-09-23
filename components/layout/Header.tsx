@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { useCart } from '@/components/providers/CartProvider';
 import { GlobalSearch } from '@/components/ui/GlobalSearch';
+import { playLogoClickSound } from '@/lib/soundEffects';
 import {
   ShoppingBag,
   Search,
@@ -49,7 +50,7 @@ export function Header() {
       <header className="sticky top-0 z-40 bg-[#0B1510] border-b border-[#1C3328] text-white shadow-xl">
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center group">
+          <Link href="/" onClick={playLogoClickSound} className="flex items-center group">
             <img
               src="/alekhins-logo-vector.svg"
               alt="Alekhins Academia de Ajedrez"
@@ -303,7 +304,13 @@ export function Header() {
           <div className="lg:hidden border-t border-[#1C3328] bg-[#0F1E17] px-4 py-6 space-y-4 text-sm animate-in slide-in-from-top duration-200">
             {/* Mobile Brand Header */}
             <div className="pb-3 border-b border-[#1C3328]">
-              <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+              <Link
+                href="/"
+                onClick={() => {
+                  playLogoClickSound();
+                  setMobileMenuOpen(false);
+                }}
+              >
                 <img
                   src="/alekhins-logo-vector.svg"
                   alt="Alekhins Academia de Ajedrez"

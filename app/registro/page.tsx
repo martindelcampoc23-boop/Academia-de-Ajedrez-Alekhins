@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { ShieldCheck, Mail, Lock, User, CheckCircle2, AlertCircle, ArrowRight, BookOpen } from 'lucide-react';
+import { playLogoClickSound } from '@/lib/soundEffects';
 
 function RegisterFormContent() {
   const router = useRouter();
@@ -95,7 +96,7 @@ function RegisterFormContent() {
 
         {/* Encabezado */}
         <div className="text-center space-y-3">
-          <Link href="/" className="inline-block hover:opacity-90 transition mb-1">
+          <Link href="/" onClick={playLogoClickSound} className="inline-block hover:opacity-90 transition mb-1">
             <img
               src="/alekhins-logo-vector.svg"
               alt="Alekhins Academia de Ajedrez"

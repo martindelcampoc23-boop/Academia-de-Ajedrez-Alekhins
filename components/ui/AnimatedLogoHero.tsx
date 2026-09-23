@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { playLogoClickSound } from '@/lib/soundEffects';
 
 /**
  * AnimatedLogoHero
@@ -156,7 +157,14 @@ export function AnimatedLogoHero() {
         </div>
 
         {/* ── LOGOTIPO VECTORIAL CON LEVITACIÓN 3D Y DESTELLO ── */}
-        <div className="anim-hero-logo relative z-10 w-full flex items-center justify-center group cursor-pointer">
+        <div
+          onClick={playLogoClickSound}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') playLogoClickSound(); }}
+          className="anim-hero-logo relative z-10 w-full flex items-center justify-center group cursor-pointer active:scale-95 transition-transform"
+          title="Alekhins Academia de Ajedrez"
+        >
           <div className="relative overflow-hidden rounded-2xl p-4 sm:p-5 transition-transform duration-500 hover:scale-[1.03]">
             {/* Destello de luz transversal (Sheen) */}
             <div
