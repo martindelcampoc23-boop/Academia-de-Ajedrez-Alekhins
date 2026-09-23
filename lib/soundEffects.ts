@@ -1,107 +1,74 @@
 /**
- * Utilidad de efectos de audio de la Academia de Ajedrez Alekhins
- * Sintetiza el sonido característico de una pieza de ajedrez Staunton de madera noble
- * al colocarse sobre el tablero (impacto acústico + resonancia dorada armónica),
- * utilizando la Web Audio API nativa del navegador.
+ * Utilidad de sonido oficial de la Academia de Ajedrez Alekhins
+ * Reproduce el auténtico sonido acústico real de una pieza de ajedrez Staunton
+ * de madera noble al ser movida sobre el tablero de torneo.
  *
- * Ventajas:
- * - Cero latencia (reproducción instantánea)
- * - Cero dependencias de archivos externos o peticiones HTTP
- * - Funciona en navegadores de escritorio y móviles
+ * Características:
+ * - Grabación orgánica real (sin sintetizadores electrónicos ni pitidos artificiales)
+ * - Pool de audio pre-cargado para reproducción instantánea con 0 latencia
+ * - Soporte para clics rápidos consecutivos sin saturación
  */
 
-let sharedAudioCtx: AudioContext | null = null;
+const AUDIO_SRC = '/sounds/chess-move.mp3';
 
-function getAudioContext(): AudioContext | null {
-  if (typeof window === 'undefined') return null;
+let audioPool: HTMLAudioElement[] = [];
+let poolIndex = 0;
+const POOL_SIZE = 3;
+
+function initPool() {
+  if (typeof window === 'undefined') return;
+  if (audioPool.length > 0) return;
+
   try {
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioCtx) return null;
-    if (!sharedAudioCtx || sharedAudioCtx.state === 'closed') {
-      sharedAudioCtx = new AudioCtx();
+    for (let i = 0; i < POOL_SIZE; i++) {
+      const audio = new Audio(AUDIO_SRC);
+      audio.preload = 'auto';
+      audio.volume = 0.75;
+      audioPool.push(audio);
     }
-    if (sharedAudioCtx.state === 'suspended') {
-      sharedAudioCtx.resume();
-    }
-    return sharedAudioCtx;
   } catch {
-    return null;
+    // Silencio seguro si el entorno no permite Audio
+  }
+}
+
+// Inicialización temprana en el cliente
+if (typeof window !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPool, { once: true });
+  } else {
+    initPool();
   }
 }
 
 export function playLogoClickSound() {
+  if (typeof window === 'undefined') return;
+
   try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-
-    const now = ctx.currentTime;
-
-    // 1. IMPACTO DE PIEZA DE AJEDREZ DE MADERA (Golpe cuerpo grave)
-    const bodyOsc = ctx.createOscillator();
-    const bodyGain = ctx.createGain();
-    bodyOsc.type = 'triangle';
-    bodyOsc.frequency.setValueAtTime(240, now);
-    bodyOsc.frequency.exponentialRampToValueAtTime(70, now + 0.07);
-
-    bodyGain.gain.setValueAtTime(0.45, now);
-    bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
-
-    bodyOsc.connect(bodyGain);
-    bodyGain.connect(ctx.destination);
-
-    bodyOsc.start(now);
-    bodyOsc.stop(now + 0.075);
-
-    // 2. CLIC MECÁNICO DE IMPACTO (Transient de madera / tap)
-    const bufferSize = Math.floor(ctx.sampleRate * 0.03);
-    const clickBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const channelData = clickBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      channelData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.005));
+    if (audioPool.length === 0) {
+      initPool();
     }
 
-    const noiseSource = ctx.createBufferSource();
-    noiseSource.buffer = clickBuffer;
+    if (audioPool.length > 0) {
+      const audio = audioPool[poolIndex];
+      poolIndex = (poolIndex + 1) % audioPool.length;
 
-    const noiseFilter = ctx.createBiquadFilter();
-    noiseFilter.type = 'bandpass';
-    noiseFilter.frequency.setValueAtTime(1400, now);
-    noiseFilter.Q.setValueAtTime(3.0, now);
-
-    const noiseGain = ctx.createGain();
-    noiseGain.gain.setValueAtTime(0.3, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
-
-    noiseSource.connect(noiseFilter);
-    noiseFilter.connect(noiseGain);
-    noiseGain.connect(ctx.destination);
-
-    noiseSource.start(now);
-
-    // 3. RESONANCIA ARMÓNICA DORADA DE LA ACADEMIA (Campanilla suave y sutil)
-    const chimeOsc1 = ctx.createOscillator();
-    const chimeOsc2 = ctx.createOscillator();
-    const chimeGain = ctx.createGain();
-
-    chimeOsc1.type = 'sine';
-    chimeOsc1.frequency.setValueAtTime(587.33, now + 0.015); // D5
-    chimeOsc2.type = 'sine';
-    chimeOsc2.frequency.setValueAtTime(880.0, now + 0.015);  // A5
-
-    chimeGain.gain.setValueAtTime(0.0001, now);
-    chimeGain.gain.setValueAtTime(0.12, now + 0.02);
-    chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
-
-    chimeOsc1.connect(chimeGain);
-    chimeOsc2.connect(chimeGain);
-    chimeGain.connect(ctx.destination);
-
-    chimeOsc1.start(now + 0.015);
-    chimeOsc2.start(now + 0.015);
-    chimeOsc1.stop(now + 0.36);
-    chimeOsc2.stop(now + 0.36);
+      audio.currentTime = 0;
+      audio.volume = 0.75;
+      const promise = audio.play();
+      if (promise !== undefined) {
+        promise.catch(() => {
+          // Si el navegador requiere interacción directa previa, creamos fallback instantáneo
+          const fallback = new Audio(AUDIO_SRC);
+          fallback.volume = 0.75;
+          fallback.play().catch(() => {});
+        });
+      }
+    } else {
+      const fallback = new Audio(AUDIO_SRC);
+      fallback.volume = 0.75;
+      fallback.play().catch(() => {});
+    }
   } catch (err) {
-    // Si el navegador tiene políticas restrictivas o no soporta audio, continúa en silencio sin interrumpir
-    console.debug('Error en efecto de sonido:', err);
+    console.debug('Audio playback note:', err);
   }
 }
