@@ -210,7 +210,7 @@ export function buildPersonLD() {
     jobTitle: 'Maestro Internacional de Ajedrez FIDE',
     birthDate: '1967-05-26',
     description:
-      'Maestro Internacional de Ajedrez FIDE (1987), Medallista de Oro Olímpico en Novi Sad 1990 y Bicampeón del Memorial Carlos Torre Repetto (1987, 1996). Fundador y Director Técnico de la Academia de Ajedrez Alekhins.',
+      'Maestro Internacional de Ajedrez FIDE (1987), Medallista de Oro Olímpico Individual en Novi Sad 1990, 4 veces Seleccionado Olímpico Nacional (1988, 1990, 1992, 1998) y Bicampeón del Memorial Carlos Torre Repetto (1987, 1996). Fundador y Director Técnico de la Academia de Ajedrez Alekhins.',
     url: `${BASE_URL}/roberto-martin-del-campo`,
     sameAs: [
       'https://ratings.fide.com/profile/5100046',

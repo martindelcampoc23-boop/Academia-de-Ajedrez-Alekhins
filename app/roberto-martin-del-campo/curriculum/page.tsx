@@ -119,7 +119,28 @@ export default function CurriculumPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Salónica 1988 */}
+          <div className="bg-[#121E17] border border-[#2B3E34] rounded-2xl p-6 space-y-4 shadow-lg">
+            <div className="flex items-center justify-between">
+              <span className="px-3 py-1 rounded-full bg-[#1B4D3E] text-[#D8B155] text-[10px] font-bold uppercase">
+                Seleccionado Olímpico
+              </span>
+              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1988</span>
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="font-serif-editorial text-xl font-bold text-white">
+                28ª Olimpiada de Salónica
+              </h3>
+              <p className="text-xs text-[#A8B2A6]">Grecia • Seleccionado Nacional de México</p>
+            </div>
+
+            <p className="text-[11px] text-[#8E9B8C] leading-relaxed">
+              Primera participación olímpica, representando a México en la histórica ciudad griega de Salónica en la máxima cita mundial del ajedrez por equipos.
+            </p>
+          </div>
+
           {/* Novi Sad 1990 */}
           <div className="bg-gradient-to-b from-[#1C3A29] to-[#0F1E16] border-2 border-[#D8B155] rounded-2xl p-6 space-y-4 shadow-xl relative overflow-hidden">
             <div className="flex items-center justify-between">
@@ -133,26 +154,11 @@ export default function CurriculumPage() {
               <h3 className="font-serif-editorial text-xl font-bold text-white">
                 29ª Olimpiada de Novi Sad
               </h3>
-              <p className="text-xs text-[#D8B155]">Yugoslavia • Tablero 4 de México</p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[#0B1510]/80 border border-[#2B3E34] space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-[#8E9B8C]">Rendimiento Histórico:</span>
-                <strong className="text-emerald-400 font-bold">75.0% de efectividad</strong>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#8E9B8C]">Score Individual:</span>
-                <strong className="text-white font-mono">+6 =3 -1 (7.5 / 10 pts)</strong>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#8E9B8C]">Distinción:</span>
-                <strong className="text-[#D8B155]">Mejor Tablero del Torneo</strong>
-              </div>
+              <p className="text-xs text-[#D8B155]">Yugoslavia • Seleccionado Nacional de México</p>
             </div>
 
             <p className="text-[11px] text-[#C2CCC0] italic leading-relaxed">
-              Una de las más grandes gestas deportivas en la historia del ajedrez mexicano, superando a maestros y grandes maestros de las principales potencias mundiales.
+              Una de las más grandes gestas deportivas en la historia del ajedrez mexicano. Conquistó la medalla de oro individual, consagrándose como el mejor en su tablero a nivel mundial.
             </p>
           </div>
 
@@ -169,22 +175,7 @@ export default function CurriculumPage() {
               <h3 className="font-serif-editorial text-xl font-bold text-white">
                 30ª Olimpiada de Manila
               </h3>
-              <p className="text-xs text-[#A8B2A6]">Filipinas • Tablero 3 de México</p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[#0B1510] border border-[#2B3E34] space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-[#8E9B8C]">Partidas Oficiales:</span>
-                <strong className="text-white font-mono">14 rondas disputadas</strong>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#8E9B8C]">Score Individual:</span>
-                <strong className="text-white font-mono">+6 =5 -3 (8.5 / 14 pts)</strong>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#8E9B8C]">Desempeño:</span>
-                <strong className="text-emerald-400">Pilar del Equipo Nacional</strong>
-              </div>
+              <p className="text-xs text-[#A8B2A6]">Filipinas • Seleccionado Nacional de México</p>
             </div>
 
             <p className="text-[11px] text-[#8E9B8C] leading-relaxed">
@@ -205,22 +196,7 @@ export default function CurriculumPage() {
               <h3 className="font-serif-editorial text-xl font-bold text-white">
                 33ª Olimpiada de Elista
               </h3>
-              <p className="text-xs text-[#A8B2A6]">Rusia (Kalmukia) • Tablero 2 de México</p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[#0B1510] border border-[#2B3E34] space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-[#8E9B8C]">Jerarquía:</span>
-                <strong className="text-white">2º Tablero Nacional</strong>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#8E9B8C]">Competencia:</span>
-                <strong className="text-white">Élite FIDE Internacional</strong>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#8E9B8C]">Sede:</span>
-                <strong className="text-white">City Chess, Elista</strong>
-              </div>
+              <p className="text-xs text-[#A8B2A6]">Rusia (Kalmukia) • Seleccionado Nacional de México</p>
             </div>
 
             <p className="text-[11px] text-[#8E9B8C] leading-relaxed">
@@ -399,8 +375,8 @@ export default function CurriculumPage() {
                   <td className="py-3 px-4 font-mono font-bold text-[#D8B155]">1990</td>
                   <td className="py-3 px-4 font-semibold text-white">29ª Olimpiada Mundial de Ajedrez</td>
                   <td className="py-3 px-4 text-[#8E9B8C]">Novi Sad, Yugoslavia</td>
-                  <td className="py-3 px-4"><span className="text-amber-300 font-bold">🥇 Medalla de Oro Individual</span> (7.5/10 pts)</td>
-                  <td className="py-3 px-4 hidden md:table-cell text-emerald-400 font-bold">75.0% Efectividad (Mejor Tablero 4)</td>
+                  <td className="py-3 px-4"><span className="text-amber-300 font-bold">🥇 Medalla de Oro Individual</span></td>
+                  <td className="py-3 px-4 hidden md:table-cell text-emerald-400 font-bold">Mejor Tablero a Nivel Mundial</td>
                 </tr>
                 <tr className="hover:bg-[#1B4D3E]/20 transition">
                   <td className="py-3 px-4 font-mono text-[#D8B155]">1987</td>

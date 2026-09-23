@@ -81,7 +81,7 @@ export default function FounderPage() {
 
             {/* Biografía ejecutiva */}
             <p className="text-sm sm:text-base text-[#C2CCC0] leading-relaxed font-sans max-w-2xl mx-auto lg:mx-0">
-              Protagonista histórico del ajedrez en Iberoamérica y una de las mentes analíticas más distinguidas de México. Conquistó la <strong className="text-white font-semibold">Medalla de Oro Olímpica Individual</strong> en la 29ª Olimpiada Mundial de la FIDE con un impresionante 75% de efectividad. Formador de múltiples generaciones de maestros, campeones nacionales y medallistas panamericanos.
+              Protagonista histórico del ajedrez en Iberoamérica y una de las mentes analíticas más distinguidas de México. Conquistó la <strong className="text-white font-semibold">Medalla de Oro Olímpica Individual</strong> en la 29ª Olimpiada Mundial de la FIDE en Novi Sad 1990. Formador de múltiples generaciones de maestros, campeones nacionales y medallistas panamericanos.
             </p>
 
             {/* Botones de acción principales */}
@@ -201,16 +201,16 @@ export default function FounderPage() {
             </div>
             <p className="text-2xl sm:text-3xl font-black text-white font-mono">1º Lugar</p>
             <p className="text-xs text-[#D8B155] font-bold uppercase tracking-wider">Oro Olímpico FIDE</p>
-            <p className="text-[11px] text-[#8E9B8C]">75% de efectividad en Novi Sad 1990</p>
+            <p className="text-[11px] text-[#8E9B8C]">Novi Sad 1990</p>
           </div>
 
           <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/60 transition-all rounded-xl p-5 space-y-2 text-center shadow-lg group">
             <div className="w-10 h-10 mx-auto rounded-lg bg-[#1B4D3E] text-emerald-400 flex items-center justify-center font-bold mb-3 group-hover:scale-110 transition-transform">
               <Trophy className="w-5 h-5" />
             </div>
-            <p className="text-2xl sm:text-3xl font-black text-white font-mono">3 Olimpiadas</p>
+            <p className="text-2xl sm:text-3xl font-black text-white font-mono">4 Olimpiadas</p>
             <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider">Seleccionado Nacional</p>
-            <p className="text-[11px] text-[#8E9B8C]">Novi Sad 1990, Manila 1992, Elista 1998</p>
+            <p className="text-[11px] text-[#8E9B8C]">Salónica 1988, Novi Sad 1990, Manila 1992, Elista 1998</p>
           </div>
 
           <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/60 transition-all rounded-xl p-5 space-y-2 text-center shadow-lg group">
@@ -277,7 +277,21 @@ export default function FounderPage() {
             </p>
           </div>
 
-          {/* Hito 3: 1990 */}
+          {/* Hito 3: 1988 */}
+          <div className="relative pl-8 group">
+            <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-[#1B4D3E] border border-[#D8B155] ring-4 ring-[#0B1510] group-hover:scale-125 transition-transform" />
+            <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
+              <span className="font-mono text-sm font-black text-[#8E9B8C]">1988</span>
+              <h3 className="font-serif-editorial text-lg font-bold text-white">
+                28ª Olimpiada Mundial de Salónica (Grecia)
+              </h3>
+            </div>
+            <p className="text-xs text-[#A8B2A6] leading-relaxed max-w-2xl">
+              Primera participación como Seleccionado Nacional de México en la máxima cita mundial del ajedrez por equipos, representando a su país en la histórica ciudad griega de Salónica.
+            </p>
+          </div>
+
+          {/* Hito 4: 1990 */}
           <div className="relative pl-8 group">
             <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-amber-400 ring-4 ring-[#0B1510] shadow-[0_0_12px_rgba(251,191,36,0.8)] group-hover:scale-125 transition-transform" />
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
@@ -287,11 +301,11 @@ export default function FounderPage() {
               </h3>
             </div>
             <p className="text-xs text-[#C2CCC0] leading-relaxed max-w-2xl bg-[#122A1E]/60 p-4 rounded-xl border border-amber-500/40">
-              Máxima hazaña del ajedrez mexicano en la 29ª Olimpiada Mundial FIDE (Yugoslavia). Defendiendo el 4º tablero nacional, finaliza con un récord de <strong className="text-white">+6 =3 -1 (7.5 de 10 puntos)</strong> y un <strong className="text-[#D8B155]">75.0% de efectividad</strong>, conquistando la medalla de oro individual al mejor tablero del planeta.
+              Máxima hazaña del ajedrez mexicano en la 29ª Olimpiada Mundial FIDE (Yugoslavia). Conquistó la medalla de oro individual al mejor tablero del planeta, consagrándose como el ajedrecista mexicano más destacado en la historia de las olimpiadas.
             </p>
           </div>
 
-          {/* Hito 4: 1992 - 1993 */}
+          {/* Hito 5: 1992 - 1993 */}
           <div className="relative pl-8 group">
             <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-[#1B4D3E] border border-[#D8B155] ring-4 ring-[#0B1510] group-hover:scale-125 transition-transform" />
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
@@ -301,7 +315,7 @@ export default function FounderPage() {
               </h3>
             </div>
             <p className="text-xs text-[#A8B2A6] leading-relaxed max-w-2xl">
-              Pilar de la selección olímpica en Filipinas 1992 (8.5/14 pts) y, un año más tarde, conquista el 1º lugar del selecto grupo Maestros en el prestigioso <strong className="text-white">Torneo Internacional Capablanca in Memoriam (Matanzas, Cuba, 1993)</strong>.
+              Pilar de la selección olímpica mexicana en Filipinas 1992 y, un año más tarde, conquista el 1º lugar del selecto grupo Maestros en el prestigioso <strong className="text-white">Torneo Internacional Capablanca in Memoriam (Matanzas, Cuba, 1993)</strong>.
             </p>
           </div>
 
