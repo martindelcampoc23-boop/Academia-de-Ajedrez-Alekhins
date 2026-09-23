@@ -548,3 +548,20 @@ model PasswordResetToken {
   @@index([token])
 }
 
+model FinanceEntry {
+  id            String   @id @default(uuid())
+  type          String   // "INCOME" | "EXPENSE"
+  category      String   // "Venta Directa", "Colegiatura / Clase Privada", "Material Ajedrez", "Nómina / Honorarios", "Marketing / Publicidad", "Software / Plataforma", "Envíos / Logística", "Impuestos / Bancarios", "Otros"
+  concept       String
+  amount        Float
+  date          DateTime @default(now())
+  paymentMethod String   @default("Transferencia") // "Stripe", "Transferencia", "Efectivo", "Tarjeta", "Otro"
+  notes         String?
+  receiptUrl    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([type])
+  @@index([date])
+}
+

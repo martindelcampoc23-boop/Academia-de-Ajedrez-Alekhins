@@ -299,57 +299,57 @@ async function main() {
     {
       name: 'Iniciación al Ajedrez',
       slug: 'iniciacion-al-ajedrez',
-      description: 'Para niños, jóvenes y adultos sin experiencia o principiantes. Aprende movimiento de piezas, tácticas básicas y mate en 1 y 2 jugadas.',
-      level: 'Principiante (0 - 1000 ELO)',
-      ageGroup: 'Todas las edades',
+      description: 'Diseñado para niños, jóvenes y adultos que inician en el ajedrez. Aprende táctica fundamental, visión geométrica del tablero, apertura básica y mates elementales.',
+      level: 'Principiante (0 - 1200 ELO)',
+      ageGroup: 'Niños, Jóvenes y Adultos',
       modality: 'Online en vivo (Zoom / Lichess)',
-      duration: '3 meses',
-      classCount: 12,
-      syllabus: '1. Movimiento y valor de piezas. 2. Jaque, jaque mate y ahogado. 3. Tácticas fundamentales (doble, clavada, enfilada). 4. Principios de apertura. 5. Mates elementales.',
-      benefits: 'Desarrollo de memoria, paciencia, atención y pensamiento lógico secuencial.',
-      price: 1200.00,
+      duration: 'Mensual renovable',
+      classCount: 4,
+      syllabus: '1. Movimiento, coordinación y valor relativo de piezas. 2. Jaques, jaque mate y recursos de tablas (ahogado, repetición). 3. Motivos tácticos esenciales (doble, clavada, descubierta). 4. Principios rectores de apertura. 5. Mates elementales de rey y dama, rey y torre.',
+      benefits: 'Desarrollo de memoria, pensamiento abstracto, paciencia y concentración bajo la metodología de un Maestro Internacional.',
+      price: 699.00,
       billingPeriod: 'MONTHLY',
       maxCapacity: 15,
-      includes: '4 clases mensuales de 60 min + Guías PDF en digital + Acceso a Videoteca Principiante + Torneos sabatinos internos'
+      includes: '4 clases mensuales en vivo de 60 min (1 por semana) + Guías didácticas en PDF + Acceso a videoteca de iniciación + Torneos sabatinos internos en plataforma'
     },
     {
       name: 'Desarrollo y Táctica Avanzada',
       slug: 'desarrollo-y-tactica-avanzada',
-      description: 'Orientado a jugadores intermedios que desean construir un repertorio de aperturas y dominar combinaciones tácticas complejas.',
-      level: 'Intermedio (1000 - 1600 ELO)',
+      description: 'Orientado a jugadores de club y entusiastas que buscan estructurar su repertorio, dominar planes estratégicos de medio juego y cálculo táctico profundo.',
+      level: 'Intermedio (1200 - 1700 ELO)',
       ageGroup: 'Juvenil y Adultos',
       modality: 'Online en vivo + Análisis PGN',
-      duration: '6 meses',
-      classCount: 24,
-      syllabus: '1. Cálculo y árbol de variantes. 2. Estructuras de peones centrales. 3. Repertorio e4/d4. 4. Finales de torres esenciales. 5. Psicología competitiva.',
-      benefits: 'Aumento significativo de ELO oficial FIDE/FENAMAC y precisión de cálculo.',
-      price: 1950.00,
+      duration: 'Mensual renovable',
+      classCount: 8,
+      syllabus: '1. Metodología de cálculo y árboles de variantes. 2. Estructuras de peones centrales y planes típicos. 3. Repertorio activo contra 1.e4 y 1.d4. 4. Finales prácticos esenciales de torres y piezas menores. 5. Manejo del tiempo en el reloj y psicología competitiva.',
+      benefits: 'Incremento medible de rating oficial (FIDE/FENAMAC), solidez estratégica y comprensión posicional avanzada.',
+      price: 1199.00,
       billingPeriod: 'MONTHLY',
       maxCapacity: 12,
-      includes: '8 clases mensuales en vivo + Análisis PGN de tus partidas + Acceso total a videoteca premium + Test mensual de rendimiento'
+      includes: '8 clases mensuales en vivo (2 por semana) + Revisión y análisis PGN de partidas de alumnos + Acceso total a videoteca premium + Test mensual de rendimiento táctico'
     },
     {
-      name: 'Alto Rendimiento y Competición',
+      name: 'Alto Rendimiento y Maestría',
       slug: 'alto-rendimiento-y-competicion',
-      description: 'Programa exclusivo para atletas de ajedrez en preparación para campeonatos nacionales, estatales e internacionales.',
-      level: 'Avanzado (1600+ ELO)',
-      ageGroup: 'Competidores',
-      modality: 'Sesiones personalizadas + Preparación de rivales',
-      duration: 'Continuo',
-      classCount: 32,
-      syllabus: '1. Estudio profundo de aperturas personalizadas. 2. Preparación teórica contra rivales específicos. 3. Manejo del reloj bajo presión. 4. Análisis de partidas de GM.',
-      benefits: 'Orientación directa por el Maestro Internacional Roberto Martín del Campo.',
-      price: 3800.00,
+      description: 'Programa de élite para jugadores federados, seleccionados estatales y aspirantes a titulación FIDE. Supervisión directa y cátedra del MI Roberto Martín del Campo.',
+      level: 'Avanzado y Competidores (1700+ ELO)',
+      ageGroup: 'Competidores y Federados',
+      modality: 'Online en vivo + Laboratorio de Aperturas',
+      duration: 'Mensual renovable',
+      classCount: 12,
+      syllabus: '1. Diagnóstico y preparación de laboratorio contra rivales específicos. 2. Repertorio de aperturas a nivel Magistral con bases ChessBase. 3. Técnica depurada en finales complejos y profilaxis posicional. 4. Análisis crítico de partidas de Grandes Maestros contemporáneos. 5. Preparación física, emocional y competitiva para torneos oficiales.',
+      benefits: 'Cátedra y mentoría de élite con el MI Roberto Martín del Campo, 4 veces representante olímpico de México y Campeón Nacional.',
+      price: 1899.00,
       billingPeriod: 'MONTHLY',
       maxCapacity: 8,
-      includes: 'Clases individuales + Informes personalizados de debilidades posicionales + Bases PGN privadas + Soporte directo vía WhatsApp'
+      includes: '12 sesiones mensuales en vivo + Acceso ilimitado a toda la plataforma y videoteca + Bases PGN magistrales personalizadas + Asesoría personalizada en torneos y soporte directo vía WhatsApp'
     }
   ];
 
   for (const plan of plansData) {
     await prisma.trainingPlan.upsert({
       where: { slug: plan.slug },
-      update: {},
+      update: plan,
       create: plan
     });
   }
