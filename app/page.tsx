@@ -65,10 +65,8 @@ export default async function HomePage() {
 
         <div className="max-w-7xl mx-auto px-4 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Caballo animado visible en mobile arriba del texto */}
-          <div className="lg:hidden flex justify-center -mb-4">
-            <div className="w-48 h-48">
-              <AnimatedChessKnight />
-            </div>
+          <div className="lg:hidden flex justify-center pb-2">
+            <AnimatedChessKnight />
           </div>
 
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">

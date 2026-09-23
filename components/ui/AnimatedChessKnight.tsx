@@ -4,303 +4,258 @@ import React from 'react';
 
 /**
  * AnimatedChessKnight
- * Caballo blanco Staunton en SVG 3D vectorial puro (sin fondo/transparente)
- * - Animación más rápida y fluida (ciclo de 2.2 segundos)
- * - Efecto de levitación con balanceo táctico
- * - Brillos dorados y reflejos marfil de alta definición
- * - Sombra dinámica reactiva al movimiento
+ * Caballo blanco Staunton de torneo (Vectorial SVG 3D puro, transparente, sin fondo cuadrado)
+ * - Animación ágil, rápida y fluida (ciclo de 2.0s)
+ * - Totalmente responsivo en móvil y escritorio
+ * - Acabados marfil/blanco con resplandor dorado
  */
 export function AnimatedChessKnight() {
   return (
-    <div className="relative flex items-center justify-center w-full h-full" aria-hidden="true">
+    <div className="relative flex items-center justify-center w-full" aria-hidden="true">
       <style>{`
-        @keyframes fast-knight-float {
+        @keyframes quick-knight-float {
           0% {
-            transform: translateY(0px) rotate(-1.5deg) scale(1);
+            transform: translateY(0px) rotate(-1deg);
           }
-          30% {
-            transform: translateY(-18px) rotate(2deg) scale(1.02);
+          35% {
+            transform: translateY(-16px) rotate(1.5deg) scale(1.02);
           }
-          60% {
-            transform: translateY(-28px) rotate(-1.5deg) scale(1.035);
+          65% {
+            transform: translateY(-26px) rotate(-1deg) scale(1.03);
           }
           85% {
-            transform: translateY(-10px) rotate(1deg) scale(1.01);
+            transform: translateY(-10px) rotate(0.8deg) scale(1.01);
           }
           100% {
-            transform: translateY(0px) rotate(-1.5deg) scale(1);
+            transform: translateY(0px) rotate(-1deg);
           }
         }
 
-        @keyframes fast-shadow-pulse {
+        @keyframes quick-shadow-pulse {
           0%, 100% {
             transform: scaleX(1) scaleY(1);
-            opacity: 0.6;
+            opacity: 0.7;
           }
-          60% {
-            transform: scaleX(0.55) scaleY(0.55);
-            opacity: 0.18;
+          65% {
+            transform: scaleX(0.6) scaleY(0.6);
+            opacity: 0.2;
           }
         }
 
-        @keyframes fast-glow-pulse {
+        @keyframes quick-aura-glow {
           0%, 100% {
-            opacity: 0.4;
+            opacity: 0.35;
             transform: scale(0.95);
           }
           50% {
-            opacity: 0.85;
+            opacity: 0.75;
             transform: scale(1.08);
           }
         }
 
-        @keyframes spark-float-1 {
-          0%   { transform: translate(0, 0) scale(0.8); opacity: 0; }
-          40%  { opacity: 1; transform: translate(-10px, -30px) scale(1.2); }
-          100% { transform: translate(-20px, -65px) scale(0); opacity: 0; }
+        @keyframes gold-spark-1 {
+          0%   { transform: translate(0, 0) scale(0.7); opacity: 0; }
+          40%  { opacity: 1; transform: translate(-12px, -32px) scale(1.1); }
+          100% { transform: translate(-22px, -65px) scale(0); opacity: 0; }
         }
 
-        @keyframes spark-float-2 {
-          0%   { transform: translate(0, 0) scale(0.8); opacity: 0; }
-          40%  { opacity: 1; transform: translate(12px, -35px) scale(1.2); }
-          100% { transform: translate(24px, -70px) scale(0); opacity: 0; }
+        @keyframes gold-spark-2 {
+          0%   { transform: translate(0, 0) scale(0.7); opacity: 0; }
+          40%  { opacity: 1; transform: translate(14px, -36px) scale(1.1); }
+          100% { transform: translate(26px, -70px) scale(0); opacity: 0; }
         }
 
-        @keyframes spark-float-3 {
-          0%   { transform: translate(0, 0) scale(0.8); opacity: 0; }
-          40%  { opacity: 1; transform: translate(-6px, -25px) scale(1); }
-          100% { transform: translate(-12px, -55px) scale(0); opacity: 0; }
+        .knight-float-fast {
+          animation: quick-knight-float 2.0s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
 
-        .knight-fast-motion {
-          animation: fast-knight-float 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        .knight-shadow-fast {
+          animation: quick-shadow-pulse 2.0s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
 
-        .knight-fast-shadow {
-          animation: fast-shadow-pulse 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        .knight-glow-fast {
+          animation: quick-aura-glow 1.8s ease-in-out infinite;
         }
 
-        .knight-fast-glow {
-          animation: fast-glow-pulse 1.8s ease-in-out infinite;
-        }
-
-        .spark-1 { animation: spark-float-1 1.6s ease-out infinite 0.1s; }
-        .spark-2 { animation: spark-float-2 1.6s ease-out infinite 0.6s; }
-        .spark-3 { animation: spark-float-3 1.6s ease-out infinite 1.1s; }
+        .sparkle-a { animation: gold-spark-1 1.5s ease-out infinite 0.1s; }
+        .sparkle-b { animation: gold-spark-2 1.5s ease-out infinite 0.7s; }
       `}</style>
 
-      {/* Contenedor principal */}
-      <div className="relative w-80 h-96 flex items-end justify-center">
+      {/* Contenedor principal con tamaño explícito y seguro */}
+      <div className="relative w-72 h-80 sm:w-80 sm:h-96 flex flex-col items-center justify-end">
 
-        {/* ── RESPLANDOR DORADO DE FONDO (SIN BORDES, TOTALMENTE DIFUSO) ── */}
+        {/* Resplandor áurico dorado en el fondo (100% difuminado y suave) */}
         <div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full knight-fast-glow pointer-events-none"
+          className="absolute inset-0 m-auto w-56 h-56 rounded-full knight-glow-fast pointer-events-none"
           style={{
-            background: 'radial-gradient(circle, rgba(216,177,85,0.28) 0%, rgba(216,177,85,0.08) 50%, transparent 75%)',
-            filter: 'blur(20px)',
+            background: 'radial-gradient(circle, rgba(216,177,85,0.3) 0%, rgba(216,177,85,0.08) 50%, transparent 70%)',
+            filter: 'blur(24px)',
           }}
         />
 
-        {/* ── PARTÍCULAS DORADAS FLOTANTES ── */}
-        <div className="absolute left-1/2 top-1/3 pointer-events-none">
+        {/* Partículas doradas de energía */}
+        <div className="absolute top-1/4 left-1/2 pointer-events-none">
           <div
-            className="absolute -left-12 -top-4 w-2 h-2 rounded-full bg-[#E8C865] spark-1"
+            className="absolute -left-14 -top-6 w-2 h-2 rounded-full bg-[#E8C865] sparkle-a"
             style={{ boxShadow: '0 0 8px 2px rgba(232,200,101,0.9)' }}
           />
           <div
-            className="absolute left-14 -top-8 w-2.5 h-2.5 rounded-full bg-[#D8B155] spark-2"
+            className="absolute left-12 -top-10 w-2.5 h-2.5 rounded-full bg-[#D8B155] sparkle-b"
             style={{ boxShadow: '0 0 10px 3px rgba(216,177,85,0.9)' }}
-          />
-          <div
-            className="absolute -left-4 top-10 w-1.5 h-1.5 rounded-full bg-white spark-3"
-            style={{ boxShadow: '0 0 6px 2px rgba(255,255,255,0.9)' }}
           />
         </div>
 
-        {/* ── CABALLO BLANCO 3D VECTORIAL (TRANSPARENTE / SIN FONDO) ── */}
-        <div className="knight-fast-motion relative z-10 w-72 h-88 flex items-end justify-center drop-shadow-[0_10px_35px_rgba(216,177,85,0.45)]">
+        {/* ── PIEZA DE AJEDREZ: CABALLO BLANCO 3D VECTORIAL ── */}
+        <div className="knight-float-fast relative z-10 w-56 h-72 sm:w-64 sm:h-80 flex items-center justify-center">
           <svg
-            viewBox="0 0 240 290"
-            className="w-full h-full"
+            viewBox="0 0 200 250"
+            className="w-full h-full overflow-visible"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            style={{ filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.5)) drop-shadow(0 0 18px rgba(216,177,85,0.45))' }}
           >
             <defs>
-              {/* Gradiente principal cuerpo marfil/blanco */}
-              <linearGradient id="ivoryBody" x1="40" y1="30" x2="200" y2="260" gradientUnits="userSpaceOnUse">
+              {/* Gradiente del cuerpo marfil / blanco */}
+              <linearGradient id="knightWhiteBody" x1="30" y1="20" x2="180" y2="230" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#FFFFFF" />
-                <stop offset="30%" stopColor="#FAF7F0" />
-                <stop offset="65%" stopColor="#E6DCB8" />
-                <stop offset="90%" stopColor="#C9B88E" />
-                <stop offset="100%" stopColor="#9C8758" />
+                <stop offset="25%" stopColor="#FAF7F0" />
+                <stop offset="55%" stopColor="#EDE2CB" />
+                <stop offset="85%" stopColor="#D4C298" />
+                <stop offset="100%" stopColor="#A89466" />
               </linearGradient>
 
-              {/* Gradiente de luz especular frontal */}
-              <linearGradient id="specularGlow" x1="120" y1="20" x2="60" y2="180" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-                <stop offset="40%" stopColor="#FFFFFF" stopOpacity="0.6" />
-                <stop offset="80%" stopColor="#FAF4E6" stopOpacity="0" />
+              {/* Gradiente de luz frontal */}
+              <linearGradient id="knightLight" x1="100" y1="20" x2="50" y2="180" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+                <stop offset="50%" stopColor="#FAF5E8" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#EDE2CB" stopOpacity="0" />
               </linearGradient>
 
-              {/* Gradiente de sombras posicionales */}
-              <linearGradient id="darkShadows" x1="180" y1="80" x2="110" y2="200" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#4A3B22" stopOpacity="0.75" />
-                <stop offset="50%" stopColor="#735E38" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#9C8758" stopOpacity="0" />
+              {/* Gradiente de sombras y volumen posterior */}
+              <linearGradient id="knightShade" x1="160" y1="60" x2="90" y2="180" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#5E4B28" stopOpacity="0.65" />
+                <stop offset="60%" stopColor="#8C7342" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="#D4C298" stopOpacity="0" />
               </linearGradient>
 
               {/* Gradiente dorado del pedestal */}
-              <linearGradient id="goldTrim" x1="50" y1="240" x2="190" y2="280" gradientUnits="userSpaceOnUse">
+              <linearGradient id="knightGoldBase" x1="40" y1="210" x2="160" y2="245" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#F5D77F" />
-                <stop offset="50%" stopColor="#D8B155" />
-                <stop offset="100%" stopColor="#8C6D23" />
+                <stop offset="40%" stopColor="#D8B155" />
+                <stop offset="80%" stopColor="#A6822C" />
+                <stop offset="100%" stopColor="#5E4612" />
               </linearGradient>
-
-              {/* Filtro de brillo dorado para el contorno */}
-              <filter id="goldAura" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#D8B155" floodOpacity="0.4" />
-              </filter>
             </defs>
 
-            {/* 1. BASE Y PEDESTAL STAUNTON */}
-            <g filter="url(#goldAura)">
-              {/* Base inferior ancha */}
-              <ellipse cx="120" cy="265" rx="72" ry="18" fill="url(#goldTrim)" />
+            {/* 1. BASE STAUNTON */}
+            <g id="base-pedestal">
+              {/* Zócalo inferior */}
+              <ellipse cx="100" cy="232" rx="60" ry="14" fill="url(#knightGoldBase)" />
               <path
-                d="M50 264 C50 252 68 244 120 244 C172 244 190 252 190 264 L186 270 C186 278 160 283 120 283 C80 283 54 278 54 270 Z"
-                fill="url(#ivoryBody)"
+                d="M42 230 C42 220 58 212 100 212 C142 212 158 220 158 230 L155 235 C155 242 135 246 100 246 C65 246 45 242 45 235 Z"
+                fill="url(#knightWhiteBody)"
               />
-              {/* Anillo intermedio */}
-              <ellipse cx="120" cy="245" rx="58" ry="10" fill="url(#goldTrim)" />
+              {/* Anillo de moldura media */}
+              <ellipse cx="100" cy="214" rx="48" ry="9" fill="url(#knightGoldBase)" />
               <path
-                d="M64 244 C64 236 80 230 120 230 C160 230 176 236 176 244 L172 248 C172 254 152 257 120 257 C88 257 68 254 68 248 Z"
-                fill="url(#ivoryBody)"
+                d="M54 212 C54 206 68 200 100 200 C132 200 146 206 146 212 L142 216 C142 220 126 223 100 223 C74 223 58 220 58 216 Z"
+                fill="url(#knightWhiteBody)"
               />
-              {/* Collarín superior del pedestal */}
-              <ellipse cx="120" cy="230" rx="46" ry="7" fill="url(#goldTrim)" />
+              {/* Collarín superior del cuello */}
+              <ellipse cx="100" cy="201" rx="38" ry="6" fill="url(#knightGoldBase)" />
             </g>
 
-            {/* 2. CUERPO PRINCIPAL DEL CABALLO (STAUNTON KNIGHT) */}
-            <g>
-              {/* Silueta y masa principal */}
+            {/* 2. CABALLO BLANCO (CUELLO, CABEZA, CRIN, HOCICO) */}
+            <g id="knight-body">
+              {/* Cuerpo principal del caballo */}
               <path
-                d="M78 230 
-                   C74 200 68 168 62 145 
-                   C56 122 52 110 56 102 
-                   C60 94 72 90 85 96 
-                   C94 100 102 112 108 116 
-                   C107 106 105 88 102 68 
-                   C99 48 106 32 116 28 
-                   C124 25 132 29 135 38 
-                   C137 45 134 56 138 62 
-                   C142 68 152 68 162 76 
-                   C172 84 178 98 176 114 
-                   C174 128 168 140 162 148 
-                   C168 160 174 180 176 205 
-                   C177 218 174 225 166 230 
+                d="M66 200
+                   C62 174 56 145 50 125
+                   C44 104 40 92 45 84
+                   C50 75 62 72 74 78
+                   C82 82 90 94 96 98
+                   C94 88 92 72 88 52
+                   C85 34 92 18 100 14
+                   C108 10 116 14 118 24
+                   C120 30 118 40 122 46
+                   C126 52 136 52 146 60
+                   C156 68 162 82 160 98
+                   C158 112 152 124 146 132
+                   C152 144 158 162 160 185
+                   C161 194 158 198 150 201
                    Z"
-                fill="url(#ivoryBody)"
+                fill="url(#knightWhiteBody)"
                 stroke="#D8B155"
-                strokeWidth="2.5"
+                strokeWidth="2"
               />
 
-              {/* Pecho y relieve frontal iluminado */}
+              {/* Luz y brillo en el pecho y cuello frontal */}
               <path
-                d="M78 230 
-                   C74 200 68 168 62 145 
-                   C56 122 52 110 56 102 
-                   C60 94 72 90 85 96 
-                   C94 100 102 112 108 116 
-                   C100 135 96 168 98 230 
+                d="M66 200
+                   C62 174 56 145 50 125
+                   C44 104 40 92 45 84
+                   C50 75 62 72 74 78
+                   C82 82 90 94 96 98
+                   C88 114 84 144 86 200
                    Z"
-                fill="url(#specularGlow)"
+                fill="url(#knightLight)"
               />
 
-              {/* Crin del caballo (Mane carvings) */}
-              {/* Mechón 1 superior */}
+              {/* Sombra de relieve en el dorso/espalda */}
               <path
-                d="M136 40 C146 48 155 58 150 68 C144 64 138 58 136 48 Z"
-                fill="#8C7646"
-              />
-              {/* Mechón 2 */}
-              <path
-                d="M142 66 C158 74 168 88 162 100 C154 94 146 86 142 76 Z"
-                fill="#8C7646"
-              />
-              {/* Mechón 3 */}
-              <path
-                d="M152 98 C170 110 178 126 172 140 C164 132 156 122 152 110 Z"
-                fill="#8C7646"
-              />
-              {/* Mechón 4 inferior */}
-              <path
-                d="M158 138 C174 154 178 176 174 195 C168 182 162 168 158 150 Z"
-                fill="#8C7646"
+                d="M118 24
+                   C120 30 118 40 122 46
+                   C126 52 136 52 146 60
+                   C156 68 162 82 160 98
+                   C158 112 152 124 146 132
+                   C152 144 158 162 160 185
+                   C161 194 158 198 150 201
+                   C130 188 115 140 110 105
+                   C108 70 115 40 118 24 Z"
+                fill="url(#knightShade)"
               />
 
-              {/* Orejas talladas */}
+              {/* Crin tallada (Mane carvings) */}
+              <path d="M120 28 C130 36 138 46 134 54 C128 50 122 44 120 36 Z" fill="#8C7342" />
+              <path d="M125 52 C140 60 148 72 142 82 C134 76 128 70 125 60 Z" fill="#8C7342" />
+              <path d="M134 80 C150 90 158 104 152 116 C144 110 138 102 134 90 Z" fill="#8C7342" />
+              <path d="M140 114 C155 128 160 148 156 165 C150 154 144 142 140 126 Z" fill="#8C7342" />
+
+              {/* Oreja erguida */}
               <path
-                d="M116 28 C112 18 118 10 126 14 C130 18 128 26 124 35 Z"
-                fill="url(#ivoryBody)"
+                d="M100 14 C96 4 102 -2 110 2 C114 6 112 14 108 22 Z"
+                fill="url(#knightWhiteBody)"
                 stroke="#D8B155"
                 strokeWidth="1.5"
               />
-              <path
-                d="M120 28 C118 20 122 15 125 17 C127 20 126 25 123 30 Z"
-                fill="#8C7646"
-              />
+              <path d="M104 14 C102 6 106 2 109 4 C111 7 110 12 107 16 Z" fill="#8C7342" />
 
               {/* Ojo expresivo Staunton */}
-              <ellipse cx="94" cy="74" rx="6.5" ry="4.5" transform="rotate(-15 94 74)" fill="#2A2012" />
-              <circle cx="95.5" cy="72.5" r="2" fill="#FFFFFF" />
-              {/* Ceja / Arco orbitario */}
-              <path d="M84 68 C88 64 98 65 104 70" stroke="#8C7646" strokeWidth="2.5" strokeLinecap="round" />
+              <ellipse cx="80" cy="58" rx="5.5" ry="3.8" transform="rotate(-15 80 58)" fill="#241B0D" />
+              <circle cx="81.5" cy="56.5" r="1.8" fill="#FFFFFF" />
+              <path d="M72 52 C76 48 84 49 89 54" stroke="#8C7342" strokeWidth="2" strokeLinecap="round" />
 
               {/* Hocico y orificio nasal */}
-              <path
-                d="M60 102 C64 98 72 98 78 104"
-                stroke="#6B5731"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-              <ellipse cx="68" cy="103" rx="3.5" ry="2" transform="rotate(-20 68 103)" fill="#2A2012" />
+              <path d="M50 84 C54 80 62 80 68 86" stroke="#665026" strokeWidth="2" strokeLinecap="round" />
+              <ellipse cx="58" cy="85" rx="3" ry="1.8" transform="rotate(-20 58 85)" fill="#241B0D" />
 
-              {/* Línea de la boca / Mandíbula */}
-              <path
-                d="M72 114 C78 116 86 115 92 110"
-                stroke="#6B5731"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
+              {/* Mandíbula y labio */}
+              <path d="M60 96 C66 98 74 97 80 92" stroke="#665026" strokeWidth="1.8" strokeLinecap="round" />
 
-              {/* Relieve muscular de la mejilla */}
+              {/* Músculo facial de la mejilla */}
               <path
-                d="M90 85 C102 92 108 108 104 122 C98 128 88 124 82 115"
-                stroke="#C4AF7A"
-                strokeWidth="2"
+                d="M76 68 C88 74 94 88 90 100 C85 106 75 102 70 94"
+                stroke="#BFA977"
+                strokeWidth="1.8"
                 strokeLinecap="round"
                 fill="none"
               />
 
-              {/* Sombra de volumen en la espalda */}
+              {/* Reflejo de brillo brillante en el cuello */}
               <path
-                d="M135 38 
-                   C137 45 134 56 138 62 
-                   C142 68 152 68 162 76 
-                   C172 84 178 98 176 114 
-                   C174 128 168 140 162 148 
-                   C168 160 174 180 176 205 
-                   C177 218 174 225 166 230 
-                   C142 215 125 160 120 120 
-                   C120 80 130 50 135 38 Z"
-                fill="url(#darkShadows)"
-              />
-
-              {/* Destello de luz en el cuello */}
-              <path
-                d="M86 130 C84 165 88 198 94 228"
+                d="M72 115 C70 145 74 175 80 198"
                 stroke="#FFFFFF"
-                strokeWidth="3.5"
+                strokeWidth="3"
                 strokeLinecap="round"
                 opacity="0.85"
               />
@@ -308,20 +263,11 @@ export function AnimatedChessKnight() {
           </svg>
         </div>
 
-        {/* ── SOMBRA DINÁMICA DE CONTACTO EN EL SUELO ── */}
+        {/* Sombra elíptica dinámica en el suelo */}
         <div
-          className="absolute bottom-2 left-1/2 -translate-x-1/2 w-48 h-6 rounded-full knight-fast-shadow pointer-events-none"
+          className="w-44 h-5 rounded-full knight-shadow-fast pointer-events-none -mt-3"
           style={{
-            background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 45%, transparent 75%)',
-            filter: 'blur(6px)',
-          }}
-        />
-
-        {/* Halo de luz dorada en la base */}
-        <div
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 w-36 h-3 rounded-full pointer-events-none"
-          style={{
-            background: 'radial-gradient(ellipse at center, rgba(216,177,85,0.4) 0%, transparent 75%)',
+            background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.25) 50%, transparent 75%)',
             filter: 'blur(5px)',
           }}
         />
