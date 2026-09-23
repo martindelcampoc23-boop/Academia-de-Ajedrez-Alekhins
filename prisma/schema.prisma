@@ -476,7 +476,7 @@ model SiteSettings {
   heroSubtitle     String   @default("Entrenamiento especializado, conocimiento de alto nivel y material seleccionado para jugadores, familias, clubes y escuelas.")
   heroCtaPrimary   String   @default("Conoce nuestros planes")
   heroCtaSecondary String   @default("Comprar material de ajedrez")
-  whatsappNumber   String   @default("525500000000")
+  whatsappNumber   String   @default("529991020078")
   contactEmail     String   @default("contacto@alekhins.com")
   footerLegalText  String   @default("© 2026 Academia de Ajedrez Alekhins. Todos los derechos reservados.")
   updatedAt        DateTime @updatedAt

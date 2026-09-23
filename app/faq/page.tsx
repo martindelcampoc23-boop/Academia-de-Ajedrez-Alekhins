@@ -129,7 +129,7 @@ export default function FAQPage() {
               Contactar por Formulario →
             </Link>
             <a
-              href="https://wa.me/525512345678"
+              href="https://wa.me/529991020078"
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 rounded-lg bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/40 text-xs font-bold uppercase tracking-wider transition"

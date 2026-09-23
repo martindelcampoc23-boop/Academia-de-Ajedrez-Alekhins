@@ -45,10 +45,15 @@ export function Footer() {
               <Mail className="w-4 h-4 text-[#D8B155] shrink-0" />
               <span>info@alekhins.mx</span>
             </div>
-            <div className="flex items-center gap-2">
+            <a
+              href="https://wa.me/529991020078"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-[#D8B155] transition"
+            >
               <Phone className="w-4 h-4 text-[#D8B155] shrink-0" />
-              <span>+52 55 1234 5678</span>
-            </div>
+              <span>+52 999 102 0078</span>
+            </a>
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-[#D8B155] shrink-0" />
               <span>Ciudad de México</span>

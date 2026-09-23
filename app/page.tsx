@@ -26,6 +26,8 @@ import {
   Clock,
   HelpCircle,
   ExternalLink,
+  Medal,
+  MessageCircle,
   ShoppingBag as CartIcon
 } from 'lucide-react';
 
@@ -408,62 +410,77 @@ export default async function HomePage() {
       </section>
 
       {/* 5. SECCIÓN DEL FUNDADOR / MI ROBERTO MARTÍN DEL CAMPO */}
-      <section className="bg-gradient-to-b from-[#0F261B] to-[#0B1510] py-20 border-b border-[#1C3328]">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-5 text-center">
+      <section className="bg-gradient-to-b from-[#0F261B] via-[#0B1510] to-[#0F261B] py-20 border-b border-[#1C3328] relative overflow-hidden">
+        <div className="absolute top-1/2 left-0 w-96 h-96 bg-[#D8B155]/10 rounded-full blur-3xl pointer-events-none -translate-y-1/2" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+          <div className="lg:col-span-5 text-center flex justify-center">
             <div className="relative inline-block">
-              <div className="w-64 h-80 sm:w-72 sm:h-96 rounded-2xl overflow-hidden border-2 border-[#D8B155] shadow-2xl mx-auto relative">
+              <div className="w-64 h-80 sm:w-72 sm:h-96 rounded-2xl overflow-hidden border-2 border-[#D8B155] shadow-[0_0_40px_rgba(216,177,85,0.25)] mx-auto relative bg-[#080E0B]">
                 <Image
                   src="/maestro-roberto.jpg"
                   alt="MI Roberto Martín del Campo Cárdenas — Maestro Internacional de Ajedrez"
                   fill
-                  className="object-cover object-top"
+                  className="object-cover object-top hover:scale-105 transition-transform duration-700"
                   priority
                 />
               </div>
-              <div className="absolute -bottom-4 -right-2 sm:right-4 bg-[#D8B155] text-[#0B1510] font-bold text-xs px-4 py-2 rounded-lg shadow-xl uppercase tracking-wider">
-                👑 Maestro Internacional
+              <div className="absolute -bottom-4 -right-2 sm:right-2 bg-gradient-to-r from-amber-500 to-[#D8B155] text-[#0B1510] font-black text-[11px] px-4 py-2 rounded-xl shadow-2xl uppercase tracking-wider flex items-center gap-1.5 border border-amber-300/40">
+                <Medal className="w-3.5 h-3.5 text-[#0B1510]" />
+                <span>🥇 Oro Olímpico Novi Sad 1990</span>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 text-[#D8B155] text-xs font-bold uppercase tracking-widest">
-              <Award className="w-4 h-4" />
-              <span>Dirección Técnica y Pedagógica</span>
+          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1B4D3E] border border-[#D8B155]/50 text-[#D8B155] text-xs font-bold uppercase tracking-widest shadow-md">
+              <Crown className="w-3.5 h-3.5" />
+              <span>Dirección Técnica & Metodología de Alto Nivel</span>
             </div>
 
             <h2 className="font-serif-editorial text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
-              MI Roberto Martín del Campo Cárdenas
+              MI Roberto Abel <br className="hidden sm:inline" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#E8C865] to-[#D8B155]">
+                Martín del Campo Cárdenas
+              </span>
             </h2>
 
-            <p className="text-sm text-gray-300 leading-relaxed font-sans">
-              Uno de los ajedrecistas y pedagogos más respetados de México. Con más de 30 años de trayectoria competitiva internacional, ha representado a México en múltiples Olimpiadas Mundiales de Ajedrez y ha sido formador de decenas de campeones nacionales, maestros FIDE y atletas de alto rendimiento.
+            <p className="text-sm sm:text-base text-[#C2CCC0] leading-relaxed font-sans max-w-2xl mx-auto lg:mx-0">
+              Leyenda viva del ajedrez mexicano y una de las figuras más respetadas del continente. Medallista de Oro Olímpico Individual en la 29ª Olimpiada Mundial de la FIDE con un extraordinario 75% de efectividad. Formador de múltiples generaciones de maestros y fundador de la Academia Alekhins.
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
-              <div className="p-3 bg-[#121E17] border border-[#2B3E34] rounded-lg">
-                <span className="text-[#D8B155] font-bold text-lg block">Campeón</span>
-                <span className="text-[11px] text-gray-400">Nacional de México</span>
+            <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-2">
+              <div className="p-3.5 bg-[#121E17] border border-[#2B3E34] rounded-xl text-center">
+                <span className="text-amber-400 font-bold text-base sm:text-lg block">🥇 Oro Olímpico</span>
+                <span className="text-[10px] sm:text-[11px] text-[#8E9B8C]">Novi Sad 1990 (FIDE)</span>
               </div>
-              <div className="p-3 bg-[#121E17] border border-[#2B3E34] rounded-lg">
-                <span className="text-[#D8B155] font-bold text-lg block">Olímpico</span>
-                <span className="text-[11px] text-gray-400">Seleccionado Nacional</span>
+              <div className="p-3.5 bg-[#121E17] border border-[#2B3E34] rounded-xl text-center">
+                <span className="text-emerald-400 font-bold text-base sm:text-lg block">🏆 Torre Repetto</span>
+                <span className="text-[10px] sm:text-[11px] text-[#8E9B8C]">Campeón Magistral</span>
               </div>
-              <div className="p-3 bg-[#121E17] border border-[#2B3E34] rounded-lg col-span-2 sm:col-span-1">
-                <span className="text-[#D8B155] font-bold text-lg block">FIDE Trainer</span>
-                <span className="text-[11px] text-gray-400">Entrenador Oficial</span>
+              <div className="p-3.5 bg-[#121E17] border border-[#2B3E34] rounded-xl text-center">
+                <span className="text-[#D8B155] font-bold text-base sm:text-lg block">+35 Años</span>
+                <span className="text-[10px] sm:text-[11px] text-[#8E9B8C]">Docencia de Élite</span>
               </div>
             </div>
 
-            <div className="pt-2">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
               <Link
                 href="/roberto-martin-del-campo"
-                className="btn-gold-solid text-xs px-6 py-3 inline-flex items-center gap-2 shadow-lg"
+                className="btn-gold-solid text-xs px-6 py-3.5 inline-flex items-center gap-2 shadow-xl font-bold uppercase tracking-wider"
               >
                 <span>Conoce su biografía y trayectoria completa</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
+              <a
+                href="https://wa.me/529991020078?text=Hola%20MI%20Roberto,%20me%20gustar%C3%ADa%20informaci%C3%B3n%20sobre%20sus%20clases"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3.5 rounded-lg bg-[#121E17] hover:bg-[#1B2F23] border border-[#D8B155]/60 text-[#D8B155] text-xs font-bold uppercase tracking-wider transition flex items-center gap-2"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>WhatsApp (+52 999 102 0078)</span>
+              </a>
             </div>
           </div>
         </div>

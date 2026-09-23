@@ -111,12 +111,12 @@ export default function ContactoPage() {
                 <div>
                   <span className="font-semibold text-ivory block">WhatsApp & Atención Telefónica</span>
                   <a
-                    href="https://wa.me/525500000000"
+                    href="https://wa.me/529991020078"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-emerald-400 font-semibold hover:underline"
                   >
-                    +52 55 1234 5678
+                    +52 999 102 0078
                   </a>
                   <p className="text-[11px] text-ivory-dim">Lunes a Sábado de 9:00 a 19:00 hrs (CDMX)</p>
                 </div>

@@ -66,7 +66,7 @@ export default function TermsLegalPage() {
             <ul className="list-disc pl-5 space-y-1 text-[#A8B2A6]">
               <li>Correo electrónico general: <strong className="text-white">contacto@alekhins.com</strong></li>
               <li>Atención a alumnos y tienda: <strong className="text-white">soporte@alekhins.com</strong></li>
-              <li>Línea directa y WhatsApp: <strong className="text-white">+52 55 1234 5678</strong></li>
+              <li>Línea directa y WhatsApp: <strong className="text-white">+52 999 102 0078</strong></li>
             </ul>
           </section>
 

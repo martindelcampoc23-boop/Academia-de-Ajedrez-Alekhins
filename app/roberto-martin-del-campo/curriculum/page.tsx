@@ -16,7 +16,10 @@ import {
   Crown,
   Sparkles,
   Target,
-  Shield
+  Shield,
+  MessageCircle,
+  Clock,
+  ChevronRight
 } from 'lucide-react';
 
 export const metadata = {
@@ -27,25 +30,28 @@ export const metadata = {
 
 export default function CurriculumPage() {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12 space-y-16">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-16">
       {/* Navigation Breadcrumb */}
-      <div>
+      <div className="flex items-center justify-between">
         <Link
           href="/roberto-martin-del-campo"
-          className="inline-flex items-center gap-1.5 text-xs text-[#D8B155] hover:underline font-semibold"
+          className="inline-flex items-center gap-2 text-xs text-[#D8B155] hover:text-[#E8C865] font-bold uppercase tracking-wider transition group"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Volver al perfil del fundador
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          Volver al perfil biográfico
         </Link>
+        <span className="text-[11px] font-mono text-[#8E9B8C]">
+          Documento Oficial • FIDE ID: 5100046
+        </span>
       </div>
 
-      {/* Hero Profile Header */}
-      <div className="card-carbon p-8 border-[#D8B155]/40 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-[#D8B155]/5 rounded-full blur-3xl -z-10" />
+      {/* 1. HERO PROFILE DOSSIER HEADER */}
+      <div className="bg-gradient-to-b from-[#1C2C23] via-[#121E17] to-[#0D1611] rounded-2xl border-2 border-[#D8B155]/60 p-6 sm:p-10 shadow-[0_0_50px_rgba(216,177,85,0.15)] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#D8B155]/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-          <div className="md:col-span-4 text-center md:text-left">
-            <div className="w-44 h-56 mx-auto md:mx-0 rounded-2xl overflow-hidden border-2 border-[#D8B155] shadow-xl relative">
+          <div className="md:col-span-4 text-center md:text-left flex justify-center md:justify-start">
+            <div className="w-48 h-60 rounded-2xl overflow-hidden border-2 border-[#D8B155] shadow-2xl relative bg-[#080E0B]">
               <Image
                 src="/maestro-roberto.jpg"
                 alt="MI Roberto Abel Martín del Campo Cárdenas"
@@ -57,32 +63,39 @@ export default function CurriculumPage() {
           </div>
 
           <div className="md:col-span-8 space-y-4 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1B4D3E] border border-[#D8B155]/50 text-[#D8B155] text-xs font-bold uppercase tracking-wider">
-              <Crown className="w-3.5 h-3.5" />
-              Maestro Internacional FIDE • FIDE ID: 5100046
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1B4D3E] border border-[#D8B155]/60 text-[#D8B155] text-xs font-bold uppercase tracking-wider">
+                <Crown className="w-3.5 h-3.5" />
+                Maestro Internacional FIDE
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-950/60 border border-amber-500/50 text-amber-300 text-xs font-bold">
+                🥇 Oro Olímpico Novi Sad 1990
+              </div>
             </div>
 
-            <h1 className="font-serif-editorial text-3xl sm:text-4xl font-bold text-[#F6F3EC]">
+            <h1 className="font-serif-editorial text-3xl sm:text-4xl font-extrabold text-[#F6F3EC] tracking-tight">
               Roberto Abel Martín del Campo Cárdenas
             </h1>
 
-            <p className="text-xs sm:text-sm text-[#A8B2A6] leading-relaxed">
-              Gran exponente del ajedrez mexicano contemporáneo. Medallista de Oro Olímpico Individual (Novi Sad 1990), Campeón Panamericano Juvenil, ganador del Memorial Carlos Torre Repetto y pedagogo con más de 35 años de experiencia formando campeones y maestros.
+            <p className="text-xs sm:text-sm text-[#C2CCC0] leading-relaxed max-w-2xl">
+              Dossier curricular y palmarés deportivo del Maestro Internacional Roberto Martín del Campo. Más de 35 años representando a México en la élite del ajedrez mundial y forjando una reconocida escuela pedagógica de alto rendimiento.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2 text-xs">
-              <div className="p-2.5 rounded-lg bg-[#0B1510] border border-[#2B3E34] text-left">
-                <span className="text-[#A8B2A6] block text-[10px] uppercase font-bold">Título Máximo</span>
-                <span className="font-bold text-[#D8B155]">Maestro Internacional (1987)</span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-xs">
+              <div className="p-3 rounded-xl bg-[#0B1510] border border-[#2B3E34] text-left">
+                <span className="text-[#8E9B8C] block text-[10px] uppercase font-bold">Titulación</span>
+                <span className="font-bold text-[#D8B155]">MI (FIDE, 1987)</span>
               </div>
-
-              <div className="p-2.5 rounded-lg bg-[#0B1510] border border-[#2B3E34] text-left">
-                <span className="text-[#A8B2A6] block text-[10px] uppercase font-bold">Hito Histórico</span>
-                <span className="font-bold text-emerald-400">🥇 Oro Olímpico (1990)</span>
+              <div className="p-3 rounded-xl bg-[#0B1510] border border-[#2B3E34] text-left">
+                <span className="text-[#8E9B8C] block text-[10px] uppercase font-bold">Elo Máximo FIDE</span>
+                <span className="font-bold text-emerald-400 font-mono">2485 Elo</span>
               </div>
-
-              <div className="p-2.5 rounded-lg bg-[#0B1510] border border-[#2B3E34] text-left">
-                <span className="text-[#A8B2A6] block text-[10px] uppercase font-bold">Federación</span>
+              <div className="p-3 rounded-xl bg-[#0B1510] border border-[#2B3E34] text-left">
+                <span className="text-[#8E9B8C] block text-[10px] uppercase font-bold">Récord Oro</span>
+                <span className="font-bold text-amber-400">75% Efectividad</span>
+              </div>
+              <div className="p-3 rounded-xl bg-[#0B1510] border border-[#2B3E34] text-left">
+                <span className="text-[#8E9B8C] block text-[10px] uppercase font-bold">Federación</span>
                 <span className="font-bold text-white">México (FIDE)</span>
               </div>
             </div>
@@ -90,164 +103,188 @@ export default function CurriculumPage() {
         </div>
       </div>
 
-      {/* 1. PALMARÉS OLÍMPICO */}
-      <div className="space-y-6">
-        <div className="flex items-center gap-3 border-b border-[#2B3E34] pb-3">
-          <div className="p-2 rounded-lg bg-amber-950/60 border border-amber-800 text-amber-300">
-            <Medal className="w-5 h-5" />
+      {/* 2. PALMARÉS OLÍMPICO FIDE */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-[#2B3E34] pb-4">
+          <div className="p-2.5 rounded-xl bg-amber-950/70 border border-amber-700/60 text-amber-300">
+            <Medal className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="font-serif-editorial text-2xl font-bold text-[#F6F3EC]">
+            <h2 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-[#F6F3EC]">
               Representación en Olimpiadas Mundiales de Ajedrez (FIDE)
             </h2>
             <p className="text-xs text-[#A8B2A6]">
-              Seleccionado Nacional de México en las máximas justas del ajedrez internacional por equipos.
+              Participaciones estelares como Seleccionado Nacional de México en las máximas cumbres del ajedrez por equipos.
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Novi Sad 1990 */}
-          <div className="card-carbon p-6 space-y-4 border-[#D8B155] relative overflow-hidden bg-gradient-to-b from-[#1A3D2B]/40 to-[#121E17]">
+          <div className="bg-gradient-to-b from-[#1C3A29] to-[#0F1E16] border-2 border-[#D8B155] rounded-2xl p-6 space-y-4 shadow-xl relative overflow-hidden">
             <div className="flex items-center justify-between">
-              <span className="px-2.5 py-1 rounded-full bg-[#D8B155] text-[#0B1510] text-[10px] font-extrabold uppercase">
+              <span className="px-3 py-1 rounded-full bg-[#D8B155] text-[#0B1510] text-[10px] font-black uppercase tracking-wider">
                 🥇 Medalla de Oro Individual
               </span>
               <span className="text-xs font-mono text-[#D8B155] font-bold">1990</span>
             </div>
 
-            <h3 className="font-serif-editorial text-lg font-bold text-white">
-              29ª Olimpiada de Novi Sad
-            </h3>
-            <p className="text-xs text-[#A8B2A6]">Yugoslavia • Tablero 4 de México</p>
+            <div className="space-y-1">
+              <h3 className="font-serif-editorial text-xl font-bold text-white">
+                29ª Olimpiada de Novi Sad
+              </h3>
+              <p className="text-xs text-[#D8B155]">Yugoslavia • Tablero 4 de México</p>
+            </div>
 
-            <div className="p-3 rounded-lg bg-[#0B1510] border border-[#2B3E34] space-y-1.5 text-xs">
+            <div className="p-3.5 rounded-xl bg-[#0B1510]/80 border border-[#2B3E34] space-y-2 text-xs">
               <div className="flex justify-between">
-                <span className="text-[#A8B2A6]">Rendimiento:</span>
+                <span className="text-[#8E9B8C]">Rendimiento Histórico:</span>
                 <strong className="text-emerald-400 font-bold">75.0% de efectividad</strong>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#A8B2A6]">Récord individual:</span>
-                <strong className="text-white">+6 =3 -1 (7.5 / 10 pts)</strong>
+                <span className="text-[#8E9B8C]">Score Individual:</span>
+                <strong className="text-white font-mono">+6 =3 -1 (7.5 / 10 pts)</strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#8E9B8C]">Distinción:</span>
+                <strong className="text-[#D8B155]">Mejor Tablero del Torneo</strong>
               </div>
             </div>
 
-            <p className="text-[11px] text-gray-300 italic leading-relaxed">
-              Una de las actuaciones más brillantes en la historia del ajedrez mexicano, superando a maestros y grandes maestros de todo el planeta.
+            <p className="text-[11px] text-[#C2CCC0] italic leading-relaxed">
+              Una de las más grandes gestas deportivas en la historia del ajedrez mexicano, superando a maestros y grandes maestros de las principales potencias mundiales.
             </p>
           </div>
 
           {/* Manila 1992 */}
-          <div className="card-carbon p-6 space-y-4 border-[#2B3E34]">
+          <div className="bg-[#121E17] border border-[#2B3E34] rounded-2xl p-6 space-y-4 shadow-lg">
             <div className="flex items-center justify-between">
-              <span className="px-2.5 py-1 rounded-full bg-[#1B4D3E] text-[#D8B155] text-[10px] font-bold uppercase">
+              <span className="px-3 py-1 rounded-full bg-[#1B4D3E] text-[#D8B155] text-[10px] font-bold uppercase">
                 Seleccionado Olímpico
               </span>
-              <span className="text-xs font-mono text-[#A8B2A6] font-bold">1992</span>
+              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1992</span>
             </div>
 
-            <h3 className="font-serif-editorial text-lg font-bold text-white">
-              30ª Olimpiada de Manila
-            </h3>
-            <p className="text-xs text-[#A8B2A6]">Filipinas • Tablero 3 de México</p>
+            <div className="space-y-1">
+              <h3 className="font-serif-editorial text-xl font-bold text-white">
+                30ª Olimpiada de Manila
+              </h3>
+              <p className="text-xs text-[#A8B2A6]">Filipinas • Tablero 3 de México</p>
+            </div>
 
-            <div className="p-3 rounded-lg bg-[#0B1510] border border-[#2B3E34] space-y-1.5 text-xs">
+            <div className="p-3.5 rounded-xl bg-[#0B1510] border border-[#2B3E34] space-y-2 text-xs">
               <div className="flex justify-between">
-                <span className="text-[#A8B2A6]">Partidas disputadas:</span>
-                <strong className="text-white">14 rondas oficiales</strong>
+                <span className="text-[#8E9B8C]">Partidas Oficiales:</span>
+                <strong className="text-white font-mono">14 rondas disputadas</strong>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#A8B2A6]">Récord individual:</span>
-                <strong className="text-white">+6 =5 -3 (8.5 / 14 pts)</strong>
+                <span className="text-[#8E9B8C]">Score Individual:</span>
+                <strong className="text-white font-mono">+6 =5 -3 (8.5 / 14 pts)</strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#8E9B8C]">Desempeño:</span>
+                <strong className="text-emerald-400">Pilar del Equipo Nacional</strong>
               </div>
             </div>
 
-            <p className="text-[11px] text-[#A8B2A6] leading-relaxed">
-              Consolidación como pilar indiscutible del equipo olímpico mexicano en los tableros principales.
+            <p className="text-[11px] text-[#8E9B8C] leading-relaxed">
+              Consolidación como referente nacional en el circuito olímpico internacional enfrentando a seleccionados de los 5 continentes.
             </p>
           </div>
 
           {/* Elista 1998 */}
-          <div className="card-carbon p-6 space-y-4 border-[#2B3E34]">
+          <div className="bg-[#121E17] border border-[#2B3E34] rounded-2xl p-6 space-y-4 shadow-lg">
             <div className="flex items-center justify-between">
-              <span className="px-2.5 py-1 rounded-full bg-[#1B4D3E] text-[#D8B155] text-[10px] font-bold uppercase">
+              <span className="px-3 py-1 rounded-full bg-[#1B4D3E] text-[#D8B155] text-[10px] font-bold uppercase">
                 Seleccionado Olímpico
               </span>
-              <span className="text-xs font-mono text-[#A8B2A6] font-bold">1998</span>
+              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1998</span>
             </div>
 
-            <h3 className="font-serif-editorial text-lg font-bold text-white">
-              33ª Olimpiada de Elista
-            </h3>
-            <p className="text-xs text-[#A8B2A6]">Rusia (Kalmukia) • Tablero 2 de México</p>
+            <div className="space-y-1">
+              <h3 className="font-serif-editorial text-xl font-bold text-white">
+                33ª Olimpiada de Elista
+              </h3>
+              <p className="text-xs text-[#A8B2A6]">Rusia (Kalmukia) • Tablero 2 de México</p>
+            </div>
 
-            <div className="p-3 rounded-lg bg-[#0B1510] border border-[#2B3E34] space-y-1.5 text-xs">
+            <div className="p-3.5 rounded-xl bg-[#0B1510] border border-[#2B3E34] space-y-2 text-xs">
               <div className="flex justify-between">
-                <span className="text-[#A8B2A6]">Posición en equipo:</span>
+                <span className="text-[#8E9B8C]">Jerarquía:</span>
                 <strong className="text-white">2º Tablero Nacional</strong>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#A8B2A6]">Récord individual:</span>
-                <strong className="text-white">+2 =3 -4</strong>
+                <span className="text-[#8E9B8C]">Competencia:</span>
+                <strong className="text-white">Élite FIDE Internacional</strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#8E9B8C]">Sede:</span>
+                <strong className="text-white">City Chess, Elista</strong>
               </div>
             </div>
 
-            <p className="text-[11px] text-[#A8B2A6] leading-relaxed">
-              Enfrentamiento directo contra la élite mundial del ajedrez soviético y europeo en la capital del ajedrez.
+            <p className="text-[11px] text-[#8E9B8C] leading-relaxed">
+              Enfrentamiento directo contra grandes maestros de la escuela rusa y europea en una de las olimpiadas más exigentes técnicamente.
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* 2. LOGROS INTERNACIONALES Y NACIONALES */}
-      <div className="space-y-6">
-        <div className="flex items-center gap-3 border-b border-[#2B3E34] pb-3">
-          <div className="p-2 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-300">
-            <Trophy className="w-5 h-5" />
+      {/* 3. TORNEOS INTERNACIONALES Y MAGISTRALES GANADOS */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-[#2B3E34] pb-4">
+          <div className="p-2.5 rounded-xl bg-emerald-950/70 border border-emerald-700/60 text-emerald-300">
+            <Trophy className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="font-serif-editorial text-2xl font-bold text-[#F6F3EC]">
+            <h2 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-[#F6F3EC]">
               Torneos Magistrales e Internacionales Ganados
             </h2>
             <p className="text-xs text-[#A8B2A6]">
-              Palmarés deportivo en eventos de norma internacional y campeonatos abiertos de prestigio.
+              Palmarés deportivo en eventos con normas internacionales y torneos abiertos de máxima categoría.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="card-carbon p-5 space-y-2 border-stone-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/50 transition-all rounded-xl p-6 space-y-2.5 shadow-md">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-[#D8B155] text-xs uppercase">Torneo Magistral Continental</span>
-              <span className="text-xs font-mono text-[#A8B2A6]">1996</span>
+              <span className="font-bold text-[#D8B155] text-xs uppercase tracking-wider">
+                Torneo Magistral Continental
+              </span>
+              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1996</span>
             </div>
-            <h3 className="font-serif-editorial font-bold text-white text-base">
+            <h3 className="font-serif-editorial font-bold text-white text-lg">
               🏆 Campeón del Memorial Carlos Torre Repetto
             </h3>
             <p className="text-xs text-[#A8B2A6] leading-relaxed">
-              El torneo internacional de mayor prestigio en México y América Latina, reuniendo a Grandes Maestros de todo el mundo.
+              El torneo internacional de mayor renombre en México y América Latina, superando en una reñida competencia a Grandes Maestros y Maestros Internacionales de todo el mundo.
             </p>
           </div>
 
-          <div className="card-carbon p-5 space-y-2 border-stone-border">
+          <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/50 transition-all rounded-xl p-6 space-y-2.5 shadow-md">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-[#D8B155] text-xs uppercase">Campeonato Continental</span>
-              <span className="text-xs font-mono text-[#A8B2A6]">1987</span>
+              <span className="font-bold text-[#D8B155] text-xs uppercase tracking-wider">
+                Campeonato Continental
+              </span>
+              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1987</span>
             </div>
-            <h3 className="font-serif-editorial font-bold text-white text-base">
+            <h3 className="font-serif-editorial font-bold text-white text-lg">
               🏆 Campeón Panamericano Juvenil
             </h3>
             <p className="text-xs text-[#A8B2A6] leading-relaxed">
-              Título continental que consagró su obtención oficial de la titulación de Maestro Internacional por la FIDE a los 20 años.
+              Triunfo continental que le otorgó oficialmente el título de Maestro Internacional de la FIDE con apenas 20 años de edad.
             </p>
           </div>
 
-          <div className="card-carbon p-5 space-y-2 border-stone-border">
+          <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/50 transition-all rounded-xl p-6 space-y-2.5 shadow-md">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-[#D8B155] text-xs uppercase">Torneos en Estados Unidos</span>
-              <span className="text-xs font-mono text-[#A8B2A6]">1995 - 2021</span>
+              <span className="font-bold text-[#D8B155] text-xs uppercase tracking-wider">
+                Circuitos en Estados Unidos
+              </span>
+              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1995 – 2021</span>
             </div>
-            <h3 className="font-serif-editorial font-bold text-white text-base">
+            <h3 className="font-serif-editorial font-bold text-white text-lg">
               🏆 Campeón en Chicago, Miami y Charlotte
             </h3>
             <p className="text-xs text-[#A8B2A6] leading-relaxed">
@@ -255,91 +292,131 @@ export default function CurriculumPage() {
             </p>
           </div>
 
-          <div className="card-carbon p-5 space-y-2 border-stone-border">
+          <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/50 transition-all rounded-xl p-6 space-y-2.5 shadow-md">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-[#D8B155] text-xs uppercase">Campeonatos Nacionales</span>
-              <span className="text-xs font-mono text-[#A8B2A6]">1985 - 1988</span>
+              <span className="font-bold text-[#D8B155] text-xs uppercase tracking-wider">
+                Torneo Abierto Internacional
+              </span>
+              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1991 – 1994</span>
             </div>
-            <h3 className="font-serif-editorial font-bold text-white text-base">
+            <h3 className="font-serif-editorial font-bold text-white text-lg">
+              🏆 Campeón Internacional de Managua & CDMX
+            </h3>
+            <p className="text-xs text-[#A8B2A6] leading-relaxed">
+              Primer lugar invicto en el Torneo Internacional de Managua (Nicaragua, 1991) y ganador del Magistral Abierto de la Ciudad de México (1994).
+            </p>
+          </div>
+
+          <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/50 transition-all rounded-xl p-6 space-y-2.5 shadow-md">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-[#D8B155] text-xs uppercase tracking-wider">
+                Campeonatos Nacionales de México
+              </span>
+              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1985 – 1988</span>
+            </div>
+            <h3 className="font-serif-editorial font-bold text-white text-lg">
               🏆 Campeón Nacional Juvenil y Medallista Absoluto
             </h3>
             <p className="text-xs text-[#A8B2A6] leading-relaxed">
               Campeón Nacional Sub-20 (1985), Bi-campeón Nacional Sub-26 (1986, 1987) y medallista de plata (1987) y bronce (1988) en el Campeonato Nacional Absoluto de México.
             </p>
           </div>
-        </div>
-      </div>
 
-      {/* 3. TRAYECTORIA DOCENTE Y METODOLOGÍA */}
-      <div className="space-y-6">
-        <div className="flex items-center gap-3 border-b border-[#2B3E34] pb-3">
-          <div className="p-2 rounded-lg bg-blue-950/60 border border-blue-800 text-blue-300">
-            <GraduationCap className="w-5 h-5" />
+          <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/50 transition-all rounded-xl p-6 space-y-2.5 shadow-md">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-[#D8B155] text-xs uppercase tracking-wider">
+                Campeonatos Continentales & Mundiales por Equipos
+              </span>
+              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1985 – 1991</span>
+            </div>
+            <h3 className="font-serif-editorial font-bold text-white text-lg">
+              🏆 Panamericanos por Equipos & Mundial Sub-26
+            </h3>
+            <p className="text-xs text-[#A8B2A6] leading-relaxed">
+              Representante nacional en los Panamericanos por Equipos de Villa Gesell (1987) y Mar del Plata (1991), y en los Mundiales Juveniles Sub-26 de Mendoza (Argentina, 1985) y Curazao (1989).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. TRAYECTORIA DOCENTE Y DIRECCIÓN TÉCNICA */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-[#2B3E34] pb-4">
+          <div className="p-2.5 rounded-xl bg-blue-950/70 border border-blue-700/60 text-blue-300">
+            <GraduationCap className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="font-serif-editorial text-2xl font-bold text-[#F6F3EC]">
-              Trayectoria Docente y Dirección Técnica
+            <h2 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-[#F6F3EC]">
+              Trayectoria Docente y Dirección Pedagógica
             </h2>
             <p className="text-xs text-[#A8B2A6]">
-              Más de 35 años consagrados a la pedagogía de alto nivel y la formación de ajedrecistas de competencia.
+              Más de 35 años consagrados a la enseñanza del ajedrez de alto rendimiento y la formación de talento competitivo.
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="card-carbon p-6 space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-[#1B4D3E] text-[#D8B155] flex items-center justify-center font-bold">
+          <div className="bg-[#121E17] border border-[#2B3E34] rounded-2xl p-6 space-y-3 shadow-md">
+            <div className="w-10 h-10 rounded-xl bg-[#1B4D3E] text-[#D8B155] flex items-center justify-center font-bold">
               <Crown className="w-5 h-5" />
             </div>
             <h3 className="font-serif-editorial font-bold text-white text-base">
               Fundador de la Academia Alekhins
             </h3>
             <p className="text-xs text-[#A8B2A6] leading-relaxed">
-              Dirección metodológica integral, selección de material bibliográfico de vanguardia y programas estructurados por niveles de ELO.
+              Diseño integral de programas pedagógicos estructurados por niveles de elo (Iniciación, Desarrollo y Alto Rendimiento), con metodologías avaladas en torneos oficiales.
             </p>
           </div>
 
-          <div className="card-carbon p-6 space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-[#1B4D3E] text-[#D8B155] flex items-center justify-center font-bold">
+          <div className="bg-[#121E17] border border-[#2B3E34] rounded-2xl p-6 space-y-3 shadow-md">
+            <div className="w-10 h-10 rounded-xl bg-[#1B4D3E] text-emerald-400 flex items-center justify-center font-bold">
               <Target className="w-5 h-5" />
             </div>
             <h3 className="font-serif-editorial font-bold text-white text-base">
               Entrenador de Talentos y Titulados
             </h3>
             <p className="text-xs text-[#A8B2A6] leading-relaxed">
-              Formador directo de múltiples campeones nacionales infantiles y juveniles, Maestros FIDE y seleccionados estatales en torneos de la FENAMAC.
+              Mentor directo de múltiples campeones infantiles y juveniles de México, maestros titulados FIDE y seleccionados estatales en justas de la CONADE y FENAMAC.
             </p>
           </div>
 
-          <div className="card-carbon p-6 space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-[#1B4D3E] text-[#D8B155] flex items-center justify-center font-bold">
+          <div className="bg-[#121E17] border border-[#2B3E34] rounded-2xl p-6 space-y-3 shadow-md">
+            <div className="w-10 h-10 rounded-xl bg-[#1B4D3E] text-amber-400 flex items-center justify-center font-bold">
               <BookOpen className="w-5 h-5" />
             </div>
             <h3 className="font-serif-editorial font-bold text-white text-base">
-              Escuela Clásica & Análisis Riguroso
+              Escuela Clásica & Análisis Asistido
             </h3>
             <p className="text-xs text-[#A8B2A6] leading-relaxed">
-              Especialista en cálculo de variantes sin sesgos, comprensión profunda de estructuras de peones y la técnica del medio juego y finales.
+              Combinación armónica del estudio de los clásicos (Alekhine, Capablanca, Fischer) con el análisis moderno de motores y bases de datos para una comprensión profunda.
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Call to action */}
-      <div className="card-carbon p-8 text-center space-y-4 border-[#D8B155]/40 bg-gradient-to-b from-[#121E17] to-[#0B1510]">
-        <h3 className="font-serif-editorial text-2xl font-bold text-[#F6F3EC]">
-          ¿Listo para entrenar con el Maestro Internacional?
-        </h3>
-        <p className="text-xs sm:text-sm text-[#A8B2A6] max-w-xl mx-auto">
-          Conoce los planes de estudio disponibles y únete a las clases en vivo impartidas y supervisadas por el MI Roberto Martín del Campo.
-        </p>
+      {/* 5. CALL TO ACTION & ASESORÍA PERSONALIZADA */}
+      <div className="bg-gradient-to-r from-[#122A1E] via-[#0B1510] to-[#122A1E] border-2 border-[#D8B155]/60 rounded-2xl p-8 sm:p-10 text-center space-y-6 shadow-2xl relative overflow-hidden">
+        <div className="space-y-2">
+          <h3 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-[#F6F3EC]">
+            Entrena directamente con el Maestro Internacional
+          </h3>
+          <p className="text-xs sm:text-sm text-[#A8B2A6] max-w-xl mx-auto">
+            Únete a las clases en vivo, planes personalizados o solicita una sesión de diagnóstico con el MI Roberto Martín del Campo.
+          </p>
+        </div>
         <div className="flex flex-wrap justify-center gap-4 pt-2">
-          <Link href="/entrenamiento" className="btn-champagne text-xs px-6 py-3">
-            Ver Planes de Entrenamiento
+          <Link href="/entrenamiento" className="btn-champagne text-xs px-8 py-3.5 font-bold uppercase tracking-wider shadow-lg">
+            Ver Planes de Estudio
           </Link>
-          <Link href="/contacto" className="btn-outline-gold text-xs px-6 py-3">
-            Contactar para Asesoría
-          </Link>
+          <a
+            href="https://wa.me/529991020078?text=Hola%20MI%20Roberto,%20deseo%20asesor%C3%ADa%20personalizada%20de%20ajedrez"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-6 py-3.5 rounded-lg bg-emerald-900/60 hover:bg-emerald-800 border border-emerald-500/50 text-emerald-300 text-xs font-bold uppercase tracking-wider transition flex items-center gap-2"
+          >
+            <MessageCircle className="w-4 h-4" />
+            <span>Consultar por WhatsApp (+52 999 102 0078)</span>
+          </a>
         </div>
       </div>
     </div>

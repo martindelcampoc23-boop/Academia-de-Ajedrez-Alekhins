@@ -8,7 +8,7 @@ interface WhatsAppButtonProps {
 }
 
 export function WhatsAppButton({ message = 'Hola, quiero información sobre las clases y material de ajedrez.' }: WhatsAppButtonProps) {
-  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '525500000000';
+  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '529991020078';
   const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 
   return (

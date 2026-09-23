@@ -14,7 +14,7 @@ async function main() {
       heroSubtitle: 'Entrenamiento especializado, conocimiento de alto nivel y material seleccionado para jugadores, familias, clubes y escuelas.',
       heroCtaPrimary: 'Conoce nuestros planes',
       heroCtaSecondary: 'Comprar material de ajedrez',
-      whatsappNumber: '525500000000',
+      whatsappNumber: '529991020078',
       contactEmail: 'contacto@alekhins.com',
       footerLegalText: '© 2026 Academia de Ajedrez Alekhins. Todos los derechos reservados.'
     }
