@@ -7,7 +7,6 @@ import { useSession, signOut } from 'next-auth/react';
 import { useCart } from '@/components/providers/CartProvider';
 import { GlobalSearch } from '@/components/ui/GlobalSearch';
 import {
-  Crown,
   ShoppingBag,
   Search,
   User,
@@ -50,18 +49,12 @@ export function Header() {
       <header className="sticky top-0 z-40 bg-[#0B1510] border-b border-[#1C3328] text-white shadow-xl">
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded border border-[#D8B155] bg-[#0F2E1E] flex items-center justify-center text-[#D8B155] group-hover:bg-[#D8B155] group-hover:text-[#0B1510] transition shadow-md">
-              <Crown className="w-6 h-6" />
-            </div>
-            <div>
-              <span className="text-[10px] tracking-[0.2em] text-[#D8B155] uppercase font-bold block leading-none">
-                ACADEMIA DE AJEDREZ
-              </span>
-              <span className="font-serif-editorial text-lg md:text-xl font-bold tracking-wider text-white block leading-tight group-hover:text-[#D8B155] transition">
-                ALEKHINS
-              </span>
-            </div>
+          <Link href="/" className="flex items-center group">
+            <img
+              src="/alekhins-logo-vector.svg"
+              alt="Alekhins Academia de Ajedrez"
+              className="h-12 md:h-14 w-auto brightness-110 group-hover:brightness-125 transition-all duration-300"
+            />
           </Link>
 
           {/* Center Navigation Links */}
