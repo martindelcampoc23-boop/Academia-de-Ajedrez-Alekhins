@@ -208,15 +208,34 @@ export function buildPersonLD() {
     name: 'Roberto Abel Martín del Campo Cárdenas',
     alternateName: 'MI Roberto Martín del Campo',
     jobTitle: 'Maestro Internacional de Ajedrez FIDE',
+    birthDate: '1967-05-26',
     description:
-      'Maestro Internacional de Ajedrez FIDE, Medallista de Oro Olímpico en Novi Sad 1990. Fundador y Director Técnico de la Academia de Ajedrez Alekhins.',
+      'Maestro Internacional de Ajedrez FIDE (1987), Medallista de Oro Olímpico en Novi Sad 1990 y Bicampeón del Memorial Carlos Torre Repetto (1987, 1996). Fundador y Director Técnico de la Academia de Ajedrez Alekhins.',
     url: `${BASE_URL}/roberto-martin-del-campo`,
     sameAs: [
-      'https://ratings.fide.com/profile/593745',
+      'https://ratings.fide.com/profile/5100046',
+      'https://www.chessgames.com/perl/chessplayer?pid=15570',
+      'https://es.wikipedia.org/wiki/Roberto_Mart%C3%ADn_del_Campo',
+      'https://www.olimpbase.org',
     ],
     worksFor: { '@id': `${BASE_URL}/#organization` },
-    knowsAbout: ['Ajedrez', 'Estrategia de Ajedrez', 'Pedagogía del Ajedrez', 'Aperturas de Ajedrez'],
-    award: 'Medalla de Oro Olímpica de Ajedrez — Novi Sad 1990 (Equipo México)',
-    nationality: 'Mexican',
+    knowsAbout: [
+      'Ajedrez Profesional',
+      'Estrategia y Táctica de Ajedrez',
+      'Pedagogía del Ajedrez de Alto Rendimiento',
+      'Repertorio de Aperturas',
+      'Finales de Ajedrez',
+    ],
+    award: [
+      'Medalla de Oro Olímpica Individual — 29ª Olimpiada Mundial de Novi Sad 1990 (FIDE)',
+      'Bicampeón del Memorial Carlos Torre Repetto (1987 y 1996)',
+      'Campeón Panamericano Juvenil (Asunción, Paraguay 1987)',
+      '1º Lugar Grupo Maestros — Torneo Capablanca in Memoriam (Matanzas, Cuba 1993)',
+      'Campeón Nacional Abierto de México (1994)',
+    ],
+    nationality: {
+      '@type': 'Country',
+      name: 'México',
+    },
   };
 }

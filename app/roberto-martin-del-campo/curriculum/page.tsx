@@ -252,13 +252,43 @@ export default function CurriculumPage() {
               <span className="font-bold text-[#D8B155] text-xs uppercase tracking-wider">
                 Torneo Magistral Continental
               </span>
-              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1996</span>
+              <span className="text-xs font-mono text-[#D8B155] font-bold">1987 & 1996</span>
             </div>
             <h3 className="font-serif-editorial font-bold text-white text-lg">
-              🏆 Campeón del Memorial Carlos Torre Repetto
+              🏆 Bicampeón del Memorial Carlos Torre Repetto
             </h3>
             <p className="text-xs text-[#A8B2A6] leading-relaxed">
-              El torneo internacional de mayor renombre en México y América Latina, superando en una reñida competencia a Grandes Maestros y Maestros Internacionales de todo el mundo.
+              Logro histórico sin precedentes: <strong className="text-white">Primer campeón en la historia</strong> de la I edición inaugural en 1987 y coronado nuevamente en la IX edición de 1996 en Mérida, Yucatán, venciendo a Grandes Maestros internacionales.
+            </p>
+          </div>
+
+          <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/50 transition-all rounded-xl p-6 space-y-2.5 shadow-md">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-[#D8B155] text-xs uppercase tracking-wider">
+                Magistral Élite en Cuba
+              </span>
+              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1993</span>
+            </div>
+            <h3 className="font-serif-editorial font-bold text-white text-lg">
+              🏆 Campeón del Torneo Capablanca in Memoriam
+            </h3>
+            <p className="text-xs text-[#A8B2A6] leading-relaxed">
+              Primer lugar en el selecto grupo Maestros del certamen más importante de las Antillas (Matanzas, Cuba), imponiéndose con brillantez táctica a la prestigiosa escuela cubana e internacional.
+            </p>
+          </div>
+
+          <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/50 transition-all rounded-xl p-6 space-y-2.5 shadow-md">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-[#D8B155] text-xs uppercase tracking-wider">
+                Campeonato Nacional Absoluto
+              </span>
+              <span className="text-xs font-mono text-[#8E9B8C] font-bold">1994</span>
+            </div>
+            <h3 className="font-serif-editorial font-bold text-white text-lg">
+              🏆 Campeón del Nacional Abierto de México
+            </h3>
+            <p className="text-xs text-[#A8B2A6] leading-relaxed">
+              Monarca absoluto de la máxima justa ajedrecística del país en 1994, además de conquistar ese mismo año el Magistral Internacional de la Ciudad de México de forma contundente.
             </p>
           </div>
 
@@ -337,6 +367,115 @@ export default function CurriculumPage() {
             </p>
           </div>
         </div>
+
+        {/* TABLA OFICIAL RESUMEN DE PALMARÉS */}
+        <div className="bg-[#121E17] border border-[#2B3E34] rounded-2xl overflow-hidden shadow-xl mt-6">
+          <div className="p-4 sm:p-6 bg-[#16271E] border-b border-[#2B3E34] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="font-serif-editorial text-lg font-bold text-white flex items-center gap-2">
+                <Trophy className="w-4 h-4 text-[#D8B155]" />
+                Cuadro de Honor y Campeonatos Principales
+              </h3>
+              <p className="text-xs text-[#8E9B8C]">Registro histórico verificado de títulos y primeros lugares</p>
+            </div>
+            <span className="text-[11px] font-mono text-[#D8B155] bg-[#0B1510] px-3 py-1 rounded-full border border-[#D8B155]/30">
+              FIDE ID: 5100046
+            </span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#0B1510]/80 text-[#D8B155] uppercase text-[10px] font-bold tracking-wider border-b border-[#2B3E34]">
+                <tr>
+                  <th className="py-3 px-4">Año</th>
+                  <th className="py-3 px-4">Certamen / Torneo</th>
+                  <th className="py-3 px-4">Sede / País</th>
+                  <th className="py-3 px-4">Resultado / Puesto</th>
+                  <th className="py-3 px-4 hidden md:table-cell">Distinción FIDE</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#1C2C23] text-gray-300">
+                <tr className="hover:bg-[#1B4D3E]/20 transition">
+                  <td className="py-3 px-4 font-mono font-bold text-[#D8B155]">1990</td>
+                  <td className="py-3 px-4 font-semibold text-white">29ª Olimpiada Mundial de Ajedrez</td>
+                  <td className="py-3 px-4 text-[#8E9B8C]">Novi Sad, Yugoslavia</td>
+                  <td className="py-3 px-4"><span className="text-amber-300 font-bold">🥇 Medalla de Oro Individual</span> (7.5/10 pts)</td>
+                  <td className="py-3 px-4 hidden md:table-cell text-emerald-400 font-bold">75.0% Efectividad (Mejor Tablero 4)</td>
+                </tr>
+                <tr className="hover:bg-[#1B4D3E]/20 transition">
+                  <td className="py-3 px-4 font-mono text-[#D8B155]">1987</td>
+                  <td className="py-3 px-4 font-semibold text-white">I Memorial Carlos Torre Repetto</td>
+                  <td className="py-3 px-4 text-[#8E9B8C]">Mérida, Yucatán, MEX</td>
+                  <td className="py-3 px-4"><span className="text-[#D8B155] font-bold">🏆 Campeón Inaugural</span></td>
+                  <td className="py-3 px-4 hidden md:table-cell text-gray-400">1º Campeón en la Historia del Evento</td>
+                </tr>
+                <tr className="hover:bg-[#1B4D3E]/20 transition">
+                  <td className="py-3 px-4 font-mono text-[#D8B155]">1996</td>
+                  <td className="py-3 px-4 font-semibold text-white">IX Memorial Carlos Torre Repetto</td>
+                  <td className="py-3 px-4 text-[#8E9B8C]">Mérida, Yucatán, MEX</td>
+                  <td className="py-3 px-4"><span className="text-[#D8B155] font-bold">🏆 Campeón Magistral</span></td>
+                  <td className="py-3 px-4 hidden md:table-cell text-gray-400">Bicampeón del Torneo Magistral</td>
+                </tr>
+                <tr className="hover:bg-[#1B4D3E]/20 transition">
+                  <td className="py-3 px-4 font-mono text-[#D8B155]">1987</td>
+                  <td className="py-3 px-4 font-semibold text-white">Campeonato Panamericano Juvenil</td>
+                  <td className="py-3 px-4 text-[#8E9B8C]">Asunción, Paraguay</td>
+                  <td className="py-3 px-4"><span className="text-[#D8B155] font-bold">🏆 Campeón Panamericano</span></td>
+                  <td className="py-3 px-4 hidden md:table-cell text-amber-400">Otorga Título de MI FIDE (a los 20 años)</td>
+                </tr>
+                <tr className="hover:bg-[#1B4D3E]/20 transition">
+                  <td className="py-3 px-4 font-mono text-[#D8B155]">1993</td>
+                  <td className="py-3 px-4 font-semibold text-white">Torneo Capablanca in Memoriam</td>
+                  <td className="py-3 px-4 text-[#8E9B8C]">Matanzas, Cuba</td>
+                  <td className="py-3 px-4"><span className="text-[#D8B155] font-bold">🏆 1º Lugar Grupo Maestros</span></td>
+                  <td className="py-3 px-4 hidden md:table-cell text-gray-400">Magistral Internacional de Élite</td>
+                </tr>
+                <tr className="hover:bg-[#1B4D3E]/20 transition">
+                  <td className="py-3 px-4 font-mono text-[#D8B155]">1994</td>
+                  <td className="py-3 px-4 font-semibold text-white">Campeonato Nacional Abierto</td>
+                  <td className="py-3 px-4 text-[#8E9B8C]">México</td>
+                  <td className="py-3 px-4"><span className="text-[#D8B155] font-bold">🏆 Campeón Absoluto de México</span></td>
+                  <td className="py-3 px-4 hidden md:table-cell text-gray-400">Máxima Corona Nacional FENAMAC</td>
+                </tr>
+                <tr className="hover:bg-[#1B4D3E]/20 transition">
+                  <td className="py-3 px-4 font-mono text-[#D8B155]">1991</td>
+                  <td className="py-3 px-4 font-semibold text-white">Torneo Internacional de Managua</td>
+                  <td className="py-3 px-4 text-[#8E9B8C]">Managua, Nicaragua</td>
+                  <td className="py-3 px-4"><span className="text-[#D8B155] font-bold">🏆 1º Lugar Invicto</span></td>
+                  <td className="py-3 px-4 hidden md:table-cell text-gray-400">Torneo Internacional Abierto</td>
+                </tr>
+                <tr className="hover:bg-[#1B4D3E]/20 transition">
+                  <td className="py-3 px-4 font-mono text-[#D8B155]">1995 – 1996</td>
+                  <td className="py-3 px-4 font-semibold text-white">Chicago Midwest Masters</td>
+                  <td className="py-3 px-4 text-[#8E9B8C]">Chicago, Illinois, USA</td>
+                  <td className="py-3 px-4"><span className="text-[#D8B155] font-bold">🏆 Campeón Biconsagrado</span></td>
+                  <td className="py-3 px-4 hidden md:table-cell text-gray-400">Circuito Abierto de Maestros USA</td>
+                </tr>
+                <tr className="hover:bg-[#1B4D3E]/20 transition">
+                  <td className="py-3 px-4 font-mono text-[#D8B155]">1997</td>
+                  <td className="py-3 px-4 font-semibold text-white">Clasificación Mundial FIDE</td>
+                  <td className="py-3 px-4 text-[#8E9B8C]">Ranking Oficial FIDE</td>
+                  <td className="py-3 px-4"><span className="text-emerald-400 font-mono font-bold">2485 Elo FIDE</span></td>
+                  <td className="py-3 px-4 hidden md:table-cell text-emerald-400 font-bold">Cúspide de Rating Histórico</td>
+                </tr>
+                <tr className="hover:bg-[#1B4D3E]/20 transition">
+                  <td className="py-3 px-4 font-mono text-[#D8B155]">2005</td>
+                  <td className="py-3 px-4 font-semibold text-white">Miami International Chess Open</td>
+                  <td className="py-3 px-4 text-[#8E9B8C]">Miami, Florida, USA</td>
+                  <td className="py-3 px-4"><span className="text-[#D8B155] font-bold">🏆 1º Lugar</span></td>
+                  <td className="py-3 px-4 hidden md:table-cell text-gray-400">Torneo Abierto de Maestros</td>
+                </tr>
+                <tr className="hover:bg-[#1B4D3E]/20 transition">
+                  <td className="py-3 px-4 font-mono text-[#D8B155]">2016 – 2021</td>
+                  <td className="py-3 px-4 font-semibold text-white">Charlotte Chess Center Invitational</td>
+                  <td className="py-3 px-4 text-[#8E9B8C]">Charlotte, NC, USA</td>
+                  <td className="py-3 px-4"><span className="text-[#D8B155] font-bold">🏆 1º Lugar Magistral</span></td>
+                  <td className="py-3 px-4 hidden md:table-cell text-gray-400">Normas y Torneos Magistrales</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
       {/* 4. TRAYECTORIA DOCENTE Y DIRECCIÓN TÉCNICA */}
@@ -355,7 +494,7 @@ export default function CurriculumPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="bg-[#121E17] border border-[#2B3E34] rounded-2xl p-6 space-y-3 shadow-md">
             <div className="w-10 h-10 rounded-xl bg-[#1B4D3E] text-[#D8B155] flex items-center justify-center font-bold">
               <Crown className="w-5 h-5" />
@@ -381,11 +520,23 @@ export default function CurriculumPage() {
           </div>
 
           <div className="bg-[#121E17] border border-[#2B3E34] rounded-2xl p-6 space-y-3 shadow-md">
+            <div className="w-10 h-10 rounded-xl bg-[#1B4D3E] text-blue-400 flex items-center justify-center font-bold">
+              <Shield className="w-5 h-5" />
+            </div>
+            <h3 className="font-serif-editorial font-bold text-white text-base">
+              Entrenador Estatal (CONADE)
+            </h3>
+            <p className="text-xs text-[#A8B2A6] leading-relaxed">
+              Entrenador y preparador técnico de delegaciones estatales (incluyendo la Selección de Chihuahua) en los Juegos Nacionales CONADE y festivales nacionales.
+            </p>
+          </div>
+
+          <div className="bg-[#121E17] border border-[#2B3E34] rounded-2xl p-6 space-y-3 shadow-md">
             <div className="w-10 h-10 rounded-xl bg-[#1B4D3E] text-amber-400 flex items-center justify-center font-bold">
               <BookOpen className="w-5 h-5" />
             </div>
             <h3 className="font-serif-editorial font-bold text-white text-base">
-              Escuela Clásica & Análisis Asistido
+              Escuela Clásica & Motores
             </h3>
             <p className="text-xs text-[#A8B2A6] leading-relaxed">
               Combinación armónica del estudio de los clásicos (Alekhine, Capablanca, Fischer) con el análisis moderno de motores y bases de datos para una comprensión profunda.

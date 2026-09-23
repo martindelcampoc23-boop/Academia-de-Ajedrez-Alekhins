@@ -153,22 +153,34 @@ export default function FounderPage() {
               </div>
 
               {/* Ficha Técnica Rápida */}
-              <div className="space-y-2.5 text-xs text-[#A8B2A6] border-t border-[#2B3E34] pt-4">
+              <div className="space-y-2 text-xs text-[#A8B2A6] border-t border-[#2B3E34] pt-4">
+                <div className="flex justify-between items-center py-1 border-b border-[#1C2C23]">
+                  <span className="text-[#8E9B8C]">Nacimiento:</span>
+                  <strong className="text-white font-medium">26 de mayo de 1967 (CDMX)</strong>
+                </div>
                 <div className="flex justify-between items-center py-1 border-b border-[#1C2C23]">
                   <span className="text-[#8E9B8C]">Título Oficial FIDE:</span>
                   <strong className="text-white font-medium">Maestro Internacional (1987)</strong>
                 </div>
                 <div className="flex justify-between items-center py-1 border-b border-[#1C2C23]">
                   <span className="text-[#8E9B8C]">Elo Máximo FIDE:</span>
-                  <strong className="text-emerald-400 font-mono font-bold">2485 FIDE</strong>
+                  <strong className="text-emerald-400 font-mono font-bold">2485 FIDE (Julio 1997)</strong>
                 </div>
                 <div className="flex justify-between items-center py-1 border-b border-[#1C2C23]">
                   <span className="text-[#8E9B8C]">Mayor Logro Histórico:</span>
                   <strong className="text-[#D8B155] font-bold">🥇 Oro Olímpico Novi Sad 1990 (75% ef.)</strong>
                 </div>
                 <div className="flex justify-between items-center py-1 border-b border-[#1C2C23]">
-                  <span className="text-[#8E9B8C]">Torneo Magistral:</span>
-                  <strong className="text-white font-medium">Campeón Memorial Carlos Torre (1996)</strong>
+                  <span className="text-[#8E9B8C]">Memorial Carlos Torre:</span>
+                  <strong className="text-white font-medium">Bicampeón (1987 y 1996)</strong>
+                </div>
+                <div className="flex justify-between items-center py-1 border-b border-[#1C2C23]">
+                  <span className="text-[#8E9B8C]">Capablanca in Memoriam:</span>
+                  <strong className="text-white font-medium">1º Lugar Maestros (1993, Cuba)</strong>
+                </div>
+                <div className="flex justify-between items-center py-1 border-b border-[#1C2C23]">
+                  <span className="text-[#8E9B8C]">Campeonato Nacional:</span>
+                  <strong className="text-white font-medium">Campeón Nacional Abierto (1994)</strong>
                 </div>
                 <div className="flex justify-between items-center py-1">
                   <span className="text-[#8E9B8C]">Especialidad Metodológica:</span>
@@ -237,21 +249,35 @@ export default function FounderPage() {
         </div>
 
         <div className="relative border-l-2 border-[#2B3E34] ml-4 md:ml-32 space-y-10 py-4">
-          {/* Hito 1: 1987 */}
+          {/* Hito 1: 1985 - 1987 */}
           <div className="relative pl-8 group">
             <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-[#D8B155] ring-4 ring-[#0B1510] group-hover:scale-125 transition-transform" />
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
-              <span className="font-mono text-sm font-black text-[#D8B155]">1987</span>
+              <span className="font-mono text-sm font-black text-[#D8B155]">1985 – 1987</span>
               <h3 className="font-serif-editorial text-lg font-bold text-white">
-                Título Oficial de Maestro Internacional & Campeón Panamericano Juvenil
+                Título de Maestro Internacional FIDE & Campeón Panamericano Juvenil
               </h3>
             </div>
             <p className="text-xs text-[#A8B2A6] leading-relaxed max-w-2xl">
-              Consigue la titulación de Maestro Internacional por la Federación Internacional de Ajedrez (FIDE) a los 20 años tras coronarse monarca en el Campeonato Panamericano Juvenil.
+              Tras coronarse Campeón Nacional Juvenil Sub-20 (1985) y Bicampeón Sub-26 (1986, 1987), conquista el <strong className="text-white">Campeonato Panamericano Juvenil en Asunción (Paraguay, 1987)</strong>, obteniendo con solo 20 años el título oficial de Maestro Internacional concedido por la FIDE.
             </p>
           </div>
 
-          {/* Hito 2: 1990 */}
+          {/* Hito 2: 1987 */}
+          <div className="relative pl-8 group">
+            <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-[#1B4D3E] border border-[#D8B155] ring-4 ring-[#0B1510] group-hover:scale-125 transition-transform" />
+            <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
+              <span className="font-mono text-sm font-black text-[#D8B155]">1987</span>
+              <h3 className="font-serif-editorial text-lg font-bold text-white">
+                🏆 Campeón Inaugural del Memorial Carlos Torre Repetto
+              </h3>
+            </div>
+            <p className="text-xs text-[#A8B2A6] leading-relaxed max-w-2xl">
+              Inscribe su nombre en los anales del ajedrez continental al proclamarse <strong className="text-white">primer campeón en la historia</strong> de la I edición del Memorial Carlos Torre Repetto en Mérida, Yucatán.
+            </p>
+          </div>
+
+          {/* Hito 3: 1990 */}
           <div className="relative pl-8 group">
             <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-amber-400 ring-4 ring-[#0B1510] shadow-[0_0_12px_rgba(251,191,36,0.8)] group-hover:scale-125 transition-transform" />
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
@@ -261,39 +287,53 @@ export default function FounderPage() {
               </h3>
             </div>
             <p className="text-xs text-[#C2CCC0] leading-relaxed max-w-2xl bg-[#122A1E]/60 p-4 rounded-xl border border-amber-500/40">
-              Hazaña histórica para México en la 29ª Olimpiada Mundial de Ajedrez (Yugoslavia). Con un récord de <strong className="text-white">+6 =3 -1 (7.5 de 10 puntos)</strong> y un 75% de efectividad, superó a destacados maestros y grandes maestros del mundo para adjudicarse la presea dorada individual.
+              Máxima hazaña del ajedrez mexicano en la 29ª Olimpiada Mundial FIDE (Yugoslavia). Defendiendo el 4º tablero nacional, finaliza con un récord de <strong className="text-white">+6 =3 -1 (7.5 de 10 puntos)</strong> y un <strong className="text-[#D8B155]">75.0% de efectividad</strong>, conquistando la medalla de oro individual al mejor tablero del planeta.
             </p>
           </div>
 
-          {/* Hito 3: 1992 */}
+          {/* Hito 4: 1992 - 1993 */}
           <div className="relative pl-8 group">
             <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-[#1B4D3E] border border-[#D8B155] ring-4 ring-[#0B1510] group-hover:scale-125 transition-transform" />
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
-              <span className="font-mono text-sm font-black text-[#8E9B8C]">1992</span>
+              <span className="font-mono text-sm font-black text-[#8E9B8C]">1992 – 1993</span>
               <h3 className="font-serif-editorial text-lg font-bold text-white">
-                30ª Olimpiada Mundial de Manila (Filipinas)
+                Olimpiada de Manila & Campeón del Torneo Capablanca in Memoriam
               </h3>
             </div>
             <p className="text-xs text-[#A8B2A6] leading-relaxed max-w-2xl">
-              Consolidación como pilar del equipo olímpico mexicano en los tableros principales, sumando 8.5 puntos en 14 intensas rondas internacionales.
+              Pilar de la selección olímpica en Filipinas 1992 (8.5/14 pts) y, un año más tarde, conquista el 1º lugar del selecto grupo Maestros en el prestigioso <strong className="text-white">Torneo Internacional Capablanca in Memoriam (Matanzas, Cuba, 1993)</strong>.
             </p>
           </div>
 
-          {/* Hito 4: 1996 */}
+          {/* Hito 5: 1994 */}
           <div className="relative pl-8 group">
             <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-[#D8B155] ring-4 ring-[#0B1510] group-hover:scale-125 transition-transform" />
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
-              <span className="font-mono text-sm font-black text-[#D8B155]">1996</span>
+              <span className="font-mono text-sm font-black text-[#D8B155]">1994</span>
               <h3 className="font-serif-editorial text-lg font-bold text-white">
-                🏆 Campeón del Magistral Carlos Torre Repetto
+                🏆 Campeón Nacional Abierto de México
               </h3>
             </div>
             <p className="text-xs text-[#A8B2A6] leading-relaxed max-w-2xl">
-              Gana la edición 1996 del torneo internacional más prestigiado y competitivo de México y Latinoamérica, venciendo a una nutrida comitiva de Grandes Maestros extranjeros.
+              Se corona Campeón Absoluto del Campeonato Nacional Abierto Mexicano y triunfa en el Magistral Internacional de la Ciudad de México, reafirmando su supremacía nacional.
             </p>
           </div>
 
-          {/* Hito 5: 1998 */}
+          {/* Hito 6: 1996 - 1997 */}
+          <div className="relative pl-8 group">
+            <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-[#D8B155] ring-4 ring-[#0B1510] group-hover:scale-125 transition-transform" />
+            <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
+              <span className="font-mono text-sm font-black text-[#D8B155]">1996 – 1997</span>
+              <h3 className="font-serif-editorial text-lg font-bold text-white">
+                🏆 Bicampeón del Carlos Torre & Cúspide de Rating (2485 Elo FIDE)
+              </h3>
+            </div>
+            <p className="text-xs text-[#A8B2A6] leading-relaxed max-w-2xl">
+              Conquista por segunda vez el Memorial Carlos Torre Repetto (IX edición) y en julio de 1997 alcanza su <strong className="text-emerald-400">máximo rating oficial FIDE de 2485 puntos</strong>, situándose en el vértice del ajedrez iberoamericano.
+            </p>
+          </div>
+
+          {/* Hito 7: 1998 */}
           <div className="relative pl-8 group">
             <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-[#1B4D3E] border border-[#D8B155] ring-4 ring-[#0B1510] group-hover:scale-125 transition-transform" />
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
@@ -303,7 +343,21 @@ export default function FounderPage() {
               </h3>
             </div>
             <p className="text-xs text-[#A8B2A6] leading-relaxed max-w-2xl">
-              Defiende el segundo tablero nacional contra las máximas potencias del ajedrez soviético y mundial en la capital del ajedrez de Kalmukia.
+              Defiende con autoridad el segundo tablero nacional en la emblemática City Chess de Kalmukia frente a maestros de la escuela rusa y la élite mundial.
+            </p>
+          </div>
+
+          {/* Hito 8: 1995 - 2021 */}
+          <div className="relative pl-8 group">
+            <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-[#1B4D3E] border border-[#D8B155] ring-4 ring-[#0B1510] group-hover:scale-125 transition-transform" />
+            <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
+              <span className="font-mono text-sm font-black text-[#8E9B8C]">1995 – 2021</span>
+              <h3 className="font-serif-editorial text-lg font-bold text-white">
+                Conquista de Circuitos en Estados Unidos (Chicago, Miami, Charlotte)
+              </h3>
+            </div>
+            <p className="text-xs text-[#A8B2A6] leading-relaxed max-w-2xl">
+              Campeón del Chicago Midwest Masters (1995, 1996), Abierto Internacional de Miami (2005) y certámenes magistrales en Charlotte Chess Center (2016, 2021).
             </p>
           </div>
 
