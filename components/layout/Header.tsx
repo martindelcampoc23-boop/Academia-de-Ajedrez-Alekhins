@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { useCart } from '@/components/providers/CartProvider';
+import { useLocaleCurrency } from '@/components/providers/LocaleCurrencyProvider';
 import { GlobalSearch } from '@/components/ui/GlobalSearch';
 import { playLogoClickSound } from '@/lib/soundEffects';
 import {
@@ -16,15 +17,19 @@ import {
   X,
   ChevronDown,
   LogOut,
-  BookOpen,
+  Laptop,
+  Globe,
+  ExternalLink,
+  ShieldCheck,
   Package,
-  ShieldAlert,
+  BookOpen
 } from 'lucide-react';
 
 export function Header() {
   const pathname = usePathname();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const { cart, setIsOpen: setCartOpen } = useCart();
+  const { currency, setCurrency, locale, setLocale } = useLocaleCurrency();
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -34,7 +39,6 @@ export function Header() {
   const user = session?.user;
   const role = (user as any)?.role || 'CUSTOMER';
 
-  // Cerrar menú desplegable al hacer clic fuera
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -47,252 +51,295 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-[#0B1510] border-b border-[#1C3328] text-white shadow-xl">
+      <header className="sticky top-0 z-40 bg-[#172B46] border-b border-[#233F65] text-[#FAF8F2] shadow-xl">
+        {/* Top Utility Bar: Dominio, Moneda, Idioma, Aula Virtual */}
+        <div className="bg-[#0F1D30] border-b border-[#1C3454] text-[11px] text-[#C4CBD4] py-1.5 px-4 hidden md:block">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="font-semibold tracking-wider text-[#C5A46D] uppercase">
+                ACADEMIA ALEKHINS
+              </span>
+              <span className="text-[#4B5563]">|</span>
+              <span>Director Académico: MI Roberto Martín del Campo Cárdenas</span>
+              <span className="text-[#4B5563]">|</span>
+              <span className="text-[#9CA3AF]">ajedrezprofesional.com</span>
+            </div>
+
+            <div className="flex items-center gap-5 font-medium">
+              {/* Selector de Moneda */}
+              <div className="flex items-center gap-1.5 bg-[#172B46] px-2 py-0.5 rounded border border-[#233F65]">
+                <span className="text-[10px] text-[#9CA3AF]">Moneda:</span>
+                <button
+                  onClick={() => setCurrency('MXN')}
+                  className={`px-1.5 py-0.5 rounded transition ${
+                    currency === 'MXN' ? 'bg-[#C5A46D] text-[#0F1D30] font-bold' : 'hover:text-white'
+                  }`}
+                >
+                  MXN ($)
+                </button>
+                <button
+                  onClick={() => setCurrency('USD')}
+                  className={`px-1.5 py-0.5 rounded transition ${
+                    currency === 'USD' ? 'bg-[#C5A46D] text-[#0F1D30] font-bold' : 'hover:text-white'
+                  }`}
+                >
+                  USD ($)
+                </button>
+              </div>
+
+              {/* Selector de Idioma */}
+              <div className="flex items-center gap-1.5 bg-[#172B46] px-2 py-0.5 rounded border border-[#233F65]">
+                <Globe className="w-3 h-3 text-[#C5A46D]" />
+                <button
+                  onClick={() => setLocale('es')}
+                  className={`px-1 py-0.5 rounded transition ${
+                    locale === 'es' ? 'text-[#C5A46D] font-bold' : 'hover:text-white'
+                  }`}
+                >
+                  ES
+                </button>
+                <span className="text-[#4B5563]">/</span>
+                <button
+                  onClick={() => setLocale('en')}
+                  className={`px-1 py-0.5 rounded transition ${
+                    locale === 'en' ? 'text-[#C5A46D] font-bold' : 'hover:text-white'
+                  }`}
+                >
+                  EN
+                </button>
+              </div>
+
+              {/* Acceso Directo Aula Virtual Chessgora */}
+              <a
+                href="https://chessgora.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[#C5A46D] hover:text-[#D4B785] transition font-bold"
+              >
+                <Laptop className="w-3.5 h-3.5" />
+                <span>Aula Virtual Chessgora</span>
+                <ExternalLink className="w-2.5 h-2.5 opacity-70" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Navigation Bar */}
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo Original de Academia Alekhins */}
           <Link href="/" onClick={playLogoClickSound} className="flex items-center group">
             <img
               src="/alekhins-logo-vector.svg"
-              alt="Alekhins Academia de Ajedrez"
-              className="h-12 md:h-14 w-auto brightness-110 group-hover:brightness-125 transition-all duration-300"
+              alt="Academia Alekhins"
+              className="h-11 sm:h-12 md:h-14 w-auto brightness-110 group-hover:brightness-125 transition-all duration-300"
             />
           </Link>
 
-          {/* Center Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider">
+          {/* Menú Principal Desktop (11 puntos institucionales) */}
+          <nav className="hidden xl:flex items-center gap-5 text-[11px] lg:text-xs font-semibold uppercase tracking-wider">
             <Link
               href="/"
-              className={`relative py-7 transition hover:text-[#D8B155] ${
-                pathname === '/' ? 'text-[#D8B155] font-bold' : 'text-white'
+              className={`py-2 transition hover:text-[#C5A46D] ${
+                pathname === '/' ? 'text-[#C5A46D] font-bold border-b-2 border-[#C5A46D]' : 'text-[#FAF8F2]'
               }`}
             >
               Inicio
-              {pathname === '/' && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#D8B155]" />
-              )}
             </Link>
 
             <Link
-              href="/entrenamiento"
-              className={`py-7 transition hover:text-[#D8B155] ${
-                pathname.startsWith('/entrenamiento') ? 'text-[#D8B155] font-bold' : 'text-gray-200'
+              href="/la-academia"
+              className={`py-2 transition hover:text-[#C5A46D] ${
+                pathname.startsWith('/la-academia') || pathname.startsWith('/roberto-martin-del-campo')
+                  ? 'text-[#C5A46D] font-bold border-b-2 border-[#C5A46D]'
+                  : 'text-[#E5DFD1]'
               }`}
             >
-              Clases
+              La Academia
+            </Link>
+
+            <Link
+              href="/programas"
+              className={`py-2 transition hover:text-[#C5A46D] ${
+                pathname.startsWith('/programas') || pathname.startsWith('/entrenamiento')
+                  ? 'text-[#C5A46D] font-bold border-b-2 border-[#C5A46D]'
+                  : 'text-[#E5DFD1]'
+              }`}
+            >
+              Programas
+            </Link>
+
+            <Link
+              href="/clases-personalizadas"
+              className={`py-2 transition hover:text-[#C5A46D] ${
+                pathname.startsWith('/clases-personalizadas')
+                  ? 'text-[#C5A46D] font-bold border-b-2 border-[#C5A46D]'
+                  : 'text-[#E5DFD1]'
+              }`}
+            >
+              Clases Personalizadas
+            </Link>
+
+            <Link
+              href="/entrenadores"
+              className={`py-2 transition hover:text-[#C5A46D] ${
+                pathname.startsWith('/entrenadores')
+                  ? 'text-[#C5A46D] font-bold border-b-2 border-[#C5A46D]'
+                  : 'text-[#E5DFD1]'
+              }`}
+            >
+              Entrenadores
             </Link>
 
             <Link
               href="/tienda"
-              className={`py-7 transition hover:text-[#D8B155] ${
-                pathname.startsWith('/tienda') ? 'text-[#D8B155] font-bold' : 'text-gray-200'
+              className={`py-2 transition hover:text-[#C5A46D] ${
+                pathname.startsWith('/tienda')
+                  ? 'text-[#C5A46D] font-bold border-b-2 border-[#C5A46D]'
+                  : 'text-[#E5DFD1]'
               }`}
             >
               Tienda
             </Link>
 
             <Link
-              href="/roberto-martin-del-campo"
-              className={`py-7 transition hover:text-[#D8B155] ${
-                pathname.startsWith('/roberto-martin-del-campo') ? 'text-[#D8B155] font-bold' : 'text-gray-200'
+              href="/clubes-y-escuelas"
+              className={`py-2 transition hover:text-[#C5A46D] ${
+                pathname === '/clubes-y-escuelas'
+                  ? 'text-[#C5A46D] font-bold border-b-2 border-[#C5A46D]'
+                  : 'text-[#E5DFD1]'
               }`}
             >
-              Nosotros
+              Escuelas y Clubes
             </Link>
 
             <Link
               href="/articulos"
-              className={`py-7 transition hover:text-[#D8B155] ${
-                pathname.startsWith('/articulos') ? 'text-[#D8B155] font-bold' : 'text-gray-200'
+              className={`py-2 transition hover:text-[#C5A46D] ${
+                pathname.startsWith('/articulos')
+                  ? 'text-[#C5A46D] font-bold border-b-2 border-[#C5A46D]'
+                  : 'text-[#E5DFD1]'
               }`}
             >
               Blog
             </Link>
 
             <Link
-              href="/clubes-y-escuelas"
-              className={`py-7 transition hover:text-[#D8B155] ${
-                pathname === '/clubes-y-escuelas' ? 'text-[#D8B155] font-bold' : 'text-gray-200'
-              }`}
-            >
-              Escuelas y Colegios
-            </Link>
-
-            <Link
               href="/contacto"
-              className={`py-7 transition hover:text-[#D8B155] ${
-                pathname === '/contacto' ? 'text-[#D8B155] font-bold' : 'text-gray-200'
+              className={`py-2 transition hover:text-[#C5A46D] ${
+                pathname === '/contacto'
+                  ? 'text-[#C5A46D] font-bold border-b-2 border-[#C5A46D]'
+                  : 'text-[#E5DFD1]'
               }`}
             >
               Contacto
             </Link>
           </nav>
 
-          {/* Right Action Buttons */}
+          {/* Right Action Icons: Search, Aula Virtual Pill, User, Cart */}
           <div className="flex items-center gap-3">
+            {/* Acceso a Aula Virtual (Visible en Desktop & Tablet) */}
+            <a
+              href="https://chessgora.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#0F1D30] border border-[#C5A46D]/60 text-[#C5A46D] hover:bg-[#C5A46D] hover:text-[#0F1D30] transition text-xs font-bold uppercase tracking-wider shadow-sm"
+            >
+              <Laptop className="w-3.5 h-3.5" />
+              <span>Aula Virtual</span>
+            </a>
+
+            {/* Búsqueda */}
             <button
               onClick={() => setSearchOpen(true)}
-              aria-label="Buscar"
-              className="p-2 text-gray-300 hover:text-[#D8B155] transition cursor-pointer"
+              aria-label="Buscar en la plataforma"
+              className="p-2 text-[#C4CBD4] hover:text-[#C5A46D] transition cursor-pointer"
             >
               <Search className="w-5 h-5" />
             </button>
 
+            {/* Carrito de Compras */}
             <button
               onClick={() => setCartOpen(true)}
-              aria-label="Carrito"
-              className="relative p-2 text-gray-300 hover:text-[#D8B155] transition cursor-pointer"
+              aria-label="Carrito de compras"
+              className="relative p-2 text-[#C4CBD4] hover:text-[#C5A46D] transition cursor-pointer"
             >
               <ShoppingBag className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute top-1 right-1 bg-[#D8B155] text-[#0B1510] text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-[#C5A46D] text-[#0F1D30] text-[10px] font-black rounded-full h-4 w-4 flex items-center justify-center shadow">
                   {cartCount}
                 </span>
               )}
             </button>
 
-            {/* Usuario Autenticado / Login */}
-            {status === 'authenticated' && user ? (
-              <div className="relative" ref={dropdownRef}>
+            {/* Menú Usuario / Cuenta */}
+            <div className="relative" ref={dropdownRef}>
+              {session?.user ? (
                 <button
-                  type="button"
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0F2E1E] border border-[#2B3E34] hover:border-[#D8B155] text-white transition text-xs font-semibold cursor-pointer"
+                  className="flex items-center gap-1.5 p-1.5 rounded-full hover:bg-[#1C3454] transition text-xs font-semibold"
                 >
-                  {user.image ? (
-                    <img
-                      src={user.image}
-                      alt={user.name || 'Usuario'}
-                      className="w-6 h-6 rounded-full object-cover border border-[#D8B155]"
-                    />
-                  ) : (
-                    <div className="w-6 h-6 rounded-full bg-[#D8B155] text-[#0B1510] font-bold flex items-center justify-center text-xs">
-                      {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                    </div>
-                  )}
-                  <span className="max-w-[100px] truncate hidden sm:inline-block">
-                    {user.name?.split(' ')[0] || 'Mi Cuenta'}
-                  </span>
-                  <ChevronDown className="w-3.5 h-3.5 text-[#D8B155]" />
-                </button>
-
-                {/* Dropdown Menu */}
-                {userDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-[#121E17] border border-[#2B3E34] rounded-xl shadow-2xl py-2 z-50 animate-fadeIn">
-                    <div className="px-4 py-2.5 border-b border-[#2B3E34]/80">
-                      <p className="text-xs font-bold text-white truncate">{user.name || 'Usuario'}</p>
-                      <p className="text-[10px] text-[#A8B2A6] truncate">{user.email}</p>
-                      <span className="inline-block mt-1 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider uppercase bg-[#1B4D3E] text-[#D8B155] border border-[#D8B155]/30">
-                        {role === 'SUPERADMIN' ? '👑 Admin & Maestro' : role === 'ADMIN' ? '👑 Administrador' : role === 'COACH' ? '🎓 Maestro / Coach' : '♟️ Alumno'}
-                      </span>
-                    </div>
-
-                    <div className="py-1">
-                      <Link
-                        href="/mi-cuenta"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-xs text-gray-200 hover:bg-[#1B4D3E]/40 hover:text-[#D8B155] transition"
-                      >
-                        <User className="w-3.5 h-3.5 text-[#D8B155]" />
-                        <span>Mi Portal de Usuario</span>
-                      </Link>
-
-                      {(role === 'SUPERADMIN' || role === 'ADMIN' || role === 'COACH' || role?.includes('COACH') || role?.includes('MAESTRO')) && (
-                        <Link
-                          href="/maestro"
-                          onClick={() => setUserDropdownOpen(false)}
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-amber-300 hover:bg-[#1B4D3E]/40 transition"
-                        >
-                          <BookOpen className="w-3.5 h-3.5 text-amber-300" />
-                          <span>Panel del Maestro (Tareas)</span>
-                        </Link>
-                      )}
-
-                      <Link
-                        href="/mi-cuenta/tareas"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-xs text-gray-200 hover:bg-[#1B4D3E]/40 hover:text-[#D8B155] transition"
-                      >
-                        <BookOpen className="w-3.5 h-3.5 text-[#D8B155]" />
-                        <span>Mis Tareas de Ajedrez</span>
-                      </Link>
-
-                      <Link
-                        href="/mi-cuenta/academia"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-xs text-gray-200 hover:bg-[#1B4D3E]/40 hover:text-[#D8B155] transition"
-                      >
-                        <BookOpen className="w-3.5 h-3.5 text-[#D8B155]" />
-                        <span>Mis Cursos & Clases</span>
-                      </Link>
-
-                      <Link
-                        href="/rastrear-pedido"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2 text-xs text-gray-200 hover:bg-[#1B4D3E]/40 hover:text-[#D8B155] transition"
-                      >
-                        <Package className="w-3.5 h-3.5 text-[#D8B155]" />
-                        <span>Mis Pedidos & Guías</span>
-                      </Link>
-
-                      {(role === 'SUPERADMIN' || role === 'ADMIN' || role?.includes('ADMIN')) && (
-                        <Link
-                          href="/admin"
-                          onClick={() => setUserDropdownOpen(false)}
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-[#D8B155] hover:bg-[#1B4D3E]/40 transition border-t border-[#2B3E34]/50"
-                        >
-                          <ShieldAlert className="w-3.5 h-3.5 text-[#D8B155]" />
-                          <span>Panel de Administración</span>
-                        </Link>
-                      )}
-                    </div>
-
-                    <div className="border-t border-[#2B3E34]/80 pt-1">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setUserDropdownOpen(false);
-                          signOut({ callbackUrl: '/' });
-                        }}
-                        className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-red-400 hover:bg-red-950/40 hover:text-red-300 transition text-left cursor-pointer"
-                      >
-                        <LogOut className="w-3.5 h-3.5 text-red-400" />
-                        <span>Cerrar Sesión</span>
-                      </button>
-                    </div>
+                  <div className="w-8 h-8 rounded-full bg-[#0F1D30] border border-[#C5A46D] flex items-center justify-center text-[#C5A46D] font-bold">
+                    {user?.name ? user.name[0].toUpperCase() : 'U'}
                   </div>
-                )}
-              </div>
-            ) : status === 'loading' ? (
-              /* Skeleton placeholder mientras carga la sesión */
-              <div className="flex items-center gap-2">
-                <div className="hidden sm:block h-8 w-24 rounded-lg bg-[#1C3328] animate-pulse" />
-                <div className="h-8 w-24 rounded-lg bg-[#1C3328] animate-pulse" />
-              </div>
-            ) : (
-              /* No autenticado — siempre visible */
-              <div className="flex items-center gap-2">
+                  <ChevronDown className="w-3.5 h-3.5 text-[#9CA3AF]" />
+                </button>
+              ) : (
                 <Link
                   href="/login"
-                  className="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 border border-stone-600 rounded-lg hover:border-[#D8B155] hover:text-[#D8B155] transition text-white"
+                  className="p-2 text-[#C4CBD4] hover:text-[#C5A46D] transition inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider"
                 >
-                  <User className="w-4 h-4" />
-                  <span>Iniciar sesión</span>
+                  <User className="w-5 h-5" />
+                  <span className="hidden sm:inline">Ingresar</span>
                 </Link>
+              )}
 
-                <Link
-                  href="/registro"
-                  className="btn-gold-solid text-xs py-2 px-3.5 shadow-md rounded-lg"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  <span>Registrarse</span>
-                </Link>
-              </div>
-            )}
+              {/* User Dropdown */}
+              {userDropdownOpen && session?.user && (
+                <div className="absolute right-0 mt-2 w-52 bg-[#0F1D30] border border-[#233F65] rounded-xl shadow-2xl py-2 z-50 text-xs text-[#FAF8F2]">
+                  <div className="px-4 py-2 border-b border-[#1C3454]">
+                    <p className="font-bold text-white truncate">{user?.name}</p>
+                    <p className="text-[11px] text-[#9CA3AF] truncate">{user?.email}</p>
+                  </div>
 
+                  <Link
+                    href="/mi-cuenta"
+                    onClick={() => setUserDropdownOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2.5 hover:bg-[#172B46] hover:text-[#C5A46D] transition"
+                  >
+                    <User className="w-4 h-4 text-[#C5A46D]" />
+                    <span>Mi Cuenta & Suscripciones</span>
+                  </Link>
 
+                  {(role === 'SUPERADMIN' || role === 'ADMIN' || role === 'COACH') && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2.5 hover:bg-[#172B46] text-[#C5A46D] font-semibold transition"
+                    >
+                      <ShieldCheck className="w-4 h-4" />
+                      <span>Panel Administrativo</span>
+                    </Link>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      setUserDropdownOpen(false);
+                      signOut({ callbackUrl: '/' });
+                    }}
+                    className="w-full flex items-center gap-2 px-4 py-2.5 text-red-400 hover:bg-[#172B46] transition border-t border-[#1C3454] mt-1"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Cerrar Sesión</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-gray-300 hover:text-[#D8B155] lg:hidden cursor-pointer"
+              className="xl:hidden p-2 text-[#C4CBD4] hover:text-[#C5A46D] transition"
+              aria-label="Abrir menú"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -301,139 +348,114 @@ export function Header() {
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-[#1C3328] bg-[#0F1E17] px-4 py-6 space-y-4 text-sm animate-in slide-in-from-top duration-200">
-            {/* Mobile Brand Header */}
-            <div className="pb-3 border-b border-[#1C3328]">
+          <div className="xl:hidden bg-[#0F1D30] border-t border-[#1C3454] px-4 py-6 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#1C3454] text-xs">
+              <span className="text-[#C5A46D] font-bold">AJEDREZPROFESIONAL.COM</span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrency(currency === 'MXN' ? 'USD' : 'MXN')}
+                  className="px-2 py-0.5 rounded bg-[#172B46] text-[#FAF8F2] border border-[#233F65] font-bold"
+                >
+                  {currency}
+                </button>
+                <button
+                  onClick={() => setLocale(locale === 'es' ? 'en' : 'es')}
+                  className="px-2 py-0.5 rounded bg-[#172B46] text-[#C5A46D] border border-[#233F65] font-bold uppercase"
+                >
+                  {locale}
+                </button>
+              </div>
+            </div>
+
+            <nav className="space-y-2 text-xs font-semibold uppercase tracking-wider">
               <Link
                 href="/"
-                onClick={() => {
-                  playLogoClickSound();
-                  setMobileMenuOpen(false);
-                }}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-[#FAF8F2] hover:text-[#C5A46D]"
               >
-                <img
-                  src="/alekhins-logo-vector.svg"
-                  alt="Alekhins Academia de Ajedrez"
-                  className="h-10 w-auto brightness-110"
-                />
+                1. Inicio
+              </Link>
+              <Link
+                href="/la-academia"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-[#FAF8F2] hover:text-[#C5A46D]"
+              >
+                2. La Academia
+              </Link>
+              <Link
+                href="/programas"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-[#FAF8F2] hover:text-[#C5A46D]"
+              >
+                3. Programas Académicos
+              </Link>
+              <Link
+                href="/clases-personalizadas"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-[#FAF8F2] hover:text-[#C5A46D]"
+              >
+                4. Clases Personalizadas
+              </Link>
+              <Link
+                href="/entrenadores"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-[#FAF8F2] hover:text-[#C5A46D]"
+              >
+                5. Entrenadores
+              </Link>
+              <Link
+                href="/tienda"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-[#FAF8F2] hover:text-[#C5A46D]"
+              >
+                6. Tienda de Ajedrez
+              </Link>
+              <Link
+                href="/clubes-y-escuelas"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-[#FAF8F2] hover:text-[#C5A46D]"
+              >
+                7. Escuelas y Clubes
+              </Link>
+              <Link
+                href="/articulos"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-[#FAF8F2] hover:text-[#C5A46D]"
+              >
+                8. Blog & Artículos
+              </Link>
+              <Link
+                href="/contacto"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-[#FAF8F2] hover:text-[#C5A46D]"
+              >
+                9. Contacto
+              </Link>
+            </nav>
+
+            <div className="pt-4 border-t border-[#1C3454] space-y-3">
+              <a
+                href="https://chessgora.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-dorado w-full text-center text-xs uppercase tracking-wider py-3 font-bold"
+              >
+                <Laptop className="w-4 h-4" />
+                10. Aula Virtual Chessgora
+              </a>
+              <Link
+                href="/mi-cuenta"
+                onClick={() => setMobileMenuOpen(false)}
+                className="btn-navy-outline w-full text-center text-xs uppercase tracking-wider py-3 font-bold block"
+              >
+                11. Mi Cuenta / Alumnos
               </Link>
             </div>
-            {status === 'authenticated' && user && (
-              <div className="p-3 rounded-lg bg-[#121E17] border border-[#2B3E34] mb-3">
-                <p className="text-xs font-bold text-white">{user.name}</p>
-                <p className="text-[10px] text-[#A8B2A6]">{user.email}</p>
-                <div className="mt-2 flex gap-2">
-                  <Link
-                    href="/mi-cuenta"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-xs text-[#D8B155] underline"
-                  >
-                    Mi Cuenta
-                  </Link>
-                  {(role === 'SUPERADMIN' || role === 'ADMIN' || role === 'COACH' || role?.includes('COACH')) && (
-                    <Link
-                      href="/maestro"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="text-xs text-amber-300 underline font-bold"
-                    >
-                      Panel Maestro
-                    </Link>
-                  )}
-                  {(role === 'SUPERADMIN' || role === 'ADMIN' || role?.includes('ADMIN')) && (
-                    <Link
-                      href="/admin"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="text-xs text-[#D8B155] underline font-bold"
-                    >
-                      Panel Admin
-                    </Link>
-                  )}
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      signOut({ callbackUrl: '/' });
-                    }}
-                    className="text-xs text-red-400 underline ml-auto"
-                  >
-                    Salir
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <Link
-              href="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block font-semibold text-[#D8B155] py-2 border-b border-stone-800"
-            >
-              Inicio
-            </Link>
-            <Link
-              href="/entrenamiento"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-white py-2 border-b border-stone-800"
-            >
-              Clases
-            </Link>
-            <Link
-              href="/tienda"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-white py-2 border-b border-stone-800"
-            >
-              Tienda
-            </Link>
-            <Link
-              href="/roberto-martin-del-campo"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-white py-2 border-b border-stone-800"
-            >
-              Nosotros
-            </Link>
-            <Link
-              href="/articulos"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-white py-2 border-b border-stone-800"
-            >
-              Blog
-            </Link>
-            <Link
-              href="/clubes-y-escuelas"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-white py-2 border-b border-stone-800"
-            >
-              Escuelas y Colegios
-            </Link>
-            <Link
-              href="/contacto"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-white py-2 border-b border-stone-800"
-            >
-              Contacto
-            </Link>
-
-            {status !== 'authenticated' && (
-              <div className="pt-2 flex flex-col gap-2 sm:hidden">
-                <Link
-                  href="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2 px-4 rounded border border-stone-600 text-white text-xs font-semibold"
-                >
-                  Iniciar sesión
-                </Link>
-                <Link
-                  href="/registro"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2 px-4 rounded bg-[#D8B155] text-[#0B1510] text-xs font-bold"
-                >
-                  Registrarse
-                </Link>
-              </div>
-            )}
           </div>
         )}
       </header>
 
-      {/* Global Search Modal */}
+      {/* Modal de Búsqueda Global */}
       <GlobalSearch isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );

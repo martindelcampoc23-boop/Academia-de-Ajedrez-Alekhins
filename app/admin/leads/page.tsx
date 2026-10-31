@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { Users, Phone, Mail, Clock, ArrowLeft, CheckCircle, BrainCircuit, School, MessageSquare, Send, MessageCircle } from 'lucide-react';
+import { LeadStatusSelector } from '@/components/admin/LeadStatusSelector';
 
 export const metadata = {
   title: 'CRM Evaluaciones & Leads | Admin Alekhins',
@@ -157,15 +158,7 @@ export default async function AdminLeadsPage({
                   </div>
 
                   <div className="flex items-center gap-2 self-start sm:self-auto">
-                    <span
-                      className={`px-3 py-1 rounded text-xs font-bold ${
-                        lead.status === 'NEW'
-                          ? 'bg-blue-950 text-blue-400 border border-blue-800'
-                          : 'bg-stone-gray text-ivory'
-                      }`}
-                    >
-                      Estado: {lead.status}
-                    </span>
+                    <LeadStatusSelector leadId={lead.id} initialStatus={lead.status} />
                   </div>
                 </div>
 

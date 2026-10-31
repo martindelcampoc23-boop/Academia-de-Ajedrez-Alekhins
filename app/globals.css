@@ -8,29 +8,38 @@
   --font-serif: 'Cinzel', 'Playfair Display', Georgia, serif;
   --font-sans: 'Inter', system-ui, sans-serif;
 
-  /* Theme Palette from Screenshot */
-  --bg-dark-forest: #0B1510;
-  --bg-dark-surface: #101E17;
-  --bg-dark-card: #15261E;
-  
-  --bg-light-cream: #F6F3EC;
-  --bg-light-surface: #EFEBE0;
-  --bg-light-card: #FFFFFF;
+  /* Paleta Institucional Academia Alekhins */
+  --bg-navy-main: #172B46;
+  --bg-navy-dark: #0F1D30;
+  --bg-navy-surface: #1C3454;
+  --bg-navy-card: #223D62;
 
-  --color-gold: #D8B155;
-  --color-gold-hover: #E5C066;
-  --color-forest-green: #0F2E1E;
-  --color-forest-hover: #15402A;
+  --bg-marfil: #FAF8F2;
+  --bg-marfil-soft: #F5F2E9;
+  --bg-white: #FFFFFF;
 
-  --text-dark: #0F1713;
-  --text-cream: #F6F3EC;
-  --text-muted-dark: #555555;
-  --text-muted-cream: #B5C2B9;
+  --color-dorado: #C5A46D;
+  --color-dorado-hover: #D4B785;
+  --color-dorado-dark: #A68750;
+
+  --text-primary-light: #FAF8F2;
+  --text-muted-light: #C4CBD4;
+  --text-primary-dark: #172B46;
+  --text-muted-dark: #5B6B82;
+
+  /* Compatibilidad con clases existentes */
+  --bg-dark-forest: #0F1D30;
+  --bg-dark-surface: #172B46;
+  --bg-dark-card: #1C3454;
+  --color-gold: #C5A46D;
+  --color-gold-hover: #D4B785;
+  --text-cream: #FAF8F2;
+  --text-muted-cream: #C4CBD4;
 }
 
 body {
-  background-color: var(--bg-dark-forest);
-  color: var(--text-cream);
+  background-color: var(--bg-navy-dark);
+  color: var(--text-primary-light);
   font-family: var(--font-sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -41,51 +50,110 @@ h1, h2, h3, h4, h5, h6, .font-serif-editorial {
   letter-spacing: -0.01em;
 }
 
-/* Color Utility Classes */
-.bg-dark-forest { background-color: #0B1510; }
-.bg-dark-surface { background-color: #101E17; }
-.bg-dark-card { background-color: #15261E; }
+/* Clases de Identidad Institucional */
+.bg-navy-main { background-color: #172B46; }
+.bg-navy-dark { background-color: #0F1D30; }
+.bg-navy-surface { background-color: #1C3454; }
+.bg-navy-card { background-color: #223D62; }
 
-.bg-light-cream { background-color: #F6F3EC; }
-.bg-light-surface { background-color: #EFEBE0; }
-.bg-light-card { background-color: #FFFFFF; }
+.bg-marfil { background-color: #FAF8F2; }
+.bg-marfil-soft { background-color: #F5F2E9; }
 
-.text-gold { color: #D8B155; }
-.text-forest-green { color: #0F2E1E; }
+.text-dorado { color: #C5A46D; }
+.text-navy { color: #172B46; }
 
-.border-gold { border-color: #D8B155; }
-.border-forest { border-color: #0F2E1E; }
-.border-light-stone { border-color: #E2DDD2; }
+.border-dorado { border-color: #C5A46D; }
+.border-navy { border-color: #1C3454; }
+.border-marfil { border-color: #D8CFBC; }
 
-/* Gold Solid Button */
-.btn-gold-solid {
-  background-color: #D8B155;
-  color: #0B1510;
+/* Botón Dorado Discreto Institucional */
+.btn-dorado {
+  background-color: #C5A46D;
+  color: #0F1D30;
   font-weight: 700;
-  padding: 0.65rem 1.5rem;
-  border-radius: 0.25rem;
+  padding: 0.7rem 1.6rem;
+  border-radius: 0.375rem;
   transition: all 0.2s ease-in-out;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 15px rgba(216, 177, 85, 0.3);
+  box-shadow: 0 4px 14px rgba(197, 164, 109, 0.25);
 }
 
-.btn-gold-solid:hover {
-  background-color: #E5C066;
-  box-shadow: 0 6px 20px rgba(216, 177, 85, 0.5);
+.btn-dorado:hover {
+  background-color: #D4B785;
+  box-shadow: 0 6px 20px rgba(197, 164, 109, 0.35);
   transform: translateY(-1px);
 }
 
-/* Forest Green Dark Outline Button */
+/* Botón Navy Outline */
+.btn-navy-outline {
+  border: 1px solid #C5A46D;
+  color: #FAF8F2;
+  background-color: rgba(23, 43, 70, 0.7);
+  font-weight: 600;
+  padding: 0.7rem 1.6rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-navy-outline:hover {
+  background-color: #172B46;
+  border-color: #D4B785;
+  color: #FFFFFF;
+}
+
+/* Botón Navy Sólido (para fondos claros) */
+.btn-navy-solid {
+  background-color: #172B46;
+  color: #FAF8F2;
+  font-weight: 700;
+  padding: 0.65rem 1.4rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-navy-solid:hover {
+  background-color: #0F1D30;
+  transform: translateY(-1px);
+}
+
+/* Compatibilidad con clases heredadas */
+.btn-gold-solid {
+  background-color: #C5A46D;
+  color: #0F1D30;
+  font-weight: 700;
+  padding: 0.65rem 1.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(197, 164, 109, 0.25);
+}
+
+.btn-gold-solid:hover {
+  background-color: #D4B785;
+  transform: translateY(-1px);
+}
+
 .btn-forest-outline {
-  border: 1px solid #D8B155;
-  color: #D8B155;
-  background-color: rgba(15, 46, 30, 0.6);
+  border: 1px solid #C5A46D;
+  color: #C5A46D;
+  background-color: rgba(23, 43, 70, 0.6);
   font-weight: 600;
   padding: 0.65rem 1.5rem;
-  border-radius: 0.25rem;
+  border-radius: 0.375rem;
   transition: all 0.2s ease-in-out;
   display: inline-flex;
   align-items: center;
@@ -94,18 +162,17 @@ h1, h2, h3, h4, h5, h6, .font-serif-editorial {
 }
 
 .btn-forest-outline:hover {
-  background-color: rgba(15, 46, 30, 0.9);
+  background-color: #172B46;
   color: #FFFFFF;
-  border-color: #E5C066;
+  border-color: #D4B785;
 }
 
-/* Forest Green Solid Button (for product cards in light section) */
 .btn-forest-solid {
-  background-color: #0F2E1E;
+  background-color: #172B46;
   color: #FFFFFF;
   font-weight: 600;
   padding: 0.5rem 1.25rem;
-  border-radius: 0.25rem;
+  border-radius: 0.375rem;
   transition: all 0.2s ease-in-out;
   display: inline-flex;
   align-items: center;
@@ -114,8 +181,27 @@ h1, h2, h3, h4, h5, h6, .font-serif-editorial {
 }
 
 .btn-forest-solid:hover {
-  background-color: #15402A;
+  background-color: #0F1D30;
   transform: translateY(-1px);
+}
+
+.bg-dark-forest { background-color: #0F1D30; }
+.bg-dark-surface { background-color: #172B46; }
+.bg-dark-card { background-color: #1C3454; }
+.text-gold { color: #C5A46D; }
+.border-gold { border-color: #C5A46D; }
+
+/* Tarjeta Editorial */
+.card-editorial {
+  background-color: #FFFFFF;
+  border: 1px solid #E5DFD1;
+  border-radius: 0.75rem;
+  transition: all 0.25s ease-in-out;
+}
+
+.card-editorial:hover {
+  border-color: #C5A46D;
+  box-shadow: 0 10px 25px -5px rgba(23, 43, 70, 0.08);
 }
 
 /* Custom Scrollbar */
@@ -125,14 +211,14 @@ h1, h2, h3, h4, h5, h6, .font-serif-editorial {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0B1510;
+  background: #0F1D30;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1C3328;
+  background: #1C3454;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #D8B155;
+  background: #C5A46D;
 }

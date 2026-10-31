@@ -31,867 +31,544 @@ import {
   ExternalLink,
   Medal,
   MessageCircle,
-  ShoppingBag as CartIcon
+  Target,
+  Check
 } from 'lucide-react';
 
 export const revalidate = 60;
 
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '529991020078';
+
 export default async function HomePage() {
   let featuredProducts: any[] = [];
-  let featuredPlans: any[] = [];
 
   try {
-    const [products, plans] = await Promise.all([
-      prisma.product.findMany({
-        where: { isPublished: true },
-        take: 5,
-        include: { images: true, variants: true, category: true },
-      }),
-      prisma.trainingPlan.findMany({
-        where: { isPublished: true },
-        take: 3,
-      }),
-    ]);
-    featuredProducts = products;
-    featuredPlans = plans;
+    featuredProducts = await prisma.product.findMany({
+      where: { isPublished: true },
+      take: 4,
+      include: { images: true, variants: true, category: true },
+    });
   } catch (error) {
     console.warn('⚠️ [HomePage] Database query fallback:', error);
   }
 
+  // Fallback de productos si la base de datos está offline
+  if (!featuredProducts || featuredProducts.length === 0) {
+    featuredProducts = [
+      {
+        id: 'p1',
+        name: 'Set de Torneo Profesional Alekhins Staunton #6',
+        slug: 'set-torneo-profesional-alekhins-staunton-6',
+        price: 899,
+        images: [{ url: '/tablero-de-ajedrez-con-logotipo-de-la-uscf-escaques-de-57-cms.jpg' }],
+      },
+      {
+        id: 'p2',
+        name: 'Reloj Digital de Ajedrez DGT 2010 Oficial FIDE',
+        slug: 'reloj-digital-ajedrez-dgt-2010-oficial-fide',
+        price: 1850,
+        images: [{ url: '/10104-DGT-Easy-Plus-with-Gift-Box-2014-fill-400x284-1-300x284.jpg' }],
+      },
+      {
+        id: 'p3',
+        name: 'Libro: El Método Yusupov 1 - Fundamentos',
+        slug: 'libro-el-metodo-yusupov-1-fundamentos',
+        price: 680,
+        images: [{ url: '/-El-M-todo-Yusupov-Fundamentos-4-Revisi-n-.jpg' }],
+      },
+      {
+        id: 'p4',
+        name: 'Paquete Escolar / Club (10 Sets de Ajedrez Completos)',
+        slug: 'paquete-escolar-club-10-sets',
+        price: 7990,
+        images: [{ url: '/ajedrez-club-special-ligero-con-tablero-de-vinil-y-bolso.jpg' }],
+      },
+    ];
+  }
+
   return (
-    <div className="space-y-0 text-white font-sans">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden bg-[#0B1510] border-b border-[#1C3328] pt-14 pb-20 md:pt-20 md:pb-32">
-        {/* Animated chess grid SVG background */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <style>{`
-            @keyframes chess-drift {
-              0% { transform: translate(0, 0) rotate(0deg); }
-              33% { transform: translate(-12px, 8px) rotate(0.4deg); }
-              66% { transform: translate(8px, -6px) rotate(-0.3deg); }
-              100% { transform: translate(0, 0) rotate(0deg); }
-            }
-            .chess-grid-anim { animation: chess-drift 18s ease-in-out infinite; }
-          `}</style>
-          <svg
-            className="chess-grid-anim absolute inset-0 w-full h-full opacity-[0.06]"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="xMidYMid slice"
-          >
-            <defs>
-              <pattern id="chess-hero" x="0" y="0" width="64" height="64" patternUnits="userSpaceOnUse">
-                <rect x="0" y="0" width="32" height="32" fill="#D8B155" />
-                <rect x="32" y="32" width="32" height="32" fill="#D8B155" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#chess-hero)" />
-          </svg>
-          {/* Radial vignette over the grid */}
-          <div className="absolute inset-0 bg-radial-fade" style={{ background: 'radial-gradient(ellipse at 60% 50%, transparent 20%, #0B1510 80%)' }} />
-        </div>
-        <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-[#0F2E1E]/50 via-[#0F2E1E]/20 to-transparent pointer-events-none" />
+    <div className="space-y-0 text-[#FAF8F2] font-sans selection:bg-[#C5A46D] selection:text-[#0F1D30]">
 
-        <div className="max-w-7xl mx-auto px-4 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Logotipo animado visible en mobile arriba del texto */}
-          <div className="lg:hidden flex justify-center pb-2 w-full">
-            <AnimatedLogoHero />
-          </div>
-
-          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            {/* Top Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1A3D2B]/80 border border-[#D8B155]/50 text-[#D8B155] text-xs font-semibold shadow-md">
-              <Crown className="w-3.5 h-3.5" />
-              <span>Academia de Alto Nivel • Dirigida por el MI Roberto Martín del Campo</span>
-            </div>
-
-            <h1 className="font-serif-editorial text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight">
-              <span className="text-white block">Domina el juego.</span>
-              <span className="text-[#D8B155] block">Aprende, compite y</span>
-              <span className="text-[#D8B155] block">equipa tu pasión.</span>
-            </h1>
-
-            {/* Gold Accent Line */}
-            <div className="w-20 h-1 bg-[#D8B155] rounded mx-auto lg:mx-0" />
-
-            <p className="text-sm md:text-base text-gray-200 max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans font-normal">
-              Formación estructurada para niños, jóvenes y adultos. Desde tus primeros movimientos hasta el alto rendimiento y la maestría, con la mejor tienda especializada de ajedrez en México.
-            </p>
-
-            {/* Primary Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-              <Link href="/entrenamiento" className="btn-forest-outline w-full sm:w-auto text-sm px-6 py-3.5 flex items-center justify-center gap-2">
-                <span>Ver programas de clases</span>
-                <ChevronRight className="w-4 h-4 text-[#D8B155]" />
-              </Link>
-
-              <Link href="/tienda" className="btn-gold-solid w-full sm:w-auto text-sm px-6 py-3.5 flex items-center justify-center gap-2">
-                <span>Explorar tienda oficial</span>
-                <ShoppingBag className="w-4 h-4" />
-              </Link>
-            </div>
-
-            {/* Auth CTA — siempre visible como HTML estático */}
-            <div className="flex items-center gap-3 pt-3 justify-center lg:justify-start">
-              <Link
-                href="/login"
-                className="inline-flex items-center gap-1.5 text-xs text-gray-300 hover:text-[#D8B155] underline underline-offset-2 transition"
-              >
-                <User className="w-3.5 h-3.5" />
-                Iniciar sesión
-              </Link>
-              <span className="text-gray-600 text-xs">·</span>
-              <Link
-                href="/registro"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D8B155] hover:text-[#E8C865] transition"
-              >
-                <GraduationCap className="w-3.5 h-3.5" />
-                Crear cuenta de alumno →
-              </Link>
-            </div>
-
-            {/* Trust Badges Pills */}
-            <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-[11px] text-[#A8B2A6]">
-              <span className="flex items-center gap-1 bg-[#121E17] border border-[#2B3E34] px-3 py-1 rounded-full">
-                <CheckCircle className="w-3 h-3 text-[#D8B155]" /> +500 Alumnos Formados
-              </span>
-              <span className="flex items-center gap-1 bg-[#121E17] border border-[#2B3E34] px-3 py-1 rounded-full">
-                <Star className="w-3 h-3 text-[#D8B155] fill-[#D8B155]" /> 4.9/5 Satisfacción
-              </span>
-              <span className="flex items-center gap-1 bg-[#121E17] border border-[#2B3E34] px-3 py-1 rounded-full">
-                <ShieldCheck className="w-3 h-3 text-[#D8B155]" /> Material FIDE Oficial
-              </span>
-            </div>
-          </div>
-
-          {/* Logotipo animado — columna derecha desktop */}
-          <div className="hidden lg:flex lg:col-span-5 items-center justify-center relative">
-            {/* Glow radial de fondo */}
-            <div className="absolute inset-0 rounded-full" style={{ background: 'radial-gradient(ellipse at center, rgba(200,170,110,0.12) 0%, transparent 70%)' }} />
-            <AnimatedLogoHero />
-          </div>
-        </div>
-      </section>
-
-      {/* 2. FEATURE HIGHLIGHTS BAR (Light Cream Background #F6F3EC) */}
-      <section className="bg-[#F6F3EC] text-[#0F1713] py-10 border-b border-[#E5DEC9]">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="flex items-start gap-4 p-2">
-            <div className="w-12 h-12 rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shrink-0 shadow-md">
-              <User className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-serif-editorial text-sm font-bold text-[#0F1713]">Entrenadores Titulados</h4>
-              <p className="text-xs text-gray-600 mt-1 leading-relaxed">
-                Maestros Internacionales (MI) y entrenadores certificados por la FIDE con décadas de trayectoria.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4 p-2">
-            <div className="w-12 h-12 rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shrink-0 shadow-md">
-              <Laptop className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-serif-editorial text-sm font-bold text-[#0F1713]">Aula Virtual Interactiva</h4>
-              <p className="text-xs text-gray-600 mt-1 leading-relaxed">
-                Clases en vivo, tableros interactivos, análisis de partidas con motores y tareas calificadas.
-                Plataforma de clases: <strong className="text-[#1B4D3E]">chessgora.com</strong>
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4 p-2">
-            <div className="w-12 h-12 rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shrink-0 shadow-md">
-              <TrendingUp className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-serif-editorial text-sm font-bold text-[#0F1713]">Progreso Medible</h4>
-              <p className="text-xs text-gray-600 mt-1 leading-relaxed">
-                Metodología por niveles claros: desde iniciación y club hasta competencia nacional y rating FIDE.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4 p-2">
-            <div className="w-12 h-12 rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shrink-0 shadow-md">
-              <ShoppingBag className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-serif-editorial text-sm font-bold text-[#0F1713]">Tienda Especializada</h4>
-              <p className="text-xs text-gray-600 mt-1 leading-relaxed">
-                Material reglamentario, relojes digitales DGT, tableros Staunton y envíos rápidos a todo México.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. METODOLOGÍA ALEKHINS (Los 4 Pilares del Ajedrez Moderno) */}
-      <section className="bg-[#0B1510] py-20 border-b border-[#1C3328]">
-        <div className="max-w-7xl mx-auto px-4 space-y-12">
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 text-[#D8B155] text-xs font-bold uppercase tracking-widest">
-              <span className="w-8 h-[1px] bg-[#D8B155]" />
-              <Sparkles className="w-4 h-4" />
-              <span>METODOLOGÍA EXCLUSIVA</span>
-              <span className="w-8 h-[1px] bg-[#D8B155]" />
-            </div>
-            <h2 className="font-serif-editorial text-3xl sm:text-4xl font-bold tracking-wider text-white">
-              Los 4 Pilares del Ajedrez Moderno
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-400">
-              Nuestro sistema de entrenamiento combina la tradición clásica con el análisis moderno por computadora.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/60 transition rounded-xl p-6 space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-[#0F2E1E] border border-[#D8B155] flex items-center justify-center text-[#D8B155] font-serif font-bold text-lg">
-                I
+      {/* =========================================================
+          1. HERO PRINCIPAL: INSTITUCIÓN INTERNACIONAL DE AJEDREZ
+      ========================================================= */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#0F1D30] via-[#172B46] to-[#0F1D30] border-b border-[#1C3454] pt-14 pb-20 md:pt-20 md:pb-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-14 items-center">
+            
+            {/* Texto y Propuesta de Valor */}
+            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#0F1D30] border border-[#C5A46D]/60 text-[#C5A46D] text-xs font-bold uppercase tracking-widest shadow">
+                <Crown className="w-3.5 h-3.5" />
+                <span>Institución de Ajedrez Profesional • ajedrezprofesional.com</span>
               </div>
-              <h3 className="font-serif-editorial text-lg font-bold text-white">Repertorio & Aperturas</h3>
-              <p className="text-xs text-gray-300 leading-relaxed">
-                Construcción de un repertorio sólido y adaptado a tu estilo de juego, entendiendo los planes típicos en lugar de memorizar variantes mecánicas.
+
+              <h1 className="font-serif-editorial text-3xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight leading-[1.15]">
+                ACADEMIA ALEKHINS
+              </h1>
+
+              <p className="text-base sm:text-lg md:text-xl text-[#C4CBD4] leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light">
+                Formación ajedrecística de alto nivel para niños, jóvenes y competidores internacionales. Metodología probada bajo la dirección académica del <strong>Maestro Internacional Roberto Martín del Campo Cárdenas</strong>.
               </p>
-            </div>
 
-            <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/60 transition rounded-xl p-6 space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-[#0F2E1E] border border-[#D8B155] flex items-center justify-center text-[#D8B155] font-serif font-bold text-lg">
-                II
-              </div>
-              <h3 className="font-serif-editorial text-lg font-bold text-white">Táctica & Cálculo Profundo</h3>
-              <p className="text-xs text-gray-300 leading-relaxed">
-                Entrenamiento diario de visión combinativa, reconocimiento de patrones de mate, clavadas, horquillas y cálculo preciso de variantes.
-              </p>
-            </div>
-
-            <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/60 transition rounded-xl p-6 space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-[#0F2E1E] border border-[#D8B155] flex items-center justify-center text-[#D8B155] font-serif font-bold text-lg">
-                III
-              </div>
-              <h3 className="font-serif-editorial text-lg font-bold text-white">Estrategia & Medio Juego</h3>
-              <p className="text-xs text-gray-300 leading-relaxed">
-                Dominio de estructuras de peones, casillas débiles, piezas activas versus pasivas y formulación de planes a largo plazo.
-              </p>
-            </div>
-
-            <div className="bg-[#121E17] border border-[#2B3E34] hover:border-[#D8B155]/60 transition rounded-xl p-6 space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-[#0F2E1E] border border-[#D8B155] flex items-center justify-center text-[#D8B155] font-serif font-bold text-lg">
-                IV
-              </div>
-              <h3 className="font-serif-editorial text-lg font-bold text-white">Técnica en Finales</h3>
-              <p className="text-xs text-gray-300 leading-relaxed">
-                Estudio riguroso de finales teóricos de torres, piezas menores y peones para convertir ventajas mínimas en victorias contundentes.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. NUESTROS PROGRAMAS */}
-      <section className="bg-[#0B1510] py-20 border-b border-[#1C3328]">
-        <div className="max-w-7xl mx-auto px-4 space-y-12">
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 text-[#D8B155] text-xs font-bold uppercase tracking-widest">
-              <span className="w-8 h-[1px] bg-[#D8B155]" />
-              <Crown className="w-4 h-4" />
-              <span className="w-8 h-[1px] bg-[#D8B155]" />
-            </div>
-            <h2 className="font-serif-editorial text-3xl sm:text-4xl font-bold tracking-wider text-white">
-              NUESTROS PROGRAMAS DE ENTRENAMIENTO
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-400 max-w-xl mx-auto">
-              Grupos reducidos por nivel y edad con sesiones dinámicas, material de estudio y soporte continuo del entrenador.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Card 1: INICIACIÓN */}
-            <div className="bg-[#F9F8F3] rounded-xl overflow-hidden border border-[#E2DDD2] text-[#0F1713] flex flex-col justify-between shadow-xl group">
-              <div>
-                <div className="aspect-[4/3] bg-gray-200 overflow-hidden relative">
-                  <img
-                    src="/ajedrez-club-special-ligero-con-tablero-de-vinil-y-bolso.jpg"
-                    alt="Iniciación al Ajedrez"
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                  />
-                  <span className="absolute top-3 left-3 bg-[#0F2E1E] text-[#D8B155] text-[10px] font-bold uppercase px-2.5 py-1 rounded">
-                    Desde 5 años
-                  </span>
-                </div>
-                <div className="p-6 space-y-4 text-center">
-                  <h3 className="font-serif-editorial text-xl font-bold tracking-wider text-[#0F1713]">
-                    INICIACIÓN (PEONES DEL FUTURO)
-                  </h3>
-                  <p className="text-xs text-gray-600 leading-relaxed min-h-[48px]">
-                    Aprende las reglas, tácticas básicas y fundamentos del juego de forma divertida, estructurada e interactiva.
-                  </p>
-                  <ul className="text-xs text-gray-700 space-y-2 text-left pt-2 border-t border-gray-200">
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#0F2E1E]">♟</span> Movimiento de piezas y leyes del juego
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#0F2E1E]">♟</span> Patrones básicos de jaque mate
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#0F2E1E]">♟</span> Desarrollo de concentración y memoria
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="p-6 pt-0 text-center">
-                <Link href="/entrenamiento/iniciacion-al-ajedrez" className="btn-forest-solid text-xs py-2.5 px-6 rounded-full w-full">
-                  Más información &gt;
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                <Link
+                  href="/programas"
+                  className="btn-dorado text-xs sm:text-sm uppercase tracking-wider font-extrabold py-3.5 px-7 shadow-lg"
+                >
+                  Conocer Programas Académicos
+                </Link>
+                <Link
+                  href="/clases-personalizadas"
+                  className="btn-navy-outline text-xs sm:text-sm uppercase tracking-wider font-bold py-3.5 px-6"
+                >
+                  Clases Personalizadas 1 a 1
                 </Link>
               </div>
-            </div>
 
-            {/* Card 2: COMPETITIVO */}
-            <div className="bg-[#F9F8F3] rounded-xl overflow-hidden border border-[#E2DDD2] text-[#0F1713] flex flex-col justify-between shadow-xl group">
-              <div>
-                <div className="aspect-[4/3] bg-gray-200 overflow-hidden relative">
-                  <img
-                    src="/dgt1500-grey-blue-chess-clock-home.avif"
-                    alt="Desarrollo Competitivo"
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                  />
-                  <span className="absolute top-3 left-3 bg-[#D8B155] text-[#0B1510] text-[10px] font-bold uppercase px-2.5 py-1 rounded">
-                    Intermedio / Avanzado
-                  </span>
+              {/* Sellos de Confianza */}
+              <div className="pt-6 border-t border-[#1C3454] grid grid-cols-3 gap-4 text-center lg:text-left text-xs text-[#C4CBD4]">
+                <div>
+                  <strong className="text-white block text-sm sm:text-base font-serif-editorial text-[#C5A46D]">
+                    4 Olimpiadas
+                  </strong>
+                  <span>Representación de México</span>
                 </div>
-                <div className="p-6 space-y-4 text-center">
-                  <h3 className="font-serif-editorial text-xl font-bold tracking-wider text-[#0F1713]">
-                    DESARROLLO & TÁCTICA AVANZADA
-                  </h3>
-                  <p className="text-xs text-gray-600 leading-relaxed min-h-[48px]">
-                    Desarrolla tu estrategia, tácticas complejas y preparación específica para torneos locales, estatales y nacionales.
-                  </p>
-                  <ul className="text-xs text-gray-700 space-y-2 text-left pt-2 border-t border-gray-200">
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#0F2E1E]">♟</span> Repertorio estructurado de aperturas
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#0F2E1E]">♟</span> Análisis de partidas y preparación de rivales
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#0F2E1E]">♟</span> Manejo de reloj y control del tiempo
-                    </li>
-                  </ul>
+                <div>
+                  <strong className="text-white block text-sm sm:text-base font-serif-editorial text-[#C5A46D]">
+                    Chessgora.com
+                  </strong>
+                  <span>Aula Virtual Integrada</span>
                 </div>
-              </div>
-              <div className="p-6 pt-0 text-center">
-                <Link href="/entrenamiento/desarrollo-y-tactica-avanzada" className="btn-forest-solid text-xs py-2.5 px-6 rounded-full w-full">
-                  Más información &gt;
-                </Link>
+                <div>
+                  <strong className="text-white block text-sm sm:text-base font-serif-editorial text-[#C5A46D]">
+                    Material FIDE
+                  </strong>
+                  <span>Tienda Especializada</span>
+                </div>
               </div>
             </div>
 
-            {/* Card 3: ALTO RENDIMIENTO */}
-            <div className="bg-[#F9F8F3] rounded-xl overflow-hidden border border-[#E2DDD2] text-[#0F1713] flex flex-col justify-between shadow-xl group">
-              <div>
-                <div className="aspect-[4/3] bg-gray-200 overflow-hidden relative">
-                  <img
-                    src="/713QtLhmJiL._AC_SX679_.jpg"
-                    alt="Alto Rendimiento"
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                  />
-                  <span className="absolute top-3 left-3 bg-[#1A3D2B] text-[#D8B155] text-[10px] font-bold uppercase px-2.5 py-1 rounded">
-                    Elo 1800+ FIDE
-                  </span>
-                </div>
-                <div className="p-6 space-y-4 text-center">
-                  <h3 className="font-serif-editorial text-xl font-bold tracking-wider text-[#0F1713]">
-                    ALTO RENDIMIENTO & COMPETICIÓN
-                  </h3>
-                  <p className="text-xs text-gray-600 leading-relaxed min-h-[48px]">
-                    Entrenamiento intensivo para jugadores que buscan normas de maestro, incremento sostenido de Elo FIDE y títulos oficiales.
-                  </p>
-                  <ul className="text-xs text-gray-700 space-y-2 text-left pt-2 border-t border-gray-200">
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#0F2E1E]">♟</span> Mentoría directa con el MI Roberto Martín del Campo
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#0F2E1E]">♟</span> Bases de datos magistrales y novedades teóricas
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#0F2E1E]">♟</span> Preparación psicológica de alta competencia
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="p-6 pt-0 text-center">
-                <Link href="/entrenamiento/alto-rendimiento-y-competicion" className="btn-forest-solid text-xs py-2.5 px-6 rounded-full w-full">
-                  Más información &gt;
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-center pt-4">
-            <Link href="/entrenamiento" className="btn-forest-outline text-xs px-8 py-3.5 inline-flex items-center gap-2">
-              <span>Ver todos los planes de entrenamiento</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. SECCIÓN DEL FUNDADOR / MI ROBERTO MARTÍN DEL CAMPO */}
-      <section className="bg-gradient-to-b from-[#0F261B] via-[#0B1510] to-[#0F261B] py-20 border-b border-[#1C3328] relative overflow-hidden">
-        <div className="absolute top-1/2 left-0 w-96 h-96 bg-[#D8B155]/10 rounded-full blur-3xl pointer-events-none -translate-y-1/2" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-          <div className="lg:col-span-5 text-center flex justify-center">
-            <div className="relative inline-block">
-              <div className="w-64 h-80 sm:w-72 sm:h-96 rounded-2xl overflow-hidden border-2 border-[#D8B155] shadow-[0_0_40px_rgba(216,177,85,0.25)] mx-auto relative bg-[#080E0B]">
+            {/* Imagen Principal del Maestro Roberto Martín del Campo */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative aspect-[4/5] max-w-md mx-auto rounded-3xl overflow-hidden border-2 border-[#C5A46D] shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_40px_rgba(197,164,109,0.25)] bg-[#172B46]">
                 <Image
                   src="/maestro-roberto.jpg"
-                  alt="MI Roberto Martín del Campo Cárdenas — Maestro Internacional de Ajedrez"
+                  alt="MI Roberto Martín del Campo Cárdenas — Director Académico de Academia Alekhins"
                   fill
                   className="object-cover object-top hover:scale-105 transition-transform duration-700"
                   priority
                 />
-              </div>
-              <div className="absolute -bottom-4 -right-2 sm:right-2 bg-gradient-to-r from-amber-500 to-[#D8B155] text-[#0B1510] font-black text-[11px] px-4 py-2 rounded-xl shadow-2xl uppercase tracking-wider flex items-center gap-1.5 border border-amber-300/40">
-                <Medal className="w-3.5 h-3.5 text-[#0B1510]" />
-                <span>🥇 Oro Olímpico Novi Sad 1990</span>
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0F1D30] via-[#0F1D30]/80 to-transparent p-6 text-center">
+                  <span className="text-[11px] uppercase font-bold tracking-widest text-[#C5A46D] block">
+                    Director Académico
+                  </span>
+                  <h3 className="font-serif-editorial text-lg sm:text-xl font-bold text-white">
+                    MI Roberto Martín del Campo Cárdenas
+                  </h3>
+                  <p className="text-xs text-[#C4CBD4]">
+                    FIDE ID: 5100046 • Campeón Nacional Absoluto
+                  </p>
+                </div>
               </div>
             </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================
+          2. PRESENTACIÓN DE ACADEMIA ALEKHINS & TRAYECTORIA
+      ========================================================= */}
+      <section className="py-16 md:py-24 bg-[#0F1D30] border-b border-[#1C3454]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#C5A46D] block">
+              Institución & Trayectoria
+            </span>
+            <h2 className="font-serif-editorial text-2xl sm:text-4xl font-bold text-white">
+              Cátedra, Metodología y Tradición Ajedrecística
+            </h2>
+            <p className="text-sm text-[#C4CBD4] leading-relaxed">
+              Academia Alekhins es una institución dedicada a formar mentes analíticas, estratégicas y competitivas mediante la metodología clásica perfeccionada por Grandes Maestros y tecnología interactiva.
+            </p>
           </div>
 
-          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1B4D3E] border border-[#D8B155]/50 text-[#D8B155] text-xs font-bold uppercase tracking-widest shadow-md">
-              <Crown className="w-3.5 h-3.5" />
-              <span>Dirección Técnica & Metodología de Alto Nivel</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs sm:text-sm">
+            <div className="p-6 rounded-2xl bg-[#172B46] border border-[#233F65] space-y-3 hover:border-[#C5A46D] transition">
+              <div className="w-10 h-10 rounded-xl bg-[#0F1D30] border border-[#C5A46D]/40 flex items-center justify-center text-[#C5A46D]">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <h3 className="font-serif-editorial text-base font-bold text-white">
+                Dirección Titulada FIDE
+              </h3>
+              <p className="text-[#C4CBD4] leading-relaxed">
+                Cada programa pedagógico está supervisado directamente por el MI Roberto Martín del Campo, garantizando que el contenido enseñado responda a los más altos estándares mundiales.
+              </p>
             </div>
 
-            <h2 className="font-serif-editorial text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
-              MI Roberto Abel <br className="hidden sm:inline" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#E8C865] to-[#D8B155]">
-                Martín del Campo Cárdenas
+            <div className="p-6 rounded-2xl bg-[#172B46] border border-[#233F65] space-y-3 hover:border-[#C5A46D] transition">
+              <div className="w-10 h-10 rounded-xl bg-[#0F1D30] border border-[#C5A46D]/40 flex items-center justify-center text-[#C5A46D]">
+                <Target className="w-5 h-5" />
+              </div>
+              <h3 className="font-serif-editorial text-base font-bold text-white">
+                Progresión Garantizada
+              </h3>
+              <p className="text-[#C4CBD4] leading-relaxed">
+                Niveles ordenados desde los fundamentos hasta el alto rendimiento. Cada etapa cuenta con temarios medibles y evaluaciones continuas para certificar el avance del alumno.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[#172B46] border border-[#233F65] space-y-3 hover:border-[#C5A46D] transition">
+              <div className="w-10 h-10 rounded-xl bg-[#0F1D30] border border-[#C5A46D]/40 flex items-center justify-center text-[#C5A46D]">
+                <Laptop className="w-5 h-5" />
+              </div>
+              <h3 className="font-serif-editorial text-base font-bold text-white">
+                Aula Virtual Chessgora
+              </h3>
+              <p className="text-[#C4CBD4] leading-relaxed">
+                Nuestra plataforma tecnológica oficial permite resolver ejercicios diarios, analizar partidas con módulos y acceder a grabaciones sin costo adicional.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================
+          3. PROGRAMAS ACADÉMICOS DESTACADOS
+      ========================================================= */}
+      <section className="py-16 md:py-24 bg-[#172B46] border-b border-[#233F65]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-widest text-[#C5A46D] block">
+                Formación Continua
               </span>
+              <h2 className="font-serif-editorial text-2xl sm:text-4xl font-bold text-white mt-1">
+                Programas Académicos Destacados
+              </h2>
+            </div>
+            <Link
+              href="/programas"
+              className="text-xs text-[#C5A46D] hover:underline font-bold inline-flex items-center gap-1.5 uppercase tracking-wider"
+            >
+              <span>Ver todos los programas</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Tarjeta 1: Iniciación */}
+            <div className="p-6 rounded-3xl bg-[#0F1D30] border border-[#233F65] flex flex-col justify-between space-y-6 hover:border-[#C5A46D] transition group">
+              <div className="space-y-4">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#C5A46D] block">
+                  Principiantes (0 - 1000 Elo)
+                </span>
+                <h3 className="font-serif-editorial text-xl font-bold text-white group-hover:text-[#C5A46D] transition">
+                  Grupo de Ajedrez Inicial
+                </h3>
+                <p className="text-xs text-[#C4CBD4] leading-relaxed">
+                  Aprende desde los fundamentos con metodología amena. Lunes, miércoles y jueves de 6:00 a 7:00 p. m.
+                </p>
+                <div className="border-t border-[#233F65] pt-3 flex items-baseline gap-2">
+                  <span className="text-2xl font-bold text-[#C5A46D]">$500 MXN</span>
+                  <span className="text-xs text-[#9CA3AF]">/ mes (12 hrs)</span>
+                </div>
+              </div>
+              <Link href="/programas#iniciacion" className="btn-dorado w-full text-center text-xs uppercase font-bold py-3 block">
+                Ver Detalles del Grupo
+              </Link>
+            </div>
+
+            {/* Tarjeta 2: Competitivo (Popular) */}
+            <div className="p-6 rounded-3xl bg-gradient-to-b from-[#1C3454] to-[#0F1D30] border-2 border-[#C5A46D] flex flex-col justify-between space-y-6 shadow-xl relative">
+              <div className="absolute top-4 right-4 bg-[#C5A46D] text-[#0F1D30] text-[10px] font-black uppercase tracking-wider px-3 py-0.5 rounded-full">
+                Más Elegido
+              </div>
+              <div className="space-y-4">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#C5A46D] block">
+                  Menos de 2000 Elo
+                </span>
+                <h3 className="font-serif-editorial text-xl font-bold text-white">
+                  Entrenamiento Competitivo
+                </h3>
+                <p className="text-xs text-[#C4CBD4] leading-relaxed">
+                  4 días de entrenamiento a la semana (Martes a viernes de 6:00 a 7:00 p. m.). Cálculo, aperturas y estrategia.
+                </p>
+                <div className="border-t border-[#233F65] pt-3 flex items-baseline gap-2">
+                  <span className="text-2xl font-bold text-[#C5A46D]">$699 MXN</span>
+                  <span className="text-xs text-[#9CA3AF]">/ mes (16 hrs)</span>
+                </div>
+              </div>
+              <Link href="/programas#desarrollo" className="btn-dorado w-full text-center text-xs uppercase font-bold py-3 block">
+                Inscribirme al Grupo
+              </Link>
+            </div>
+
+            {/* Tarjeta 3: Personalizado */}
+            <div className="p-6 rounded-3xl bg-[#0F1D30] border border-[#233F65] flex flex-col justify-between space-y-6 hover:border-[#C5A46D] transition group">
+              <div className="space-y-4">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#C5A46D] block">
+                  Atención Individual 1 a 1
+                </span>
+                <h3 className="font-serif-editorial text-xl font-bold text-white group-hover:text-[#C5A46D] transition">
+                  Entrenamiento Personalizado
+                </h3>
+                <p className="text-xs text-[#C4CBD4] leading-relaxed">
+                  Sesiones individuales de 60 minutos con el MI Roberto Martín del Campo. Agenda a convenir y análisis PGN.
+                </p>
+                <div className="border-t border-[#233F65] pt-3 flex items-baseline gap-2">
+                  <span className="text-2xl font-bold text-[#C5A46D]">$5,000 MXN</span>
+                  <span className="text-xs text-[#9CA3AF]">10 sesiones ($600 indiv.)</span>
+                </div>
+              </div>
+              <Link href="/clases-personalizadas" className="btn-navy-outline w-full text-center text-xs uppercase font-bold py-3 block">
+                Solicitar Entrenamiento
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================
+          4. SECCIÓN DESTACADA: CHESSGORA.COM INCLUIDO
+      ========================================================= */}
+      <section className="py-16 md:py-24 bg-[#0F1D30] border-b border-[#1C3454]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative rounded-3xl bg-gradient-to-r from-[#172B46] via-[#1C3454] to-[#172B46] border-2 border-[#C5A46D] p-8 sm:p-12 md:p-16 text-center space-y-6 shadow-2xl">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0F1D30] border border-[#C5A46D] text-[#C5A46D] text-xs font-black uppercase tracking-widest shadow">
+              <Laptop className="w-4 h-4" />
+              <span>PLATAFORMA ASOCIADA • AULA VIRTUAL</span>
+            </div>
+
+            <h2 className="font-serif-editorial text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide">
+              CHESSGORA.COM INCLUIDO
             </h2>
 
-            <p className="text-sm sm:text-base text-[#C2CCC0] leading-relaxed font-sans max-w-2xl mx-auto lg:mx-0">
-              Leyenda viva del ajedrez mexicano y una de las figuras más respetadas del continente. Medallista de Oro Olímpico Individual en la 29ª Olimpiada Mundial de la FIDE con un extraordinario 75% de efectividad. Formador de múltiples generaciones de maestros y fundador de la Academia Alekhins.
+            <p className="text-sm sm:text-base md:text-lg text-[#E5DFD1] max-w-3xl mx-auto font-light leading-relaxed">
+              Una plataforma de entrenamiento ajedrecístico donde podrás reforzar tus conocimientos, resolver ejercicios, practicar posiciones y continuar trabajando fuera de las clases en vivo.
             </p>
 
-            <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-2">
-              <div className="p-3.5 bg-[#121E17] border border-[#2B3E34] rounded-xl text-center">
-                <span className="text-amber-400 font-bold text-base sm:text-lg block">🥇 Oro Olímpico</span>
-                <span className="text-[10px] sm:text-[11px] text-[#8E9B8C]">Novi Sad 1990 (FIDE)</span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto pt-4 text-xs text-left">
+              <div className="p-4 rounded-xl bg-[#0F1D30]/80 border border-[#233F65] space-y-1">
+                <strong className="text-white block font-bold">1. Práctica Diaria</strong>
+                <span className="text-[#C4CBD4]">Ejercicios tácticos adaptados a tu nivel para resolver todos los días.</span>
               </div>
-              <div className="p-3.5 bg-[#121E17] border border-[#2B3E34] rounded-xl text-center">
-                <span className="text-emerald-400 font-bold text-base sm:text-lg block">🏆 Torre Repetto</span>
-                <span className="text-[10px] sm:text-[11px] text-[#8E9B8C]">Campeón Magistral</span>
+              <div className="p-4 rounded-xl bg-[#0F1D30]/80 border border-[#233F65] space-y-1">
+                <strong className="text-white block font-bold">2. Análisis de Partidas</strong>
+                <span className="text-[#C4CBD4]">Tableros interactivos para revisar las lecciones trabajadas en clase.</span>
               </div>
-              <div className="p-3.5 bg-[#121E17] border border-[#2B3E34] rounded-xl text-center">
-                <span className="text-[#D8B155] font-bold text-base sm:text-lg block">+35 Años</span>
-                <span className="text-[10px] sm:text-[11px] text-[#8E9B8C]">Docencia de Élite</span>
+              <div className="p-4 rounded-xl bg-[#0F1D30]/80 border border-[#233F65] space-y-1">
+                <strong className="text-white block font-bold">3. 100% Sin Costo Extra</strong>
+                <span className="text-[#C4CBD4]">Tu inscripción en cualquier modalidad de Alekhins incluye acceso completo.</span>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
-              <Link
-                href="/videos"
-                className="px-5 py-3.5 rounded-lg bg-gradient-to-r from-red-950 via-red-900 to-amber-950 hover:from-red-900 hover:to-amber-900 border border-red-500/60 text-white text-xs font-bold uppercase tracking-wider inline-flex items-center gap-2 shadow-xl transition-all hover:scale-[1.02]"
-              >
-                <Video className="w-4 h-4 text-red-400 animate-pulse" />
-                <span>Ver Videos & Clase Pública (4 Horas)</span>
-              </Link>
-              <Link
-                href="/roberto-martin-del-campo"
-                className="btn-gold-solid text-xs px-5 py-3.5 inline-flex items-center gap-2 shadow-xl font-bold uppercase tracking-wider"
-              >
-                <span>Biografía y Trayectoria</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+            <div className="pt-2">
               <a
-                href="https://wa.me/529991020078?text=Hola%20MI%20Roberto,%20me%20gustar%C3%ADa%20informaci%C3%B3n%20sobre%20sus%20clases"
+                href="https://chessgora.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3.5 rounded-lg bg-[#121E17] hover:bg-[#1B2F23] border border-[#D8B155]/60 text-[#D8B155] text-xs font-bold uppercase tracking-wider transition flex items-center gap-2"
+                className="btn-dorado text-xs uppercase tracking-wider font-extrabold py-3.5 px-8 inline-flex items-center gap-2"
               >
-                <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp Personal</span>
+                <span>Acceder a Chessgora.com</span>
+                <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 6. ECOSISTEMA DIGITAL (CÓMO FUNCIONA EL PORTAL DEL ALUMNO) */}
-      <section className="bg-[#0B1510] py-20 border-b border-[#1C3328]">
-        <div className="max-w-7xl mx-auto px-4 space-y-12">
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 text-[#D8B155] text-xs font-bold uppercase tracking-widest">
-              <Laptop className="w-4 h-4" />
-              <span>TECNOLOGÍA APLICADA AL AJEDREZ</span>
+      {/* =========================================================
+          5. TIENDA DE MATERIAL ESPECIALIZADO DE AJEDREZ
+      ========================================================= */}
+      <section className="py-16 md:py-24 bg-[#172B46] border-b border-[#233F65]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-widest text-[#C5A46D] block">
+                Comercio Especializado
+              </span>
+              <h2 className="font-serif-editorial text-2xl sm:text-4xl font-bold text-white mt-1">
+                Material de Competición & Estudio
+              </h2>
             </div>
-            <h2 className="font-serif-editorial text-3xl sm:text-4xl font-bold text-white">
-              Tu Aula Virtual de Ajedrez
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-400">
-              Una plataforma diseñada para acelerar tu aprendizaje antes, durante y después de cada clase.
-            </p>
-            <a
-              href="https://chessgora.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1A3D2B] border border-[#D8B155]/60 text-[#D8B155] text-sm font-bold hover:bg-[#1B4D3E] transition shadow-lg"
+            <Link
+              href="/tienda"
+              className="text-xs text-[#C5A46D] hover:underline font-bold inline-flex items-center gap-1.5 uppercase tracking-wider"
             >
-              <Laptop className="w-4 h-4" />
-              Acceder al Aula Virtual → chessgora.com
-            </a>
+              <span>Ver catálogo completo de la tienda</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-6 space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-[#1B4D3E] text-[#D8B155] flex items-center justify-center font-bold">
-                <BookOpen className="w-6 h-6" />
-              </div>
-              <h3 className="font-serif-editorial text-lg font-bold text-white">Tareas y Ejercicios FEN</h3>
-              <p className="text-xs text-gray-300 leading-relaxed">
-                Recibe ejercicios tácticos semanales directamente en tu cuenta. Analízalos en tableros interactivos integrados con Lichess y entrega tu solución por escrito.
-              </p>
-              <span className="text-[11px] text-[#D8B155] font-semibold block">✓ Calificadas con retroalimentación del maestro</span>
-            </div>
-
-            <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-6 space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-[#1B4D3E] text-[#D8B155] flex items-center justify-center font-bold">
-                <Video className="w-6 h-6" />
-              </div>
-              <h3 className="font-serif-editorial text-lg font-bold text-white">Videoteca de Repaso HD</h3>
-              <p className="text-xs text-gray-300 leading-relaxed">
-                ¿Te perdiste una clase o quieres repasar una variante? Todas las clases magistrales se graban y quedan archivadas en tu panel personal con acceso 24/7.
-              </p>
-              <span className="text-[11px] text-[#D8B155] font-semibold block">✓ Acceso ilimitado durante tu suscripción</span>
-            </div>
-
-            <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-6 space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-[#1B4D3E] text-[#D8B155] flex items-center justify-center font-bold">
-                <Trophy className="w-6 h-6" />
-              </div>
-              <h3 className="font-serif-editorial text-lg font-bold text-white">Torneos Internos & Ránking</h3>
-              <p className="text-xs text-gray-300 leading-relaxed">
-                Participa en torneos cerrados entre alumnos de la academia con control de tiempo oficial, análisis post-partida y premiación con material de ajedrez.
-              </p>
-              <span className="text-[11px] text-[#D8B155] font-semibold block">✓ Práctica competitiva periódica</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. PRODUCTOS DESTACADOS (Light Cream #F6F3EC) */}
-      <section className="bg-[#F6F3EC] text-[#0F1713] py-20 border-b border-[#E5DEC9]">
-        <div className="max-w-7xl mx-auto px-4 space-y-12">
-          {/* Section Header */}
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 text-[#D8B155] text-xs font-bold uppercase tracking-widest">
-              <span className="w-8 h-[1px] bg-[#D8B155]" />
-              <Crown className="w-4 h-4" />
-              <span className="w-8 h-[1px] bg-[#D8B155]" />
-            </div>
-            <h2 className="font-serif-editorial text-3xl sm:text-4xl font-bold tracking-wider text-[#0F1713]">
-              PRODUCTOS DESTACADOS DE LA TIENDA
-            </h2>
-            <p className="text-xs text-gray-600 max-w-md mx-auto">
-              Material reglamentario avalado por la FIDE y seleccionado para la mejor experiencia de juego.
-            </p>
-          </div>
-
-          {/* Products Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredProducts.map((p: any) => {
-              const image = p.images?.[0]?.url || '/ajedrez-club-special-ligero-con-tablero-de-vinil-y-bolso.jpg';
+              const image = p.images?.[0]?.url || '/tablero-de-ajedrez-con-logotipo-de-la-uscf-escaques-de-57-cms.jpg';
               return (
-                <div key={p.id} className="bg-white rounded-xl p-4 border border-[#E2DDD2] flex flex-col justify-between shadow-sm hover:shadow-md transition group">
-                  <div className="space-y-3 text-center">
-                    <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative">
-                      <img src={image} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                <div
+                  key={p.id}
+                  className="bg-[#0F1D30] rounded-2xl p-5 border border-[#233F65] flex flex-col justify-between hover:border-[#C5A46D] transition shadow-lg group"
+                >
+                  <div className="space-y-4">
+                    <div className="aspect-square bg-[#172B46] rounded-xl overflow-hidden relative border border-[#233F65]">
+                      <img
+                        src={image}
+                        alt={p.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                      />
                       <WishlistButton productId={p.id} productName={p.name} />
                     </div>
 
-                    <h4 className="font-serif-editorial text-xs font-bold text-[#0F1713] line-clamp-2 min-h-[32px]">
+                    <h4 className="font-serif-editorial text-sm font-bold text-white line-clamp-2 min-h-[40px] group-hover:text-[#C5A46D] transition">
                       {p.name}
                     </h4>
 
-                    <span className="text-sm font-extrabold text-[#0F1713] block">
+                    <span className="text-lg font-extrabold text-[#C5A46D] block">
                       ${p.price.toFixed(0)} MXN
                     </span>
                   </div>
 
-                  <div className="pt-3">
+                  <div className="pt-4 border-t border-[#1C3454] mt-4">
                     <Link
                       href={`/producto/${p.slug}`}
-                      className="btn-forest-solid text-[11px] py-2 px-3 rounded w-full flex items-center justify-center gap-1.5"
+                      className="btn-navy-outline w-full text-center text-xs uppercase font-bold py-2.5 block hover:bg-[#C5A46D] hover:text-[#0F1D30] transition"
                     >
-                      <CartIcon className="w-3.5 h-3.5" />
-                      Ver detalles
+                      Ver Producto
                     </Link>
                   </div>
                 </div>
               );
             })}
           </div>
+        </div>
+      </section>
 
-          <div className="text-center pt-4">
-            <Link href="/tienda" className="btn-forest-outline text-xs px-8 py-3.5 inline-flex items-center gap-2">
-              <span>Ir a la tienda completa</span>
-              <ShoppingBag className="w-4 h-4 text-[#D8B155]" />
-            </Link>
+      {/* =========================================================
+          6. ESCUELAS, CLUBES Y CONVENIOS INSTITUCIONALES
+      ========================================================= */}
+      <section className="py-16 md:py-24 bg-[#0F1D30] border-b border-[#1C3454]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-8 space-y-4">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#C5A46D] block">
+                Convenios Educativos
+              </span>
+              <h2 className="font-serif-editorial text-2xl sm:text-4xl font-bold text-white">
+                Ajedrez para Colegios, Universidades y Clubes
+              </h2>
+              <p className="text-xs sm:text-sm text-[#C4CBD4] leading-relaxed max-w-2xl font-light">
+                Implementamos programas de ajedrez curricular y extracurricular en instituciones educativas. Capacitación a profesores, dotación de material homologado y torneos intercolegiales con aval académico.
+              </p>
+            </div>
+            <div className="lg:col-span-4 text-center lg:text-right">
+              <Link
+                href="/clubes-y-escuelas"
+                className="btn-dorado text-xs sm:text-sm uppercase tracking-wider font-extrabold py-3.5 px-6"
+              >
+                Solicitar Cotización Escolar
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 8. MEMBRESÍAS Y CLASES PROMO BANNER (Dark Green #0F261B) */}
-      <section className="bg-[#0F261B] text-white py-12 border-y border-[#1C3328]">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4 text-center md:text-left">
-            <div className="w-14 h-14 rounded-full bg-[#1A3D2B] text-[#D8B155] flex items-center justify-center shrink-0 border border-[#D8B155] shadow-lg">
-              <Crown className="w-7 h-7" />
-            </div>
-            <div>
-              <span className="text-[10px] uppercase font-bold tracking-widest text-[#D8B155] block">MEMBRESÍAS MENSUALES</span>
-              <h3 className="font-serif-editorial text-xl sm:text-2xl font-bold text-white">
-                Planes desde <span className="text-[#D8B155]">699 MXN</span> al mes
-              </h3>
-              <p className="text-xs text-gray-300 mt-0.5">Sin plazos forzosos. Cancela en cualquier momento.</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <Link href="/entrenamiento" className="btn-gold-solid text-xs px-6 py-3.5 shadow-md">
-              Explorar planes de estudio &gt;
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 9. POR QUÉ ELEGIRNOS */}
-      <section className="bg-[#F6F3EC] text-[#0F1713] py-20 border-b border-[#E5DEC9]">
-        <div className="max-w-7xl mx-auto px-4 space-y-12">
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 text-[#D8B155] text-xs font-bold uppercase tracking-widest">
-              <span className="w-8 h-[1px] bg-[#D8B155]" />
-              <Crown className="w-4 h-4" />
-              <span className="w-8 h-[1px] bg-[#D8B155]" />
-            </div>
-            <h2 className="font-serif-editorial text-3xl sm:text-4xl font-bold tracking-wider text-[#0F1713]">
-              NUESTROS RESULTADOS EN NÚMEROS
+      {/* =========================================================
+          7. PREGUNTAS FRECUENTES (FAQ)
+      ========================================================= */}
+      <section className="py-16 md:py-24 bg-[#172B46] border-b border-[#233F65]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-10">
+          <div className="text-center space-y-2">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#C5A46D] block">
+              Resolución de Dudas
+            </span>
+            <h2 className="font-serif-editorial text-2xl sm:text-4xl font-bold text-white">
+              Preguntas Frecuentes
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shadow-md">
-                <GraduationCap className="w-8 h-8" />
-              </div>
-              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">
-                +<AnimatedCounter target={500} duration={2000} />
-              </h3>
-              <span className="text-xs font-bold uppercase text-[#0F1713] block">ALUMNOS ACTIVOS</span>
-              <p className="text-xs text-gray-600">Niños, jóvenes y adultos formados con pasión y disciplina.</p>
-            </div>
-
-            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shadow-md">
-                <User className="w-8 h-8" />
-              </div>
-              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">
-                +<AnimatedCounter target={10} duration={1500} />
-              </h3>
-              <span className="text-xs font-bold uppercase text-[#0F1713] block">COACHES FIDE</span>
-              <p className="text-xs text-gray-600">Maestros Internacionales y entrenadores con certificación oficial.</p>
-            </div>
-
-            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shadow-md">
-                <PackageCheck className="w-8 h-8" />
-              </div>
-              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">
-                +<AnimatedCounter target={120} duration={1800} />
-              </h3>
-              <span className="text-xs font-bold uppercase text-[#0F1713] block">PRODUCTOS OFICIALES</span>
-              <p className="text-xs text-gray-600">Sets, relojes DGT, tableros y bibliografía de ajedrez en catálogo.</p>
-            </div>
-
-            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shadow-md">
-                <Trophy className="w-8 h-8" />
-              </div>
-              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">
-                +<AnimatedCounter target={30} duration={1600} />
-              </h3>
-              <span className="text-xs font-bold uppercase text-[#0F1713] block">TORNEOS REALIZADOS</span>
-              <p className="text-xs text-gray-600">Competencias internas, festivales infantiles y torneos abiertos.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 10. TESTIMONIOS */}
-      <section className="bg-[#0B1510] text-white py-20 border-b border-[#1C3328]">
-        <div className="max-w-7xl mx-auto px-4 space-y-12">
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 text-[#D8B155] text-xs font-bold uppercase tracking-widest">
-              <span className="w-8 h-[1px] bg-[#D8B155]" />
-              <Crown className="w-4 h-4" />
-              <span className="w-8 h-[1px] bg-[#D8B155]" />
-            </div>
-            <h2 className="font-serif-editorial text-3xl sm:text-4xl font-bold tracking-wider text-white">
-              HISTORIAS DE ÉXITO DE NUESTRA COMUNIDAD
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-400">
-              Conoce las experiencias de nuestros alumnos y familias.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#13221B] border border-[#21392D] rounded-xl p-6 space-y-4 shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-[#0F2E1E] border border-[#D8B155] flex items-center justify-center font-bold text-[#D8B155]">
-                  MR
-                </div>
-                <div>
-                  <h4 className="font-serif-editorial text-sm font-bold text-white">Mateo R. (11 años)</h4>
-                  <p className="text-[11px] text-gray-400">Campeón Estatal Sub-12</p>
-                  <div className="flex text-[#D8B155] text-xs mt-0.5">★★★★★</div>
-                </div>
-              </div>
-              <p className="text-xs text-gray-300 italic leading-relaxed">
-                &quot;Las clases con el MI Roberto cambiaron mi visión del ajedrez. Antes jugaba por intuición, ahora tengo planes claros y aumenté 200 puntos de rating en 6 meses.&quot;
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs sm:text-sm">
+            <div className="p-5 rounded-2xl bg-[#0F1D30] border border-[#233F65] space-y-2">
+              <h4 className="font-bold text-white flex items-center gap-2">
+                <HelpCircle className="w-4 h-4 text-[#C5A46D] shrink-0" />
+                ¿A partir de qué edad se puede ingresar?
+              </h4>
+              <p className="text-[#C4CBD4] leading-relaxed">
+                Aceptamos alumnos desde los 6 años en nuestro Grupo de Ajedrez Inicial, así como jóvenes y adultos en todas las modalidades.
               </p>
             </div>
 
-            <div className="bg-[#13221B] border border-[#21392D] rounded-xl p-6 space-y-4 shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-[#0F2E1E] border border-[#D8B155] flex items-center justify-center font-bold text-[#D8B155]">
-                  AG
-                </div>
-                <div>
-                  <h4 className="font-serif-editorial text-sm font-bold text-white">Ana Gabriela S.</h4>
-                  <p className="text-[11px] text-gray-400">Mamá de alumno en Iniciación</p>
-                  <div className="flex text-[#D8B155] text-xs mt-0.5">★★★★★</div>
-                </div>
-              </div>
-              <p className="text-xs text-gray-300 italic leading-relaxed">
-                &quot;La paciencia y pedagogía para niños pequeños es impresionante. Mi hijo espera emocionado cada sábado su clase y el portal de tareas es súper interactivo.&quot;
+            <div className="p-5 rounded-2xl bg-[#0F1D30] border border-[#233F65] space-y-2">
+              <h4 className="font-bold text-white flex items-center gap-2">
+                <HelpCircle className="w-4 h-4 text-[#C5A46D] shrink-0" />
+                ¿Qué necesito para tomar las clases en línea?
+              </h4>
+              <p className="text-[#C4CBD4] leading-relaxed">
+                Una computadora o tableta con conexión a internet estable. Las sesiones se transmiten con tableros interactivos en vivo y videoconferencia.
               </p>
             </div>
 
-            <div className="bg-[#13221B] border border-[#21392D] rounded-xl p-6 space-y-4 shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-[#0F2E1E] border border-[#D8B155] flex items-center justify-center font-bold text-[#D8B155]">
-                  CD
-                </div>
-                <div>
-                  <h4 className="font-serif-editorial text-sm font-bold text-white">Carlos D.</h4>
-                  <p className="text-[11px] text-gray-400">Jugador de Club (Adulto)</p>
-                  <div className="flex text-[#D8B155] text-xs mt-0.5">★★★★★</div>
-                </div>
-              </div>
-              <p className="text-xs text-gray-300 italic leading-relaxed">
-                &quot;Excelente material en la videoteca y los sets de ajedrez que compré llegaron impecables y súper rápido. 100% recomendado para cualquier apasionado del ajedrez.&quot;
+            <div className="p-5 rounded-2xl bg-[#0F1D30] border border-[#233F65] space-y-2">
+              <h4 className="font-bold text-white flex items-center gap-2">
+                <HelpCircle className="w-4 h-4 text-[#C5A46D] shrink-0" />
+                ¿Cómo recibo el acceso a Chessgora.com?
+              </h4>
+              <p className="text-[#C4CBD4] leading-relaxed">
+                Al confirmar tu inscripción en cualquiera de nuestros programas, te habilitamos tu cuenta de alumno para acceder de forma ilimitada.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-[#0F1D30] border border-[#233F65] space-y-2">
+              <h4 className="font-bold text-white flex items-center gap-2">
+                <HelpCircle className="w-4 h-4 text-[#C5A46D] shrink-0" />
+                ¿Hacen envíos de material a todo México y el mundo?
+              </h4>
+              <p className="text-[#C4CBD4] leading-relaxed">
+                Sí. Nuestra tienda despacha pedidos con paquetería express rastreable a cualquier estado de la República Mexicana y cotizamos envíos internacionales.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 11. FAQ RÁPIDO EN PORTADA */}
-      <section className="bg-[#0F261B] py-20 border-b border-[#1C3328]">
-        <div className="max-w-4xl mx-auto px-4 space-y-8">
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 text-[#D8B155] text-xs font-bold uppercase tracking-widest">
-              <HelpCircle className="w-4 h-4" />
-              <span>PREGUNTAS FRECUENTES</span>
-            </div>
-            <h2 className="font-serif-editorial text-3xl sm:text-4xl font-bold text-white">
-              ¿Tienes dudas antes de comenzar?
-            </h2>
-          </div>
+      {/* =========================================================
+          8. LLAMADA A LA ACCIÓN FINAL & CONTACTO DIRECTO
+      ========================================================= */}
+      <section className="py-16 md:py-24 bg-[#0F1D30] text-center space-y-6">
+        <div className="max-w-3xl mx-auto px-4 space-y-4">
+          <Crown className="w-10 h-10 text-[#C5A46D] mx-auto" />
+          <h2 className="font-serif-editorial text-2xl sm:text-4xl font-bold text-white">
+            Comienza tu camino hacia la maestría ajedrecística
+          </h2>
+          <p className="text-sm text-[#C4CBD4] leading-relaxed">
+            Ponte en contacto con nuestro equipo docente para evaluar tu nivel y orientarte sobre el programa más adecuado para ti o tu familia.
+          </p>
 
-          <div className="space-y-4">
-            <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-5 space-y-2">
-              <h3 className="font-serif-editorial text-base font-bold text-white flex items-center gap-2">
-                <span className="text-[#D8B155]">♟</span> ¿A partir de qué edad pueden tomar clases?
-              </h3>
-              <p className="text-xs text-gray-300 pl-5 leading-relaxed">
-                Recibimos alumnos desde los 5 años en el programa de Iniciación hasta jóvenes y adultos en niveles avanzados y de maestría.
-              </p>
-            </div>
-
-            <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-5 space-y-2">
-              <h3 className="font-serif-editorial text-base font-bold text-white flex items-center gap-2">
-                <span className="text-[#D8B155]">♟</span> ¿Qué pasa si no puedo asistir a una clase en vivo?
-              </h3>
-              <p className="text-xs text-gray-300 pl-5 leading-relaxed">
-                Todas las clases quedan grabadas en alta definición y se suben a tu videoteca privada para que las repases cuando quieras.
-              </p>
-            </div>
-
-            <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-5 space-y-2">
-              <h3 className="font-serif-editorial text-base font-bold text-white flex items-center gap-2">
-                <span className="text-[#D8B155]">♟</span> ¿Realizan envíos de material a todo México?
-              </h3>
-              <p className="text-xs text-gray-300 pl-5 leading-relaxed">
-                Sí, enviamos con FedEx, DHL y Estafeta con número de guía rastreable y empaque de alta protección para relojes y piezas.
-              </p>
-            </div>
-
-            <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-5 space-y-2">
-              <h3 className="font-serif-editorial text-base font-bold text-white flex items-center gap-2">
-                <span className="text-[#D8B155]">♟</span> ¿Hay contratos forzosos en las mensualidades?
-              </h3>
-              <p className="text-xs text-gray-300 pl-5 leading-relaxed">
-                Ninguno. Puedes cancelar o pausar tu suscripción mensual en cualquier momento directamente desde tu panel de usuario.
-              </p>
-            </div>
-          </div>
-
-          <div className="text-center pt-2">
-            <Link href="/faq" className="text-xs text-[#D8B155] hover:underline inline-flex items-center gap-1 font-semibold">
-              Ver todas las preguntas frecuentes (FAQ) →
+          <div className="pt-4 flex flex-wrap justify-center gap-4">
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                'Hola, deseo asesoría para inscribirme a Academia Alekhins.'
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-dorado text-xs sm:text-sm uppercase tracking-wider font-extrabold py-3.5 px-8 flex items-center gap-2"
+            >
+              <MessageCircle className="w-4 h-4" />
+              Atención Inmediata por WhatsApp (+52 999 102 0078)
+            </a>
+            <Link
+              href="/contacto"
+              className="btn-navy-outline text-xs sm:text-sm uppercase tracking-wider font-bold py-3.5 px-6"
+            >
+              Formulario de Contacto
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 12. PRE-FOOTER CTA BANNER */}
-      <section className="bg-gradient-to-r from-[#0B1510] via-[#0F2E1E] to-[#0B1510] text-white py-16 border-t border-[#1C3328] relative overflow-hidden">
-        {/* Marca de agua sutil del logotipo de fondo */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/6 opacity-5 pointer-events-none w-96 hidden md:block">
-          <img src="/alekhins-logo-vector.svg" alt="" className="w-full h-auto brightness-200" />
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
-          <div className="space-y-3 text-center md:text-left">
-            <img
-              src="/alekhins-logo-vector.svg"
-              alt="Alekhins Academia de Ajedrez"
-              className="h-9 w-auto mx-auto md:mx-0 brightness-110 opacity-90"
-            />
-            <h2 className="font-serif-editorial text-3xl sm:text-4xl font-bold">
-              <span className="text-white block">Lleva tu ajedrez</span>
-              <span className="text-[#D8B155] block">al siguiente nivel</span>
-            </h2>
-            <p className="text-xs text-gray-300">Agenda una clase diagnóstica y descubre tu potencial.</p>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link href="/entrenamiento" className="btn-gold-solid text-sm px-8 py-4 shadow-xl">
-              <GraduationCap className="w-4 h-4" />
-              Ver Planes de Entrenamiento
-            </Link>
-            <Link href="/clubes-y-escuelas" className="btn-forest-outline text-sm px-6 py-4">
-              <span>Contacto y Convenios</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Floating Banner — aparece 3.5s después de cargar la página */}
+      {/* Banner flotante */}
       <FloatingBanner />
+
     </div>
   );
 }

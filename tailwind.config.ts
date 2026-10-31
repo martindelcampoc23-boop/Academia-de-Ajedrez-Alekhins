@@ -9,32 +9,44 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Paleta Institucional Academia Alekhins
+        navy: {
+          DEFAULT: '#172B46',
+          dark: '#0F1D30',
+          deep: '#0A1422',
+          surface: '#1C3454',
+          card: '#223D62',
+          light: '#2E507D',
+        },
+        marfil: {
+          DEFAULT: '#FAF8F2',
+          soft: '#F5F2E9',
+          muted: '#E8E1D3',
+          border: '#D8CFBC',
+        },
+        dorado: {
+          DEFAULT: '#C5A46D',
+          hover: '#D4B785',
+          subtle: '#E8D7B8',
+          dark: '#A68750',
+        },
+        // Compatibilidad previa
         carbon: {
-          DEFAULT: '#16130b',
-          light: '#1f1b13',
-          surface: '#231f17',
-          card: '#2d2a21',
-          dark: '#110e07',
+          DEFAULT: '#172B46',
+          light: '#1C3454',
+          surface: '#0F1D30',
+          card: '#15263E',
+          dark: '#0A1422',
         },
         ivory: {
-          DEFAULT: '#eae1d4',
-          muted: '#d0c5af',
-          dim: '#99907c',
-        },
-        stoneGray: {
-          light: '#4d4635',
-          DEFAULT: '#38342b',
-          dark: '#1f1b13',
-        },
-        walnut: {
-          light: '#5D4037',
-          DEFAULT: '#3D2B1F',
-          dark: '#231f17',
+          DEFAULT: '#FAF8F2',
+          muted: '#E8E1D3',
+          dim: '#9CA3AF',
         },
         champagne: {
-          light: '#f2ca50',
-          DEFAULT: '#d4af37',
-          dark: '#e9c349',
+          light: '#D4B785',
+          DEFAULT: '#C5A46D',
+          dark: '#A68750',
         },
       },
       fontFamily: {
@@ -43,8 +55,9 @@ const config: Config = {
         mono: ['JetBrains Mono', 'monospace'],
       },
       boxShadow: {
-        premium: '0 10px 30px -10px rgba(0, 0, 0, 0.8)',
-        gold: '0 0 25px rgba(212, 175, 55, 0.25)',
+        premium: '0 10px 30px -10px rgba(23, 43, 70, 0.4)',
+        gold: '0 0 20px rgba(197, 164, 109, 0.25)',
+        navy: '0 10px 30px rgba(15, 29, 48, 0.5)',
       },
     },
   },

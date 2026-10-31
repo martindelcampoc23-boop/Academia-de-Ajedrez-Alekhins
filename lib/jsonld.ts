@@ -12,10 +12,10 @@ export function buildOrganizationLD() {
     '@context': 'https://schema.org',
     '@type': 'EducationalOrganization',
     '@id': `${BASE_URL}/#organization`,
-    name: 'Academia de Ajedrez Alekhins',
+    name: 'Academia Alekhins',
     alternateName: 'Alekhins Chess Academy',
     url: BASE_URL,
-    logo: `${BASE_URL}/logo-alekhins.png`,
+    logo: `${BASE_URL}/alekhins-logo-vector.svg`,
     sameAs: [
       'https://www.facebook.com/AlekhinsAjedrez',
       'https://www.instagram.com/AlekhinsAjedrez',
@@ -24,9 +24,9 @@ export function buildOrganizationLD() {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer service',
-      availableLanguage: 'Spanish',
-      telephone: '+52-55-0000-0000',
-      email: 'contacto@alekhins.com',
+      availableLanguage: ['Spanish', 'English'],
+      telephone: '+52-999-102-0078',
+      email: 'contacto@ajedrezprofesional.com',
     },
     address: {
       '@type': 'PostalAddress',

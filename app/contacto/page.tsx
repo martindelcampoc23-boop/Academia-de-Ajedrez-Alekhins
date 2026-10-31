@@ -91,15 +91,15 @@ export default function ContactoPage() {
 
             <div className="space-y-4 text-xs text-ivory-muted">
               <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-carbon-dark border border-stone-border text-champagne shrink-0">
+                <div className="p-2 rounded-lg bg-[#0F1D30] border border-[#233F65] text-[#C5A46D] shrink-0">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="font-semibold text-ivory block">Correo Electrónico</span>
-                  <a href="mailto:info@alekhins.mx" className="text-champagne hover:underline">
-                    info@alekhins.mx
+                  <span className="font-semibold text-white block">Correo Electrónico</span>
+                  <a href="mailto:contacto@ajedrezprofesional.com" className="text-[#C5A46D] hover:underline">
+                    contacto@ajedrezprofesional.com
                   </a>
-                  <p className="text-[11px] text-ivory-dim">Respuesta en menos de 24 horas</p>
+                  <p className="text-[11px] text-[#9CA3AF]">info@alekhins.mx • Respuesta en menos de 24 horas</p>
                 </div>
               </div>
 

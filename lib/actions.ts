@@ -274,6 +274,21 @@ export async function submitLeadAction(formData: {
   }
 }
 
+// 3.1 Update Lead Status (CRM Comercial)
+export async function updateLeadStatusAction(leadId: string, status: string) {
+  try {
+    const updated = await prisma.lead.update({
+      where: { id: leadId },
+      data: { status },
+    });
+    revalidatePath('/admin/leads');
+    return { success: true, lead: updated };
+  } catch (error: any) {
+    console.error('Error updating lead status:', error);
+    return { success: false, error: error.message || 'Error al actualizar el estado del prospecto.' };
+  }
+}
+
 // 4. Track Order Lookup
 export async function trackOrderAction(orderNumber: string, email: string) {
   try {
