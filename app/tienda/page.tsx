@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { prisma } from '@/lib/db';
 import { Filter, ShoppingBag, Star, CheckCircle } from 'lucide-react';
+import { WishlistButton } from '@/components/ui/WishlistButton';
 
 export const metadata = {
   title: 'Tienda de Ajedrez | Sets, Tableros, Piezas & Relojes DGT',
@@ -118,6 +119,7 @@ export default async function StorePage({
                       Recomendado Alekhins
                     </span>
                   )}
+                  <WishlistButton productId={product.id} productName={product.name} />
                 </div>
 
                 <div>

@@ -103,27 +103,27 @@ export function LevelAssessmentQuiz() {
     // Lógica pedagógica para determinar el plan óptimo
     if (answers.experience.includes('Principiante') || answers.experience.includes('mover las piezas')) {
       return {
-        name: 'Plan Iniciación & Fundamentos',
-        level: 'Principiante',
-        description: 'Ideal para construir bases posicionales sólidas, evitar celadas típicas y dominar los principios fundamentales del juego.',
-        slug: 'iniciacion-fundamentos',
-        price: 1200,
+        name: 'Grupo de Ajedrez Inicial',
+        level: 'Principiantes',
+        description: 'Aprende ajedrez desde cero y construye una base sólida con 3 días de entrenamiento semanal (Lunes, Miércoles y Jueves de 6:00 a 7:00 p. m.).',
+        slug: 'ajedrez-inicial',
+        price: 500,
       };
-    } else if (answers.experience.includes('Avanzado') || answers.experience.includes('1800') || answers.timeCommitment.includes('6')) {
+    } else if (answers.goal.includes('personal') || answers.timeCommitment.includes('flexible')) {
       return {
-        name: 'Plan Alto Rendimiento & Maestría',
-        level: 'Avanzado / Maestría',
-        description: 'Repertorio profundo de aperturas, cálculo dinámico, toma de decisiones complejas y preparación para torneos oficiales FIDE.',
-        slug: 'alto-rendimiento',
-        price: 2400,
+        name: 'Entrenamiento Personalizado',
+        level: 'Individual (1 a 1)',
+        description: 'Preparación a tu ritmo y objetivos con el Maestro Internacional Roberto Martín del Campo Cárdenas en sesiones individuales de 60 minutos.',
+        slug: 'entrenamiento-personalizado',
+        price: 5000,
       };
     } else {
       return {
-        name: 'Plan Intermedio & Táctica Competitiva',
-        level: 'Intermedio',
-        description: 'Enfocado en visión táctica, cálculo de variantes, estructuras de peones y técnica en finales para superar la barrera de los 1500-1800 ELO.',
-        slug: 'intermedio-tactica',
-        price: 1600,
+        name: 'Grupo de Entrenamiento Competitivo',
+        level: 'Menos de 2000 Elo',
+        description: 'Lleva tu ajedrez al siguiente nivel con 4 días de entrenamiento semanal (Martes a Viernes de 6:00 a 7:00 p. m.). Incluye Chessgora.com.',
+        slug: 'entrenamiento-competitivo',
+        price: 699,
       };
     }
   };

@@ -119,24 +119,24 @@ export function AnimatedLogoHero() {
         }
       `}</style>
 
-      {/* Contenedor central con proporciones premium */}
-      <div className="relative w-full max-w-[340px] sm:max-w-[420px] lg:max-w-[480px] flex flex-col items-center justify-center p-4">
+      {/* Contenedor central con proporciones premium — más grande */}
+      <div className="relative w-full max-w-[460px] sm:max-w-[640px] lg:max-w-[800px] xl:max-w-[920px] flex flex-col items-center justify-center p-4">
 
         {/* Resplandor áurico multicapa (Oro + Esmeralda) */}
         <div
-          className="absolute inset-0 m-auto w-64 h-32 sm:w-80 sm:h-44 rounded-full anim-hero-aura pointer-events-none"
+          className="absolute inset-0 m-auto w-80 h-44 sm:w-[420px] sm:h-64 lg:w-[560px] lg:h-80 rounded-full anim-hero-aura pointer-events-none"
           style={{
             background: 'radial-gradient(ellipse at center, rgba(216,177,85,0.28) 0%, rgba(27,77,62,0.35) 45%, transparent 75%)',
-            filter: 'blur(32px)',
+            filter: 'blur(48px)',
           }}
         />
 
         {/* Halo de luz puntual central */}
         <div
-          className="absolute inset-0 m-auto w-40 h-20 rounded-full anim-hero-aura pointer-events-none"
+          className="absolute inset-0 m-auto w-56 h-28 sm:w-72 sm:h-36 rounded-full anim-hero-aura pointer-events-none"
           style={{
             background: 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(216,177,85,0.15) 50%, transparent 80%)',
-            filter: 'blur(16px)',
+            filter: 'blur(20px)',
           }}
         />
 
@@ -178,9 +178,9 @@ export function AnimatedLogoHero() {
             <img
               src="/alekhins-logo-vector.svg"
               alt="Alekhins Academia de Ajedrez — Logotipo Oficial"
-              className="w-full h-auto max-h-36 sm:max-h-44 object-contain brightness-115 contrast-105 transition-all duration-300 group-hover:brightness-130"
+              className="w-full h-auto max-h-52 sm:max-h-72 lg:max-h-88 object-contain brightness-115 contrast-105 transition-all duration-300 group-hover:brightness-130"
               style={{
-                filter: 'drop-shadow(0 14px 28px rgba(0,0,0,0.65)) drop-shadow(0 0 20px rgba(216,177,85,0.35))',
+                filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.7)) drop-shadow(0 0 32px rgba(216,177,85,0.45))',
               }}
             />
           </div>
@@ -189,7 +189,7 @@ export function AnimatedLogoHero() {
         {/* ── Sombra elíptica dinámica en la base ── */}
         <div className="relative -mt-3 sm:-mt-4 w-3/4 flex justify-center pointer-events-none">
           <div
-            className="anim-hero-shadow w-52 sm:w-64 h-4 rounded-full"
+            className="anim-hero-shadow w-72 sm:w-96 lg:w-[450px] h-5 rounded-full"
             style={{
               background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(11,21,16,0.5) 55%, transparent 75%)',
               filter: 'blur(5px)',

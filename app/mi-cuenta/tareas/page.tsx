@@ -14,8 +14,12 @@ import {
   FileText,
   Download,
   X,
-  ExternalLink
+  ExternalLink,
+  Eye,
+  Crown,
 } from 'lucide-react';
+import { ChessFenViewer } from '@/components/chess/ChessFenViewer';
+import { DocumentPreviewModal } from '@/components/homework/DocumentPreviewModal';
 
 interface Submission {
   id: string;
@@ -48,6 +52,7 @@ export default function TareasAlumnoPage() {
   const [studentFiles, setStudentFiles] = useState<Record<string, { url: string; name: string }>>({});
   const [submitting, setSubmitting] = useState<string | null>(null);
   const [msg, setMsg] = useState<Record<string, string>>({});
+  const [previewDoc, setPreviewDoc] = useState<{ url: string; filename: string; title?: string } | null>(null);
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -229,37 +234,65 @@ export default function TareasAlumnoPage() {
 
                   {/* Documento adjunto por el maestro */}
                   {hw.attachmentUrl && (
-                    <div className="p-3.5 rounded-lg bg-[#0B1510] border border-[#2B3E34] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div className="flex items-center gap-2 text-xs text-white">
-                        <FileText className="w-4 h-4 text-[#D8B155] shrink-0" />
-                        <span>Material adjunto por el maestro: <strong className="text-[#D8B155]">{hw.attachmentName || 'Descargar archivo'}</strong></span>
+                    <div className="p-4 rounded-xl bg-[#0B1510] border border-[#2B3E34] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+                      <div className="flex items-center gap-2.5 text-xs text-white">
+                        <FileText className="w-5 h-5 text-[#D8B155] shrink-0" />
+                        <div>
+                          <span className="text-[10px] uppercase font-bold text-[#A8B2A6] block">Material adjunto por el maestro:</span>
+                          <strong className="text-white text-xs">{hw.attachmentName || 'Guía de Estudio'}</strong>
+                        </div>
                       </div>
-                      <a
-                        href={hw.attachmentUrl}
-                        download={hw.attachmentName || 'material-tarea'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-3 py-1.5 rounded bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/40 text-xs font-bold flex items-center justify-center gap-1.5 transition shrink-0"
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Descargar Documento</span>
-                      </a>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setPreviewDoc({
+                              url: hw.attachmentUrl!,
+                              filename: hw.attachmentName || 'Material de Tarea',
+                              title: hw.title,
+                            })
+                          }
+                          className="px-3.5 py-1.5 rounded-lg bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/40 text-xs font-bold flex items-center justify-center gap-1.5 transition shrink-0 cursor-pointer shadow"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>Ver Vista Previa</span>
+                        </button>
+                        <a
+                          href={hw.attachmentUrl}
+                          download={hw.attachmentName || 'material-tarea'}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3.5 py-1.5 rounded-lg bg-[#121E17] hover:bg-[#1C3328] text-white border border-[#2B3E34] text-xs font-bold flex items-center justify-center gap-1.5 transition shrink-0"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          <span>Descargar</span>
+                        </a>
+                      </div>
                     </div>
                   )}
 
-                  {/* Posición FEN */}
+                  {/* Posición FEN con Tablero Visual */}
                   {hw.fen && (
-                    <div className="bg-[#0B1510] border border-[#2B3E34] rounded-lg p-3 space-y-2">
-                      <p className="text-[10px] uppercase font-bold text-[#D8B155]">Posición del Ejercicio (FEN):</p>
-                      <p className="text-xs font-mono text-[#D2DBD0] break-all">{hw.fen}</p>
-                      <a
-                        href={`https://lichess.org/editor/${encodeURIComponent(hw.fen)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs text-[#D8B155] hover:underline font-semibold"
-                      >
-                        ♟️ Analizar en Tablero Interactivo de Lichess →
-                      </a>
+                    <div className="bg-[#0B1510] border border-[#2B3E34] rounded-xl p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[10px] uppercase font-bold text-[#D8B155] flex items-center gap-1.5">
+                          <Crown className="w-3.5 h-3.5 text-[#D8B155]" />
+                          <span>Diagrama del Ejercicio:</span>
+                        </p>
+                        <a
+                          href={`https://lichess.org/editor/${encodeURIComponent(hw.fen)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] text-[#D8B155] hover:underline font-semibold flex items-center gap-1"
+                        >
+                          <span>Abrir en Lichess</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
+
+                      <div className="flex justify-center py-1">
+                        <ChessFenViewer fen={hw.fen} size="md" caption="Posición del Ejercicio" />
+                      </div>
                     </div>
                   )}
 
@@ -356,6 +389,17 @@ export default function TareasAlumnoPage() {
             );
           })}
         </div>
+      )}
+
+      {/* Modal de Previsualización de Documentos */}
+      {previewDoc && (
+        <DocumentPreviewModal
+          url={previewDoc.url}
+          filename={previewDoc.filename}
+          title={previewDoc.title}
+          isOpen={true}
+          onClose={() => setPreviewDoc(null)}
+        />
       )}
     </div>
   );

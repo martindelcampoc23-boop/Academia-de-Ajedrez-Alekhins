@@ -3,6 +3,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { prisma } from '@/lib/db';
 import { AnimatedLogoHero } from '@/components/ui/AnimatedLogoHero';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
+import { FloatingBanner } from '@/components/ui/FloatingBanner';
+import { WishlistButton } from '@/components/ui/WishlistButton';
 import {
   Crown,
   ChevronRight,
@@ -59,8 +62,33 @@ export default async function HomePage() {
     <div className="space-y-0 text-white font-sans">
       {/* 1. HERO SECTION */}
       <section className="relative overflow-hidden bg-[#0B1510] border-b border-[#1C3328] pt-14 pb-20 md:pt-20 md:pb-32">
-        {/* Background Overlay */}
-        <div className="absolute inset-0 bg-cover bg-center opacity-25 bg-chessboard-grid" />
+        {/* Animated chess grid SVG background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <style>{`
+            @keyframes chess-drift {
+              0% { transform: translate(0, 0) rotate(0deg); }
+              33% { transform: translate(-12px, 8px) rotate(0.4deg); }
+              66% { transform: translate(8px, -6px) rotate(-0.3deg); }
+              100% { transform: translate(0, 0) rotate(0deg); }
+            }
+            .chess-grid-anim { animation: chess-drift 18s ease-in-out infinite; }
+          `}</style>
+          <svg
+            className="chess-grid-anim absolute inset-0 w-full h-full opacity-[0.06]"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid slice"
+          >
+            <defs>
+              <pattern id="chess-hero" x="0" y="0" width="64" height="64" patternUnits="userSpaceOnUse">
+                <rect x="0" y="0" width="32" height="32" fill="#D8B155" />
+                <rect x="32" y="32" width="32" height="32" fill="#D8B155" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#chess-hero)" />
+          </svg>
+          {/* Radial vignette over the grid */}
+          <div className="absolute inset-0 bg-radial-fade" style={{ background: 'radial-gradient(ellipse at 60% 50%, transparent 20%, #0B1510 80%)' }} />
+        </div>
         <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-[#0F2E1E]/50 via-[#0F2E1E]/20 to-transparent pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -464,10 +492,17 @@ export default async function HomePage() {
 
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
               <Link
-                href="/roberto-martin-del-campo"
-                className="btn-gold-solid text-xs px-6 py-3.5 inline-flex items-center gap-2 shadow-xl font-bold uppercase tracking-wider"
+                href="/videos"
+                className="px-5 py-3.5 rounded-lg bg-gradient-to-r from-red-950 via-red-900 to-amber-950 hover:from-red-900 hover:to-amber-900 border border-red-500/60 text-white text-xs font-bold uppercase tracking-wider inline-flex items-center gap-2 shadow-xl transition-all hover:scale-[1.02]"
               >
-                <span>Conoce su biografía y trayectoria completa</span>
+                <Video className="w-4 h-4 text-red-400 animate-pulse" />
+                <span>Ver Videos & Clase Pública (4 Horas)</span>
+              </Link>
+              <Link
+                href="/roberto-martin-del-campo"
+                className="btn-gold-solid text-xs px-5 py-3.5 inline-flex items-center gap-2 shadow-xl font-bold uppercase tracking-wider"
+              >
+                <span>Biografía y Trayectoria</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <a
@@ -477,7 +512,7 @@ export default async function HomePage() {
                 className="px-5 py-3.5 rounded-lg bg-[#121E17] hover:bg-[#1B2F23] border border-[#D8B155]/60 text-[#D8B155] text-xs font-bold uppercase tracking-wider transition flex items-center gap-2"
               >
                 <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp (+52 999 102 0078)</span>
+                <span>WhatsApp Personal</span>
               </a>
             </div>
           </div>
@@ -573,6 +608,7 @@ export default async function HomePage() {
                   <div className="space-y-3 text-center">
                     <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative">
                       <img src={image} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                      <WishlistButton productId={p.id} productName={p.name} />
                     </div>
 
                     <h4 className="font-serif-editorial text-xs font-bold text-[#0F1713] line-clamp-2 min-h-[32px]">
@@ -646,38 +682,46 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm">
+            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
               <div className="w-16 h-16 mx-auto rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shadow-md">
                 <GraduationCap className="w-8 h-8" />
               </div>
-              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">+500</h3>
+              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">
+                +<AnimatedCounter target={500} duration={2000} />
+              </h3>
               <span className="text-xs font-bold uppercase text-[#0F1713] block">ALUMNOS ACTIVOS</span>
               <p className="text-xs text-gray-600">Niños, jóvenes y adultos formados con pasión y disciplina.</p>
             </div>
 
-            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm">
+            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
               <div className="w-16 h-16 mx-auto rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shadow-md">
                 <User className="w-8 h-8" />
               </div>
-              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">+10</h3>
+              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">
+                +<AnimatedCounter target={10} duration={1500} />
+              </h3>
               <span className="text-xs font-bold uppercase text-[#0F1713] block">COACHES FIDE</span>
               <p className="text-xs text-gray-600">Maestros Internacionales y entrenadores con certificación oficial.</p>
             </div>
 
-            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm">
+            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
               <div className="w-16 h-16 mx-auto rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shadow-md">
                 <PackageCheck className="w-8 h-8" />
               </div>
-              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">+120</h3>
+              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">
+                +<AnimatedCounter target={120} duration={1800} />
+              </h3>
               <span className="text-xs font-bold uppercase text-[#0F1713] block">PRODUCTOS OFICIALES</span>
               <p className="text-xs text-gray-600">Sets, relojes DGT, tableros y bibliografía de ajedrez en catálogo.</p>
             </div>
 
-            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm">
+            <div className="text-center space-y-3 p-4 bg-white rounded-xl border border-[#E2DDD2] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
               <div className="w-16 h-16 mx-auto rounded-full bg-[#0F2E1E] text-[#D8B155] flex items-center justify-center shadow-md">
                 <Trophy className="w-8 h-8" />
               </div>
-              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">+30</h3>
+              <h3 className="font-serif-editorial text-3xl font-bold text-[#0F1713]">
+                +<AnimatedCounter target={30} duration={1600} />
+              </h3>
               <span className="text-xs font-bold uppercase text-[#0F1713] block">TORNEOS REALIZADOS</span>
               <p className="text-xs text-gray-600">Competencias internas, festivales infantiles y torneos abiertos.</p>
             </div>
@@ -845,6 +889,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Floating Banner — aparece 3.5s después de cargar la página */}
+      <FloatingBanner />
     </div>
   );
 }

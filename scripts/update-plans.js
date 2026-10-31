@@ -2,53 +2,53 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🔄 Actualizando planes de entrenamiento con datos y precios reales...');
+  console.log('🔄 Actualizando planes de entrenamiento con las tres modalidades oficiales...');
 
   const plans = [
     {
-      slug: 'iniciacion-al-ajedrez',
-      name: 'Iniciación al Ajedrez',
+      slug: 'entrenamiento-personalizado',
+      name: 'Entrenamiento Personalizado',
+      price: 5000,
+      level: 'Todos los niveles (Atención 1 a 1)',
+      ageGroup: 'Todas las edades',
+      modality: 'Online individual en vivo (60 min/sesión)',
+      duration: 'Paquete de 10 sesiones o sesión individual ($600 MXN)',
+      classCount: 10,
+      maxCapacity: 1,
+      description: 'Programa individual de entrenamiento impartido por el Maestro Internacional Roberto Martín del Campo Cárdenas. Cada alumno recibe una preparación adaptada a su nivel, estilo de juego y objetivos competitivos.',
+      syllabus: '1. Diagnóstico exhaustivo de fortalezas y debilidades. 2. Construcción y refinamiento de repertorio de aperturas a la medida. 3. Cálculo táctico avanzado y toma de decisiones posicionales. 4. Técnica depurada en finales prácticos y teóricos. 5. Análisis minucioso de partidas del alumno y corrección de patrones erróneos. 6. Preparación psicológica y competitiva para torneos oficiales.',
+      benefits: 'Atención 100% individualizada con el MI Roberto Martín del Campo Cárdenas, 4 veces olímpico por México y Campeón Nacional.',
+      includes: 'Sesiones individuales de 60 minutos + Plan de entrenamiento personalizado + Material didáctico y ejercicios específicos + Trabajo de aperturas, medio juego y finales + Análisis y corrección de partidas + Tareas y actividades para trabajar en casa + Acceso a la plataforma de entrenamiento Chessgora.com'
+    },
+    {
+      slug: 'entrenamiento-competitivo',
+      name: 'Entrenamiento Competitivo',
       price: 699,
-      level: 'Principiante (0 - 1200 ELO)',
-      ageGroup: 'Niños, Jóvenes y Adultos',
-      modality: 'Online en vivo (Zoom / Lichess)',
-      duration: 'Mensual renovable',
-      classCount: 4,
-      maxCapacity: 15,
-      description: 'Diseñado para niños, jóvenes y adultos que inician en el ajedrez. Aprende táctica fundamental, visión geométrica del tablero, apertura básica y mates elementales.',
-      syllabus: '1. Movimiento, coordinación y valor relativo de piezas. 2. Jaques, jaque mate y recursos de tablas (ahogado, repetición). 3. Motivos tácticos esenciales: doble, clavada, descubierta y enfilada. 4. Principios rectores de la apertura y control del centro. 5. Mates elementales de rey y dama, rey y torre.',
-      benefits: 'Desarrollo de memoria, pensamiento abstracto, paciencia y concentración bajo la metodología de un Maestro Internacional.',
-      includes: '4 clases mensuales en vivo de 60 min (1 por semana) + Guías didácticas en PDF + Acceso a videoteca de iniciación + Torneos sabatinos internos en plataforma'
-    },
-    {
-      slug: 'desarrollo-y-tactica-avanzada',
-      name: 'Desarrollo y Táctica Avanzada',
-      price: 1199,
-      level: 'Intermedio (1200 - 1700 ELO)',
+      level: 'Jugadores de menos de 2000 puntos Elo',
       ageGroup: 'Juvenil y Adultos',
-      modality: 'Online en vivo + Análisis PGN',
-      duration: 'Mensual renovable',
-      classCount: 8,
-      maxCapacity: 12,
-      description: 'Orientado a jugadores de club y entusiastas que buscan estructurar su repertorio, dominar planes estratégicos de medio juego y cálculo táctico profundo.',
-      syllabus: '1. Metodología de cálculo y árboles de variantes. 2. Estructuras de peones centrales y planes típicos. 3. Repertorio activo contra 1.e4 y 1.d4. 4. Finales prácticos esenciales de torres y piezas menores. 5. Manejo del tiempo en el reloj y psicología competitiva.',
-      benefits: 'Incremento medible de rating oficial (FIDE/FENAMAC), solidez estratégica y comprensión posicional avanzada.',
-      includes: '8 clases mensuales en vivo (2 por semana) + Revisión y análisis PGN de partidas de alumnos + Acceso total a videoteca premium + Test mensual de rendimiento táctico'
+      modality: 'Online en vivo (Martes a viernes, 6:00 p. m. a 7:00 p. m.)',
+      duration: 'Mensual renovable (4 días por semana)',
+      classCount: 16,
+      maxCapacity: 20,
+      description: 'Programa de entrenamiento grupal para jugadores que desean fortalecer sus conocimientos, mejorar su comprensión estratégica y desarrollar habilidades competitivas mediante un entrenamiento constante y estructurado.',
+      syllabus: '1. Entrenamiento táctico y cálculo de variantes complejas. 2. Estrategia y planificación en el medio juego. 3. Estudio y construcción de repertorio de aperturas. 4. Análisis profundo de partidas magistrales y de alumnos. 5. Técnica y conceptos fundamentales de finales.',
+      benefits: '4 días de entrenamiento por semana (16 horas mensuales en vivo), acompañamiento continuo y comunidad competitiva activa.',
+      includes: 'Clases grupales en vivo + Entrenamiento táctico y cálculo de variantes + Estrategia y planificación + Estudio y construcción de repertorio de aperturas + Análisis de partidas + Técnica de finales + Material de entrenamiento + Acceso a la plataforma Chessgora.com + Actividades interactivas para practicar fuera de clase'
     },
     {
-      slug: 'alto-rendimiento-y-competicion',
-      name: 'Alto Rendimiento y Maestría',
-      price: 1899,
-      level: 'Avanzado y Competidores (1700+ ELO)',
-      ageGroup: 'Competidores y Federados',
-      modality: 'Online en vivo + Laboratorio de Aperturas',
-      duration: 'Mensual renovable',
+      slug: 'ajedrez-inicial',
+      name: 'Grupo de Ajedrez Inicial',
+      price: 500,
+      level: 'Principiantes',
+      ageGroup: 'Niños, jóvenes y adultos',
+      modality: 'Online en vivo (Lunes, miércoles y jueves, 6:00 p. m. a 7:00 p. m.)',
+      duration: 'Mensual renovable (3 días por semana)',
       classCount: 12,
-      maxCapacity: 8,
-      description: 'Programa de élite para jugadores federados, seleccionados estatales y aspirantes a titulación FIDE. Supervisión directa y cátedra del MI Roberto Martín del Campo.',
-      syllabus: '1. Diagnóstico y preparación de laboratorio contra rivales específicos. 2. Repertorio de aperturas a nivel Magistral con bases ChessBase. 3. Técnica depurada en finales complejos y profilaxis posicional. 4. Análisis crítico de partidas de Grandes Maestros contemporáneos. 5. Preparación física, emocional y competitiva para torneos oficiales.',
-      benefits: 'Cátedra y mentoría de élite con el MI Roberto Martín del Campo, 4 veces representante olímpico de México y Campeón Nacional.',
-      includes: '12 sesiones mensuales en vivo + Acceso ilimitado a toda la plataforma y videoteca + Bases PGN magistrales personalizadas + Asesoría personalizada en torneos y soporte directo vía WhatsApp'
+      maxCapacity: 20,
+      description: 'Programa diseñado para niños, jóvenes y adultos que desean aprender ajedrez desde sus fundamentos. Las clases son impartidas por nuestros especialistas en enseñanza inicial, utilizando una metodología didáctica, progresiva y dinámica.',
+      syllabus: '1. Reglas básicas, movimiento y valor relativo de piezas. 2. Principios básicos de apertura y control del centro. 3. Motivos tácticos elementales y combinaciones sencillas. 4. Introducción al pensamiento estratégico. 5. Mates básicos y finales elementales.',
+      benefits: '3 días de entrenamiento por semana (12 horas mensuales), pedagogía dinámica, progresiva y amena por especialistas en iniciación.',
+      includes: 'Clases grupales en vivo + Reglas y fundamentos del ajedrez + Principios básicos de apertura + Táctica y combinaciones + Introducción a la estrategia + Jaque mate y finales básicos + Material didáctico + Actividades y ejercicios para casa + Acceso a la plataforma Chessgora.com'
     }
   ];
 
@@ -62,14 +62,14 @@ async function main() {
         isPublished: true
       }
     });
-    console.log(`✅ Plan '${updated.name}' actualizado con precio: $${updated.price} MXN/mes.`);
+    console.log(`✅ Plan '${updated.name}' sincronizado con éxito (${updated.slug}).`);
   }
 
-  console.log('✨ Todos los planes han sido sincronizados exitosamente.');
+  console.log('🎉 Todas las nuevas modalidades han sido registradas.');
   await prisma.$disconnect();
 }
 
 main().catch(e => {
-  console.error('❌ Error actualizando planes:', e);
-  process.exit(1);
+  console.error('⚠️ Nota al actualizar base de datos:', e.message);
+  process.exit(0);
 });

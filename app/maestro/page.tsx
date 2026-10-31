@@ -26,10 +26,15 @@ import {
   ShieldAlert,
   Crown,
   ShoppingBag,
-  RefreshCw
+  RefreshCw,
+  Eye,
+  Check,
+  Zap,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { ChessFenViewer } from '@/components/chess/ChessFenViewer';
+import { DocumentPreviewModal } from '@/components/homework/DocumentPreviewModal';
 
 interface UserRecord {
   id: string;
@@ -116,6 +121,7 @@ export default function MaestroPage() {
   const [creatingHw, setCreatingHw] = useState(false);
   const [hwMsg, setHwMsg] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewDoc, setPreviewDoc] = useState<{ url: string; filename: string; title?: string } | null>(null);
 
   // Users State
   const [users, setUsers] = useState<UserRecord[]>([]);
@@ -673,122 +679,289 @@ export default function MaestroPage() {
       )}
 
       {/* ============================================================ */}
-      {/* TAB 2: TAREAS ESCOLARES & DOCUMENTOS */}
+      {/* TAB 2: TAREAS ESCOLARES & DOCUMENTOS TECNOLÓGICOS */}
       {/* ============================================================ */}
       {activeTab === 'tareas' && (
         <div className="space-y-8">
-          {/* Formulario Crear Tarea */}
-          <div className="bg-[#121E17] border border-[#2B3E34] rounded-xl p-6 space-y-4">
-            <h2 className="font-serif font-bold text-[#F6F3EC] text-lg flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-[#D8B155]" />
-              Crear Nueva Tarea con Documentos
-            </h2>
+          {/* Formulario Crear Tarea Tecnológico */}
+          <div className="bg-[#121E17] border-2 border-[#D8B155]/60 rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#2B3E34] pb-4 gap-2">
+              <div>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#D8B155] block">
+                  LMS & Asignación Pedagógica
+                </span>
+                <h2 className="font-serif-editorial font-bold text-white text-xl sm:text-2xl flex items-center gap-2">
+                  <BookOpen className="w-6 h-6 text-[#D8B155]" />
+                  <span>Publicar Tarea, Material Didáctico o Ejercicio</span>
+                </h2>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-[#0B1510] border border-[#2B3E34] text-xs font-mono text-emerald-400 font-bold flex items-center gap-1.5 self-start sm:self-auto">
+                <Sparkles className="w-3.5 h-3.5 text-[#D8B155]" />
+                Visor Interactivo FEN & Documentos
+              </span>
+            </div>
+
             {hwMsg && (
-              <p className="text-sm p-3 rounded-lg bg-[#0B1510] border border-[#2B3E34] text-[#D8B155]">
-                {hwMsg}
-              </p>
+              <div className="p-3.5 rounded-xl bg-[#0B1510] border border-[#D8B155]/50 text-xs text-[#D8B155] font-semibold flex items-center gap-2 animate-in fade-in">
+                <span>{hwMsg}</span>
+              </div>
             )}
 
-            <form onSubmit={handleCreateHomework} className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-xs text-[#A8B2A6] font-semibold">Título de la Tarea / Ejercicio:</label>
+            <form onSubmit={handleCreateHomework} className="space-y-6">
+              {/* Título */}
+              <div className="space-y-1.5">
+                <label className="text-xs text-[#D2DBD0] font-bold block">
+                  Título de la Asignación / Tema *
+                </label>
                 <input
                   required
                   value={newHw.title}
                   onChange={(e) => setNewHw((p) => ({ ...p, title: e.target.value }))}
-                  placeholder="Ej: Táctica Semana 4 - Clavadas y Ataques Dobles"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#0B1510] border border-[#2B3E34] text-[#F6F3EC] text-sm focus:outline-none focus:border-[#D8B155]"
+                  placeholder="Ej: Táctica Avanzada Semana 4 — Desviación, Clavadas y Redes de Mate"
+                  className="w-full px-4 py-3 rounded-xl bg-[#0B1510] border border-[#2B3E34] text-white text-sm focus:outline-none focus:border-[#D8B155] transition"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-xs text-[#A8B2A6] font-semibold">Instrucciones Pedagógicas:</label>
+              {/* Instrucciones Pedagógicas */}
+              <div className="space-y-1.5">
+                <label className="text-xs text-[#D2DBD0] font-bold block">
+                  Instrucciones & Análisis Solicitado al Alumno *
+                </label>
                 <textarea
                   required
                   value={newHw.description}
                   onChange={(e) => setNewHw((p) => ({ ...p, description: e.target.value }))}
-                  placeholder="Escribe las indicaciones para el alumno..."
+                  placeholder="Indica al alumno los objetivos del ejercicio, jugadas a calcular, número de variantes y plazo de entrega..."
                   rows={3}
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#0B1510] border border-[#2B3E34] text-[#F6F3EC] text-sm focus:outline-none focus:border-[#D8B155] resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#0B1510] border border-[#2B3E34] text-white text-sm focus:outline-none focus:border-[#D8B155] resize-none transition"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="text-xs text-[#A8B2A6] font-semibold">Posición FEN de Ajedrez (Opcional):</label>
+              {/* Posición FEN de Ajedrez con Visor Interactivo en Tiempo Real */}
+              <div className="space-y-3 p-4 rounded-xl bg-[#0B1510] border border-[#2B3E34]">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <label className="text-xs text-[#D8B155] font-bold flex items-center gap-1.5">
+                    <Crown className="w-4 h-4 text-[#D8B155]" />
+                    <span>Diagrama de Ajedrez FEN (Visualización en Tiempo Real):</span>
+                  </label>
+
+                  {/* Botones de Posiciones Predefinidas */}
+                  <div className="flex flex-wrap gap-1.5 text-[11px]">
+                    <span className="text-[#A8B2A6] text-[10px] self-center mr-1">Cargar plantilla:</span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setNewHw((p) => ({
+                          ...p,
+                          fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+                        }))
+                      }
+                      className="px-2 py-0.5 rounded bg-[#121E17] hover:bg-[#1B4D3E] border border-[#2B3E34] text-[#A8B2A6] hover:text-white transition text-[10px]"
+                    >
+                      Inicial
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setNewHw((p) => ({
+                          ...p,
+                          fen: 'r1bqkb1r/pppp1ppp/2n5/4p3/2B1n3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4',
+                        }))
+                      }
+                      className="px-2 py-0.5 rounded bg-[#121E17] hover:bg-[#1B4D3E] border border-[#2B3E34] text-[#A8B2A6] hover:text-white transition text-[10px]"
+                    >
+                      Clavada e4
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setNewHw((p) => ({
+                          ...p,
+                          fen: '8/8/8/4k3/8/4K3/4P3/8 w - - 0 1',
+                        }))
+                      }
+                      className="px-2 py-0.5 rounded bg-[#121E17] hover:bg-[#1B4D3E] border border-[#2B3E34] text-[#A8B2A6] hover:text-white transition text-[10px]"
+                    >
+                      Final Rey+P
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setNewHw((p) => ({
+                          ...p,
+                          fen: 'r1b2rk1/pp3ppp/2n5/8/4q3/1NP5/PP2B1PP/R2Q1RK1 b - - 0 15',
+                        }))
+                      }
+                      className="px-2 py-0.5 rounded bg-[#121E17] hover:bg-[#1B4D3E] border border-[#2B3E34] text-[#A8B2A6] hover:text-white transition text-[10px]"
+                    >
+                      Medio Juego
+                    </button>
+                  </div>
+                </div>
+
                 <input
                   value={newHw.fen}
                   onChange={(e) => setNewHw((p) => ({ ...p, fen: e.target.value }))}
                   placeholder="Ej: r1bqkb1r/pppp1ppp/2n5/4p3/2B1n3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#0B1510] border border-[#2B3E34] text-[#F6F3EC] text-sm font-mono focus:outline-none focus:border-[#D8B155]"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#121E17] border border-[#2B3E34] text-[#D8B155] text-xs font-mono focus:outline-none focus:border-[#D8B155]"
                 />
-              </div>
 
-              {/* Adjuntar Documentos */}
-              <div className="space-y-2 p-4 rounded-lg bg-[#0B1510] border border-[#2B3E34]">
-                <label className="text-xs text-[#D8B155] font-bold flex items-center gap-1.5">
-                  <Paperclip className="w-4 h-4" />
-                  Adjuntar Archivo o Documento (PDF, PGN, Word, Imagen, etc.):
-                </label>
-
-                {newHw.attachmentName ? (
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-[#121E17] border border-[#2B3E34] text-xs text-white">
-                    <div className="flex items-center gap-2 truncate">
-                      <FileText className="w-4 h-4 text-[#D8B155]" />
-                      <span className="truncate font-semibold">{newHw.attachmentName}</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleRemoveAttachment}
-                      className="p-1 rounded hover:bg-red-950/60 text-red-400 hover:text-red-300 transition"
-                      title="Quitar archivo"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex flex-col sm:flex-row items-center gap-3">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      onChange={handleFileChange}
-                      accept=".pdf,.pgn,.doc,.docx,.txt,.jpg,.jpeg,.png,.webp,.zip"
-                      className="text-xs text-[#A8B2A6] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#1B4D3E] file:text-[#D8B155] hover:file:bg-[#226350] file:cursor-pointer cursor-pointer"
-                    />
-                    {attachmentLoading && <span className="text-xs text-[#D8B155]">Cargando documento...</span>}
+                {/* Vista previa en vivo del tablero FEN si se ingresó */}
+                {newHw.fen.trim() && (
+                  <div className="pt-2 flex flex-col items-center justify-center p-3 rounded-xl bg-[#0B1510] border border-[#1C3328]">
+                    <ChessFenViewer fen={newHw.fen} size="md" caption="Vista previa interactiva que verá el alumno" />
                   </div>
                 )}
               </div>
 
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
+              {/* Zona Tecnológica de Carga & Vista Previa de Documentos */}
+              <div className="space-y-3 p-4 rounded-xl bg-[#0B1510] border border-[#2B3E34]">
+                <label className="text-xs text-[#D8B155] font-bold flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <Paperclip className="w-4 h-4 text-[#D8B155]" />
+                    <span>Material Adjunto (PDF, PGN, Word, Imagen, Ejercicios en Guía):</span>
+                  </span>
+                  <span className="text-[10px] text-[#A8B2A6] font-mono">Máx 10 MB</span>
+                </label>
+
+                {newHw.attachmentUrl ? (
+                  /* Tarjeta Tecnológica de Documento Listo con Vista Previa */
+                  <div className="p-4 rounded-xl bg-[#121E17] border-2 border-emerald-500/50 space-y-3 shadow-lg">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 truncate">
+                        <div className="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-500 flex items-center justify-center text-emerald-400 shrink-0">
+                          <FileText className="w-5 h-5" />
+                        </div>
+                        <div className="truncate">
+                          <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-950 text-emerald-300 border border-emerald-700/60 inline-block mb-0.5">
+                            ✓ Documento Verificado
+                          </span>
+                          <p className="text-xs font-bold text-white truncate max-w-sm">
+                            {newHw.attachmentName}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 self-end sm:self-auto">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setPreviewDoc({
+                              url: newHw.attachmentUrl,
+                              filename: newHw.attachmentName || 'Documento de Tarea',
+                              title: newHw.title || 'Vista Previa del Documento',
+                            })
+                          }
+                          className="px-3 py-1.5 rounded-lg bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/50 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>Previsualizar Documento</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handleRemoveAttachment}
+                          className="p-1.5 rounded-lg bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300 transition cursor-pointer"
+                          title="Quitar archivo"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Previsualización en miniatura si es imagen */}
+                    {newHw.attachmentName?.match(/\.(jpg|jpeg|png|webp|gif)$/i) && (
+                      <div className="pt-2 border-t border-[#2B3E34] flex items-center gap-3">
+                        <img
+                          src={newHw.attachmentUrl}
+                          alt="Previsualización miniatura"
+                          className="h-20 w-32 object-cover rounded-lg border border-[#2B3E34]"
+                        />
+                        <span className="text-[11px] text-[#A8B2A6]">
+                          Imagen cargada correctamente. Se mostrará en el visor de alta resolución para los alumnos.
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Selector Dropzone */
+                  <div className="border-2 border-dashed border-[#2B3E34] hover:border-[#D8B155]/60 rounded-xl p-6 text-center space-y-3 transition bg-[#070E0A]/40">
+                    <FileText className="w-8 h-8 text-[#D8B155] mx-auto opacity-70" />
+                    <div>
+                      <p className="text-xs font-bold text-white">
+                        Selecciona o arrastra el archivo de la tarea
+                      </p>
+                      <p className="text-[11px] text-[#A8B2A6]">
+                        Compatible con PDF, bases PGN, documentos Word (.docx), imágenes JPG/PNG o archivos ZIP.
+                      </p>
+                    </div>
+
+                    <div className="pt-1">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        onChange={handleFileChange}
+                        accept=".pdf,.pgn,.doc,.docx,.txt,.jpg,.jpeg,.png,.webp,.zip"
+                        className="text-xs text-[#A8B2A6] file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#1B4D3E] file:text-[#D8B155] hover:file:bg-[#226350] file:cursor-pointer cursor-pointer"
+                      />
+                    </div>
+                    {attachmentLoading && (
+                      <p className="text-xs text-[#D8B155] font-semibold animate-pulse">
+                        ⏳ Subiendo documento al almacenamiento seguro...
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Fecha y Botón de Publicación */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2 border-t border-[#2B3E34]">
                 <div className="space-y-1">
                   <label className="text-xs text-[#A8B2A6] font-semibold block">Fecha Límite de Entrega:</label>
                   <input
                     type="date"
                     value={newHw.dueDate}
                     onChange={(e) => setNewHw((p) => ({ ...p, dueDate: e.target.value }))}
-                    className="px-4 py-2 rounded-lg bg-[#0B1510] border border-[#2B3E34] text-[#F6F3EC] text-xs focus:outline-none focus:border-[#D8B155]"
+                    className="px-4 py-2.5 rounded-lg bg-[#0B1510] border border-[#2B3E34] text-[#F6F3EC] text-xs focus:outline-none focus:border-[#D8B155]"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={creatingHw || attachmentLoading}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#D8B155] hover:bg-[#E8C865] text-[#0B1510] text-sm font-bold transition disabled:opacity-60 shadow-md cursor-pointer"
+                  className="flex items-center gap-2 px-7 py-3 rounded-xl bg-[#D8B155] hover:bg-[#E8C865] text-[#0B1510] text-sm font-bold transition disabled:opacity-60 shadow-xl shadow-[#D8B155]/20 cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
-                  {creatingHw ? 'Publicando...' : 'Publicar Tarea'}
+                  <span>{creatingHw ? 'Publicando en Plataforma...' : 'Publicar Tarea Oficial'}</span>
                 </button>
               </div>
             </form>
           </div>
 
-          {/* Lista de Tareas y Entregas */}
+          {/* Lista de Tareas Publicadas con Vista Previa */}
           <div className="space-y-4">
-            <h2 className="font-serif font-bold text-[#F6F3EC] text-lg">Tareas Publicadas & Entregas</h2>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="font-serif font-bold text-[#F6F3EC] text-xl">
+                  Tareas Publicadas & Entregas de Alumnos
+                </h2>
+                <p className="text-xs text-[#A8B2A6]">
+                  Revisa el material asignado, consulta los documentos adjuntos y califica las respuestas.
+                </p>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-[#121E17] border border-[#2B3E34] text-xs font-mono text-[#D8B155] font-bold">
+                {homeworks.length} tareas activas
+              </span>
+            </div>
+
             {loadingHw ? (
-              <p className="text-[#A8B2A6] text-sm">Cargando tareas...</p>
+              <p className="text-[#A8B2A6] text-sm py-8 text-center">Cargando tareas...</p>
             ) : homeworks.length === 0 ? (
-              <p className="text-[#A8B2A6] text-sm">Aún no hay tareas publicadas.</p>
+              <div className="text-center py-12 p-6 rounded-2xl bg-[#121E17] border border-[#2B3E34] space-y-2">
+                <BookOpen className="w-8 h-8 text-[#A8B2A6] mx-auto opacity-50" />
+                <p className="text-sm font-bold text-white">Aún no hay tareas publicadas</p>
+                <p className="text-xs text-[#A8B2A6]">Crea tu primera tarea con el formulario superior.</p>
+              </div>
             ) : (
               homeworks.map((hw) => {
                 const pending = hw.submissions.filter((s) => s.status === 'SUBMITTED').length;
@@ -796,110 +969,158 @@ export default function MaestroPage() {
                 return (
                   <div
                     key={hw.id}
-                    className="bg-[#121E17] border border-[#2B3E34] rounded-xl overflow-hidden shadow-lg"
+                    className="bg-[#121E17] border border-[#2B3E34] rounded-2xl overflow-hidden shadow-lg transition-all"
                   >
                     <button
                       onClick={() => setExpandedHw(isOpen ? null : hw.id)}
-                      className="w-full flex items-center justify-between p-5 text-left hover:bg-[#1B3028]/50 transition cursor-pointer"
+                      className="w-full flex items-center justify-between p-5 text-left hover:bg-[#1B3028]/40 transition cursor-pointer"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-[#1B4D3E] flex items-center justify-center text-[#D8B155]">
+                      <div className="flex items-center gap-3.5">
+                        <div className="w-10 h-10 rounded-xl bg-[#1B4D3E] border border-[#D8B155]/40 flex items-center justify-center text-[#D8B155] shrink-0">
                           <BookOpen className="w-5 h-5" />
                         </div>
                         <div>
-                          <p className="font-bold text-[#F6F3EC] text-sm">{hw.title}</p>
-                          <p className="text-xs text-[#A8B2A6]">
-                            {hw.dueDate
-                              ? `Entrega: ${new Date(hw.dueDate).toLocaleDateString('es-MX')}`
-                              : 'Sin fecha límite'}
-                            {' · '}
-                            {hw.submissions.length} entregas
+                          <p className="font-bold text-[#F6F3EC] text-base">{hw.title}</p>
+                          <div className="flex flex-wrap items-center gap-2 text-xs text-[#A8B2A6] mt-0.5">
+                            <span>
+                              {hw.dueDate
+                                ? `Entrega: ${new Date(hw.dueDate).toLocaleDateString('es-MX')}`
+                                : 'Sin fecha límite'}
+                            </span>
+                            <span>•</span>
+                            <span className="font-bold text-white">{hw.submissions.length} entregas</span>
                             {hw.attachmentUrl && (
-                              <span className="ml-2 text-emerald-400 font-semibold inline-flex items-center gap-1">
+                              <span className="text-emerald-400 font-semibold inline-flex items-center gap-1 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800 text-[10px]">
                                 <Paperclip className="w-3 h-3" /> Con archivo adjunto
                               </span>
                             )}
-                            {pending > 0 && (
-                              <span className="ml-2 px-1.5 py-0.5 rounded bg-amber-900/50 text-amber-300 text-[10px] font-bold">
-                                {pending} pendientes de revisar
+                            {hw.fen && (
+                              <span className="text-[#D8B155] font-semibold inline-flex items-center gap-1 bg-[#0B1510] px-2 py-0.5 rounded border border-[#2B3E34] text-[10px]">
+                                <Crown className="w-3 h-3" /> Diagrama FEN
                               </span>
                             )}
-                          </p>
+                            {pending > 0 && (
+                              <span className="px-2 py-0.5 rounded bg-amber-900/60 border border-amber-600/50 text-amber-200 text-[10px] font-bold animate-pulse">
+                                {pending} por calificar
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                       {isOpen ? (
-                        <ChevronUp className="w-4 h-4 text-[#A8B2A6]" />
+                        <ChevronUp className="w-5 h-5 text-[#D8B155]" />
                       ) : (
-                        <ChevronDown className="w-4 h-4 text-[#A8B2A6]" />
+                        <ChevronDown className="w-5 h-5 text-[#A8B2A6]" />
                       )}
                     </button>
 
                     {isOpen && (
-                      <div className="border-t border-[#2B3E34] p-5 space-y-4">
-                        <div className="text-xs text-[#D2DBD0] bg-[#0B1510] rounded-lg p-3 leading-relaxed">
-                          {hw.description}
+                      <div className="border-t border-[#2B3E34] p-6 space-y-6 bg-[#070E0A]/40">
+                        {/* Indicaciones */}
+                        <div className="space-y-1">
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-[#A8B2A6]">
+                            Indicaciones para el Alumno:
+                          </span>
+                          <div className="text-xs sm:text-sm text-[#D2DBD0] bg-[#0B1510] rounded-xl p-4 leading-relaxed border border-[#1C3328]">
+                            {hw.description}
+                          </div>
                         </div>
 
-                        {hw.attachmentUrl && (
-                          <div className="p-3 rounded-lg bg-[#0B1510] border border-[#2B3E34] flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-xs text-white">
-                              <FileText className="w-4 h-4 text-[#D8B155]" />
-                              <span>
-                                Archivo adjunto:{' '}
-                                <strong className="text-[#D8B155]">
-                                  {hw.attachmentName || 'Descargar'}
-                                </strong>
-                              </span>
-                            </div>
-                            <a
-                              href={hw.attachmentUrl}
-                              download={hw.attachmentName || 'tarea-alekhins'}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="px-3 py-1.5 rounded bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/40 text-xs font-bold flex items-center gap-1 transition"
-                            >
-                              <Download className="w-3.5 h-3.5" />
-                              <span>Descargar</span>
-                            </a>
-                          </div>
-                        )}
-
+                        {/* FEN Visualizer */}
                         {hw.fen && (
-                          <div className="text-xs font-mono text-[#D8B155] bg-[#0B1510] rounded-lg p-3 border border-[#2B3E34]">
-                            <span className="text-[#A8B2A6] block mb-1">Posición FEN:</span>
-                            {hw.fen}
+                          <div className="p-4 rounded-xl bg-[#0B1510] border border-[#2B3E34] flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div className="space-y-1">
+                              <span className="text-xs font-bold text-[#D8B155] block">
+                                Posición de la Tarea:
+                              </span>
+                              <p className="font-mono text-[11px] text-[#A8B2A6] break-all max-w-sm">
+                                {hw.fen}
+                              </p>
+                            </div>
+                            <ChessFenViewer fen={hw.fen} size="sm" />
                           </div>
                         )}
 
+                        {/* Material Adjunto con Botón de Previsualización */}
+                        {hw.attachmentUrl && (
+                          <div className="p-4 rounded-xl bg-[#0B1510] border border-[#2B3E34] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 rounded-lg bg-[#1B4D3E] flex items-center justify-center text-[#D8B155] shrink-0">
+                                <FileText className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <span className="text-[10px] text-[#A8B2A6] uppercase font-bold block">
+                                  Documento del Maestro:
+                                </span>
+                                <span className="font-bold text-sm text-white">
+                                  {hw.attachmentName || 'Material Didáctico'}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setPreviewDoc({
+                                    url: hw.attachmentUrl!,
+                                    filename: hw.attachmentName || 'Material de Tarea',
+                                    title: hw.title,
+                                  })
+                                }
+                                className="px-3.5 py-2 rounded-lg bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/40 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+                              >
+                                <Eye className="w-3.5 h-3.5" />
+                                <span>Ver Vista Previa</span>
+                              </button>
+
+                              <a
+                                href={hw.attachmentUrl}
+                                download={hw.attachmentName || 'tarea-alekhins'}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3.5 py-2 rounded-lg bg-[#121E17] hover:bg-[#1C3328] text-white border border-[#2B3E34] text-xs font-bold flex items-center gap-1.5 transition"
+                              >
+                                <Download className="w-3.5 h-3.5" />
+                                <span>Descargar</span>
+                              </a>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Entregas de Alumnos */}
                         {hw.submissions.length === 0 ? (
-                          <p className="text-xs text-[#A8B2A6]">Ningún alumno ha entregado esta tarea todavía.</p>
+                          <div className="text-center py-6 text-xs text-[#A8B2A6] bg-[#0B1510] rounded-xl border border-[#1C3328]">
+                            Ningún alumno ha entregado esta tarea todavía.
+                          </div>
                         ) : (
                           <div className="space-y-3 pt-2">
-                            <p className="text-xs font-bold text-[#D2DBD0] uppercase tracking-wider">
-                              Entregas Recibidas:
-                            </p>
+                            <h4 className="text-xs font-bold text-[#D8B155] uppercase tracking-wider flex items-center gap-2">
+                              <span>Respuestas & Entregas de Alumnos ({hw.submissions.length}):</span>
+                            </h4>
+
                             {hw.submissions.map((sub) => (
                               <div
                                 key={sub.id}
-                                className="bg-[#0B1510] rounded-lg p-4 border border-[#2B3E34] space-y-3"
+                                className="bg-[#0B1510] rounded-xl p-4 border border-[#2B3E34] space-y-3 shadow-md"
                               >
                                 <div className="flex items-start justify-between gap-2">
                                   <div>
-                                    <p className="text-sm font-bold text-[#F6F3EC]">
+                                    <p className="text-sm font-bold text-white">
                                       {sub.student?.user?.name || 'Alumno'}
                                     </p>
-                                    <p className="text-[10px] text-[#A8B2A6]">
+                                    <p className="text-[11px] text-[#A8B2A6]">
                                       {sub.student?.user?.email}
                                     </p>
-                                    <p className="text-xs text-[#D2DBD0] mt-2 whitespace-pre-wrap">
+                                    <p className="text-xs text-[#D2DBD0] mt-2 whitespace-pre-wrap bg-[#121E17] p-3 rounded-lg border border-[#1C3328]">
                                       {sub.solutionText}
                                     </p>
                                   </div>
                                   <span
-                                    className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
                                       sub.status === 'REVIEWED'
-                                        ? 'bg-emerald-900/50 text-emerald-300'
-                                        : 'bg-amber-900/50 text-amber-300'
+                                        ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                                        : 'bg-amber-950 text-amber-300 border border-amber-800'
                                     }`}
                                   >
                                     {sub.status === 'REVIEWED'
@@ -908,35 +1129,56 @@ export default function MaestroPage() {
                                   </span>
                                 </div>
 
+                                {/* Archivo del Alumno con Vista Previa */}
                                 {sub.attachmentUrl && (
-                                  <div className="p-2.5 rounded bg-[#121E17] border border-[#2B3E34] flex items-center justify-between text-xs">
-                                    <div className="flex items-center gap-1.5 text-gray-300">
-                                      <Paperclip className="w-3.5 h-3.5 text-[#D8B155]" />
+                                  <div className="p-3 rounded-lg bg-[#121E17] border border-[#2B3E34] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                                    <div className="flex items-center gap-2 text-white">
+                                      <Paperclip className="w-4 h-4 text-[#D8B155]" />
                                       <span>
                                         Archivo del alumno:{' '}
-                                        <strong>{sub.attachmentName || 'Ver adjunto'}</strong>
+                                        <strong className="text-[#D8B155]">
+                                          {sub.attachmentName || 'Ver archivo'}
+                                        </strong>
                                       </span>
                                     </div>
-                                    <a
-                                      href={sub.attachmentUrl}
-                                      download={sub.attachmentName || 'entrega-alumno'}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-xs text-[#D8B155] hover:underline flex items-center gap-1"
-                                    >
-                                      <Download className="w-3 h-3" /> Descargar
-                                    </a>
+
+                                    <div className="flex items-center gap-2">
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setPreviewDoc({
+                                            url: sub.attachmentUrl!,
+                                            filename: sub.attachmentName || 'Entrega de Alumno',
+                                            title: `Entrega de ${sub.student?.user?.name || 'Alumno'}`,
+                                          })
+                                        }
+                                        className="px-2.5 py-1 rounded bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                                      >
+                                        <Eye className="w-3 h-3" />
+                                        <span>Vista Previa</span>
+                                      </button>
+
+                                      <a
+                                        href={sub.attachmentUrl}
+                                        download={sub.attachmentName || 'entrega-alumno'}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-xs text-[#A8B2A6] hover:text-white flex items-center gap-1"
+                                      >
+                                        <Download className="w-3 h-3" /> Descargar
+                                      </a>
+                                    </div>
                                   </div>
                                 )}
 
                                 {sub.feedback && (
-                                  <div className="text-xs text-[#A8B2A6] bg-[#121E17] rounded p-2.5 border border-[#2B3E34]">
-                                    <span className="font-bold text-[#D8B155]">Retroalimentación: </span>
+                                  <div className="text-xs text-[#A8B2A6] bg-[#121E17] rounded-lg p-3 border border-[#2B3E34]">
+                                    <span className="font-bold text-[#D8B155]">Retroalimentación del Maestro: </span>
                                     {sub.feedback}
                                   </div>
                                 )}
 
-                                <div className="flex flex-wrap gap-2 items-center pt-1">
+                                <div className="flex flex-wrap gap-2 items-center pt-1 border-t border-[#1C3328]">
                                   <input
                                     type="number"
                                     min="0"
@@ -953,7 +1195,7 @@ export default function MaestroPage() {
                                       }))
                                     }
                                     placeholder="Nota /10"
-                                    className="w-24 px-2 py-1.5 rounded bg-[#121E17] border border-[#2B3E34] text-[#F6F3EC] text-xs focus:outline-none focus:border-[#D8B155]"
+                                    className="w-24 px-3 py-1.5 rounded-lg bg-[#121E17] border border-[#2B3E34] text-white text-xs focus:outline-none focus:border-[#D8B155] font-bold"
                                   />
                                   <input
                                     value={gradeData[sub.id]?.feedback || ''}
@@ -966,15 +1208,15 @@ export default function MaestroPage() {
                                         },
                                       }))
                                     }
-                                    placeholder="Retroalimentación pedagógica..."
-                                    className="flex-1 min-w-[200px] px-2.5 py-1.5 rounded bg-[#121E17] border border-[#2B3E34] text-[#F6F3EC] text-xs focus:outline-none focus:border-[#D8B155]"
+                                    placeholder="Escribe la retroalimentación técnica pedagógica..."
+                                    className="flex-1 min-w-[200px] px-3 py-1.5 rounded-lg bg-[#121E17] border border-[#2B3E34] text-white text-xs focus:outline-none focus:border-[#D8B155]"
                                   />
                                   <button
                                     onClick={() => handleGrade(sub.id)}
                                     disabled={submittingGrade === sub.id}
-                                    className="px-3.5 py-1.5 rounded bg-[#D8B155] text-[#0B1510] text-xs font-bold hover:bg-[#E8C865] transition disabled:opacity-60 cursor-pointer"
+                                    className="px-4 py-1.5 rounded-lg bg-[#D8B155] text-[#0B1510] text-xs font-bold hover:bg-[#E8C865] transition disabled:opacity-60 cursor-pointer shadow"
                                   >
-                                    {submittingGrade === sub.id ? '...' : 'Calificar'}
+                                    {submittingGrade === sub.id ? 'Guardando...' : 'Calificar'}
                                   </button>
                                 </div>
                               </div>
@@ -989,6 +1231,17 @@ export default function MaestroPage() {
             )}
           </div>
         </div>
+      )}
+
+      {/* Modal Tecnológico para Vista Previa de Documentos (PDF, Imágenes, etc.) */}
+      {previewDoc && (
+        <DocumentPreviewModal
+          url={previewDoc.url}
+          filename={previewDoc.filename}
+          title={previewDoc.title}
+          isOpen={true}
+          onClose={() => setPreviewDoc(null)}
+        />
       )}
     </div>
   );

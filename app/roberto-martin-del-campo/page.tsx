@@ -87,8 +87,15 @@ export default function FounderPage() {
             {/* Botones de acción principales */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
               <Link
+                href="/videos"
+                className="px-5 py-3.5 rounded-lg bg-gradient-to-r from-red-950 via-red-900 to-amber-950 hover:from-red-900 hover:to-amber-900 border border-red-500/60 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 shadow-xl transition-all hover:scale-[1.02]"
+              >
+                <Video className="w-4 h-4 text-red-400 animate-pulse" />
+                <span>Ver Videos & Clase Pública (4 Horas)</span>
+              </Link>
+              <Link
                 href="/roberto-martin-del-campo/curriculum"
-                className="btn-champagne text-xs px-6 py-3.5 flex items-center gap-2.5 shadow-xl font-bold uppercase tracking-wider transition-all hover:scale-[1.02]"
+                className="btn-champagne text-xs px-5 py-3.5 flex items-center gap-2.5 shadow-xl font-bold uppercase tracking-wider transition-all hover:scale-[1.02]"
               >
                 <Trophy className="w-4 h-4 text-[#0B1510]" />
                 <span>Palmarés Deportivo Completo</span>
@@ -229,6 +236,44 @@ export default function FounderPage() {
             <p className="text-2xl sm:text-3xl font-black text-white font-mono">+100</p>
             <p className="text-xs text-blue-400 font-bold uppercase tracking-wider">Campeones Formados</p>
             <p className="text-[11px] text-[#8E9B8C]">Maestros FIDE y campeones infantiles/juveniles</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 2.5 CLASE MAGISTRAL EN VIDEO (4 HORAS) DIRECTA EN LA WEB */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6">
+        <div className="bg-[#121E17] border-2 border-[#D8B155]/60 rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(216,177,85,0.2)]">
+          <div className="p-6 bg-gradient-to-r from-[#0F261B] via-[#121E17] to-[#1B4D3E]/40 border-b border-[#2B3E34] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <span className="text-[11px] font-black uppercase tracking-widest text-[#D8B155] flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+                Cátedra en Video • Masterclass Pública (4 Horas)
+              </span>
+              <h2 className="font-serif-editorial text-xl sm:text-2xl font-bold text-white">
+                Clase Magistral de Ajedrez con el MI Roberto Martín del Campo
+              </h2>
+              <p className="text-xs text-[#A8B2A6]">
+                Reproduce directamente la sesión pública de más de 4 horas: táctica, estrategia, finales y respuesta a dudas.
+              </p>
+            </div>
+
+            <Link
+              href="/videos"
+              className="px-4 py-2.5 rounded-xl bg-[#D8B155] hover:bg-[#E8C865] text-[#0B1510] text-xs font-bold transition flex items-center gap-1.5 shadow-lg shrink-0 self-start sm:self-auto"
+            >
+              <Video className="w-4 h-4" />
+              <span>Ver Más Videos del Maestro →</span>
+            </Link>
+          </div>
+
+          <div className="aspect-video w-full bg-black">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/EvJB7hol9JA?rel=0&modestbranding=1"
+              title="Masterclass Pública 4 Horas MI Roberto Martín del Campo"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="w-full h-full border-0"
+            />
           </div>
         </div>
       </section>

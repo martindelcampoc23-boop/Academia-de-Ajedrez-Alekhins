@@ -19,7 +19,8 @@ import {
   Shield,
   MessageCircle,
   Clock,
-  ChevronRight
+  ChevronRight,
+  Video,
 } from 'lucide-react';
 
 export const metadata = {
@@ -98,6 +99,33 @@ export default function CurriculumPage() {
                 <span className="text-[#8E9B8C] block text-[10px] uppercase font-bold">Federación</span>
                 <span className="font-bold text-white">México (FIDE)</span>
               </div>
+            </div>
+
+            {/* Barra de Enlaces Rápidos y Videos */}
+            <div className="pt-4 border-t border-[#2B3E34] flex flex-wrap items-center justify-center md:justify-start gap-3">
+              <Link
+                href="/videos"
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-950 via-red-900 to-amber-950 border border-red-500/60 hover:border-red-400 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg transition hover:scale-[1.02]"
+              >
+                <Video className="w-4 h-4 text-red-400 animate-pulse" />
+                <span>Ver Videos & Clase Pública (4 Horas)</span>
+              </Link>
+              <Link
+                href="/entrenamiento"
+                className="px-4 py-2.5 rounded-xl bg-[#1B4D3E] hover:bg-[#236653] text-[#D8B155] border border-[#D8B155]/40 text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition"
+              >
+                <GraduationCap className="w-4 h-4" />
+                <span>Entrenar con el Maestro</span>
+              </Link>
+              <a
+                href="https://wa.me/529991020078?text=Hola%20MI%20Roberto,%20me%20gustar%C3%ADa%20informaci%C3%B3n%20sobre%20sus%20clases"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2.5 rounded-xl bg-[#0B1510] hover:bg-[#121E17] text-emerald-400 border border-emerald-600/40 text-xs font-semibold flex items-center gap-2 transition"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>WhatsApp Personal</span>
+              </a>
             </div>
           </div>
         </div>

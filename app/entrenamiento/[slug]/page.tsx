@@ -1,20 +1,99 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db';
-import { CheckCircle, ShieldCheck, Calendar, Clock, CreditCard, Lock, ArrowLeft } from 'lucide-react';
+import {
+  CheckCircle,
+  ShieldCheck,
+  Calendar,
+  Clock,
+  CreditCard,
+  Lock,
+  ArrowLeft,
+  Laptop,
+  Crown,
+  Sparkles,
+  MessageCircle,
+  Check
+} from 'lucide-react';
 import Link from 'next/link';
 import { buildCourseLD, buildBreadcrumbLD } from '@/lib/jsonld';
 
 export const revalidate = 60;
 
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '529991020078';
+
+const STATIC_PLANS: Record<string, any> = {
+  'entrenamiento-personalizado': {
+    id: 'plan-personalizado',
+    name: 'Entrenamiento Personalizado',
+    slug: 'entrenamiento-personalizado',
+    price: 5000,
+    level: 'Todos los niveles (1 a 1)',
+    ageGroup: 'Todas las edades',
+    modality: 'Online individual en vivo (60 minutos por sesión)',
+    duration: 'Paquete de 10 sesiones ($5,000 MXN) o individual ($600 MXN)',
+    classCount: 10,
+    description:
+      'Programa individual de entrenamiento impartido por el Maestro Internacional Roberto Martín del Campo Cárdenas. Cada alumno recibe una preparación adaptada a su nivel, estilo de juego y objetivos competitivos.',
+    syllabus:
+      'Sesiones individuales de 60 minutos. Plan de entrenamiento personalizado. Material didáctico y ejercicios específicos. Trabajo de aperturas, medio juego y finales. Análisis y corrección de partidas. Tareas y actividades para trabajar en casa. Acceso a la plataforma de entrenamiento Chessgora.com.',
+    benefits: 'Atención 100% individualizada con el MI Roberto Martín del Campo Cárdenas.',
+    includes: '10 sesiones de 60 min + Plataforma Chessgora.com',
+  },
+  'entrenamiento-competitivo': {
+    id: 'plan-competitivo',
+    name: 'Entrenamiento Competitivo',
+    slug: 'entrenamiento-competitivo',
+    price: 699,
+    level: 'Jugadores de menos de 2000 puntos Elo',
+    ageGroup: 'Juvenil y Adultos',
+    modality: 'Martes a viernes, 6:00 p. m. a 7:00 p. m.',
+    duration: 'Mensual renovable (4 días de entrenamiento por semana)',
+    classCount: 16,
+    description:
+      'Programa de entrenamiento grupal para jugadores que desean fortalecer sus conocimientos, mejorar su comprensión estratégica y desarrollar habilidades competitivas mediante un entrenamiento constante y estructurado.',
+    syllabus:
+      'Clases grupales en vivo. Entrenamiento táctico y cálculo de variantes. Estrategia y planificación. Estudio y construcción de repertorio de aperturas. Análisis de partidas. Técnica de finales. Material de entrenamiento. Acceso a la plataforma Chessgora.com. Actividades interactivas para practicar fuera de clase.',
+    benefits: '4 días de entrenamiento por semana (16 horas mensuales).',
+    includes: 'Clases en vivo + Plataforma Chessgora.com',
+  },
+  'ajedrez-inicial': {
+    id: 'plan-inicial',
+    name: 'Grupo de Ajedrez Inicial',
+    slug: 'ajedrez-inicial',
+    price: 500,
+    level: 'Principiantes',
+    ageGroup: 'Niños, jóvenes y adultos',
+    modality: 'Lunes, miércoles y jueves, 6:00 p. m. a 7:00 p. m.',
+    duration: 'Mensual renovable (3 días de entrenamiento por semana)',
+    classCount: 12,
+    description:
+      'Programa diseñado para niños, jóvenes y adultos que desean aprender ajedrez desde sus fundamentos. Las clases son impartidas por nuestros especialistas en enseñanza inicial, utilizando una metodología didáctica, progresiva y dinámica.',
+    syllabus:
+      'Clases grupales en vivo. Reglas y fundamentos del ajedrez. Principios básicos de apertura. Táctica y combinaciones. Introducción a la estrategia. Jaque mate y finales básicos. Material didáctico. Actividades y ejercicios para casa. Acceso a la plataforma Chessgora.com.',
+    benefits: '3 días de entrenamiento por semana (12 horas mensuales).',
+    includes: 'Clases en vivo + Plataforma Chessgora.com',
+  },
+};
+
+async function getPlan(slug: string) {
+  try {
+    const dbPlan = await prisma.trainingPlan.findUnique({ where: { slug } });
+    if (dbPlan) return dbPlan;
+  } catch (err) {
+    console.warn(`[PlanDetailPage] Falling back for slug: ${slug}`);
+  }
+  return STATIC_PLANS[slug] || null;
+}
+
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const plan = await prisma.trainingPlan.findUnique({ where: { slug: params.slug } });
-  if (!plan) return { title: 'Plan no encontrado' };
+  const plan = await getPlan(params.slug);
+  if (!plan) return { title: 'Plan no encontrado | All-In Chess' };
   return {
-    title: `${plan.name} | Academia Alekhins`,
+    title: `${plan.name} | All-In Chess`,
     description: plan.description.slice(0, 155),
     openGraph: {
-      title: `${plan.name} | Academia Alekhins`,
+      title: `${plan.name} | All-In Chess`,
       description: plan.description.slice(0, 155),
       type: 'website',
     },
@@ -23,9 +102,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function PlanDetailPage({ params }: { params: { slug: string } }) {
-  const plan = await prisma.trainingPlan.findUnique({
-    where: { slug: params.slug },
-  });
+  const plan = await getPlan(params.slug);
 
   if (!plan) notFound();
 
@@ -41,103 +118,155 @@ export default async function PlanDetailPage({ params }: { params: { slug: strin
 
   const breadcrumbLD = buildBreadcrumbLD([
     { name: 'Inicio', url: '/' },
-    { name: 'Entrenamiento', url: '/entrenamiento' },
+    { name: 'Clases', url: '/entrenamiento' },
     { name: plan.name, url: `/entrenamiento/${plan.slug}` },
   ]);
 
+  const whatsappMessage = `Hola, deseo solicitar información e inscribirme a ${plan.name} ($${plan.price} MXN) en All-In Chess.`;
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-10">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseLD) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLD) }}
-      />
-      <Link href="/entrenamiento" className="text-xs text-champagne hover:underline inline-flex items-center gap-1">
-        <ArrowLeft className="w-3.5 h-3.5" /> Volver a todos los planes
-      </Link>
+    <div className="min-h-screen bg-[#0B1510] text-[#F6F3EC] py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-10">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(courseLD) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLD) }}
+        />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-        {/* Left Column: Plan Content & Syllabus */}
-        <div className="lg:col-span-7 space-y-8">
-          <div className="space-y-3">
-            <span className="text-xs font-semibold uppercase px-2.5 py-1 bg-stone-gray text-ivory-muted rounded inline-block">
-              Nivel: {plan.level}
-            </span>
-            <h1 className="font-serif-editorial text-3xl md:text-4xl font-bold text-ivory">{plan.name}</h1>
-            <p className="text-sm text-ivory-muted leading-relaxed">{plan.description}</p>
+        <Link
+          href="/entrenamiento"
+          className="text-xs text-[#D8B155] hover:underline inline-flex items-center gap-1.5 font-bold uppercase tracking-wider"
+        >
+          <ArrowLeft className="w-4 h-4" /> Volver a todas las clases
+        </Link>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          {/* Left Column: Plan Content & Syllabus */}
+          <div className="lg:col-span-7 space-y-8">
+            <div className="space-y-3">
+              <span className="text-xs font-bold uppercase px-3 py-1 bg-[#15261E] text-[#D8B155] border border-[#D8B155]/30 rounded-full inline-block">
+                Nivel: {plan.level}
+              </span>
+              <h1 className="font-serif-editorial text-3xl md:text-5xl font-bold text-white leading-tight">
+                {plan.name}
+              </h1>
+              <p className="text-sm md:text-base text-[#D0C5AF] leading-relaxed">
+                {plan.description}
+              </p>
+            </div>
+
+            {/* Key Facts Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 border-y border-[#1C3328] py-4 text-xs">
+              <div>
+                <span className="text-[#B5C2B9] block font-medium">Modalidad:</span>
+                <strong className="text-white text-sm">{plan.modality}</strong>
+              </div>
+              <div>
+                <span className="text-[#B5C2B9] block font-medium">Carga Horaria:</span>
+                <strong className="text-[#D8B155] text-sm">{plan.classCount} lecciones</strong>
+              </div>
+              <div>
+                <span className="text-[#B5C2B9] block font-medium">Duración:</span>
+                <strong className="text-white text-sm">{plan.duration}</strong>
+              </div>
+            </div>
+
+            {/* Syllabus */}
+            <div className="space-y-4">
+              <h2 className="font-serif-editorial text-xl font-bold text-white">
+                Contenido & Puntos del Programa
+              </h2>
+              <div className="p-6 rounded-2xl bg-[#101E17] border border-[#1C3328] space-y-3 text-xs sm:text-sm text-[#D0C5AF] leading-relaxed">
+                {plan.syllabus.split('.').filter(Boolean).map((item: string, idx: number) => (
+                  <div key={idx} className="flex items-start gap-2.5">
+                    <Check className="w-4 h-4 text-[#D8B155] shrink-0 mt-0.5" />
+                    <span>{item.trim()}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Chessgora.com Callout */}
+            <div className="p-5 rounded-2xl bg-[#0F2E1E]/60 border border-[#D8B155]/40 flex items-start gap-3">
+              <Laptop className="w-5 h-5 text-[#D8B155] shrink-0 mt-0.5" />
+              <div className="space-y-1 text-xs">
+                <strong className="text-white block font-bold text-sm">
+                  CHESSGORA.COM INCLUIDO
+                </strong>
+                <p className="text-[#B5C2B9]">
+                  Una plataforma de entrenamiento ajedrecístico donde podrás reforzar tus conocimientos, resolver ejercicios, practicar posiciones y continuar trabajando fuera de las clases en vivo.
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Key Facts Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 border-y border-stone-border py-4 text-xs">
-            <div>
-              <span className="text-ivory-dim block">Modalidad:</span>
-              <strong className="text-ivory">{plan.modality}</strong>
-            </div>
-            <div>
-              <span className="text-ivory-dim block">Clases Mensuales:</span>
-              <strong className="text-champagne">{plan.classCount} lecciones</strong>
-            </div>
-            <div>
-              <span className="text-ivory-dim block">Duración:</span>
-              <strong className="text-ivory">{plan.duration}</strong>
-            </div>
-          </div>
-
-          {/* Syllabus */}
-          <div className="space-y-4">
-            <h2 className="font-serif-editorial text-xl font-bold text-ivory">Temario & Programa de Estudio</h2>
-            <div className="card-carbon p-6 space-y-3 text-xs text-ivory-muted leading-relaxed">
-              {plan.syllabus.split('.').filter(Boolean).map((item, idx) => (
-                <div key={idx} className="flex items-start gap-2">
-                  <span className="font-bold text-champagne shrink-0">{idx + 1}.</span>
-                  <span>{item.trim()}</span>
+          {/* Right Column: Inscription Card */}
+          <div className="lg:col-span-5">
+            <div className="p-6 md:p-8 rounded-3xl bg-[#101E17] border-2 border-[#D8B155] shadow-[0_0_35px_rgba(216,177,85,0.2)] space-y-6 sticky top-28">
+              <div className="space-y-2 border-b border-[#1C3328] pb-4">
+                <span className="text-xs text-[#B5C2B9] uppercase font-bold tracking-wider block">
+                  Inversión Oficial
+                </span>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl md:text-4xl font-extrabold text-[#D8B155]">
+                    ${plan.price.toLocaleString('es-MX')} MXN
+                  </span>
+                  <span className="text-xs text-[#B5C2B9]">
+                    {plan.slug.includes('personalizado') ? 'por paquete' : '/ mes'}
+                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Checkout Card */}
-        <div className="lg:col-span-5">
-          <div className="card-carbon p-6 space-y-6 border-champagne shadow-gold sticky top-28">
-            <div className="space-y-2 border-b border-stone-border pb-4">
-              <span className="text-xs text-ivory-dim uppercase tracking-wider block">Suscripción Mensual</span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold text-champagne">${plan.price.toFixed(2)} MXN</span>
-                <span className="text-xs text-ivory-muted">/ mes</span>
               </div>
-            </div>
 
-            <div className="space-y-3 text-xs text-ivory-muted">
-              <p className="font-semibold text-ivory">Resumen de Contratación:</p>
-              <div className="flex justify-between">
-                <span>Renovación:</span>
-                <strong className="text-ivory">Mensual Automática</strong>
+              <div className="space-y-3 text-xs text-[#D0C5AF]">
+                <p className="font-semibold text-white">Resumen de Contratación:</p>
+                <div className="flex justify-between">
+                  <span>Plataforma:</span>
+                  <strong className="text-white">Clases en vivo + Chessgora.com</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span>Plazos:</span>
+                  <strong className="text-emerald-400">Sin plazos forzosos</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span>Atención:</span>
+                  <strong className="text-white">Asesoría directa y personalizada</strong>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span>Cancelación:</span>
-                <strong className="text-emerald-400">En 1-clic sin penalizaciones</strong>
-              </div>
-              <div className="flex justify-between">
-                <span>Acceso Inmediato:</span>
-                <strong className="text-ivory">Videoteca + Grupos en vivo</strong>
-              </div>
-            </div>
 
-            <form action="/api/checkout/subscription" method="POST" className="space-y-3">
-              <input type="hidden" name="planId" value={plan.id} />
-              <button type="submit" className="btn-champagne w-full py-3.5 text-sm shadow-gold">
-                <CreditCard className="w-4 h-4" />
-                Inscribirme Ahora (${plan.price.toFixed(2)} MXN)
-              </button>
-            </form>
+              <div className="space-y-3 pt-2">
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-gold-solid w-full py-4 text-xs sm:text-sm uppercase tracking-wider font-extrabold flex items-center justify-center gap-2 shadow-gold"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  {plan.slug.includes('personalizado')
+                    ? 'SOLICITAR ENTRENAMIENTO PERSONALIZADO'
+                    : 'INSCRIBIRME AL GRUPO'}
+                </a>
 
-            <div className="flex items-center justify-center gap-2 text-[11px] text-ivory-dim border-t border-stone-border pt-3">
-              <Lock className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Procesado de forma segura con Stripe. Transparencia total.</span>
+                {/* Optional checkout form if Stripe is active */}
+                <form action="/api/checkout/subscription" method="POST">
+                  <input type="hidden" name="planId" value={plan.id} />
+                  <button
+                    type="submit"
+                    className="w-full py-3 rounded-lg border border-[#1C3328] bg-[#0B1510] text-[#B5C2B9] hover:text-white hover:border-[#D8B155] transition text-xs font-semibold flex items-center justify-center gap-2"
+                  >
+                    <CreditCard className="w-3.5 h-3.5 text-[#D8B155]" />
+                    Pagar con tarjeta en línea (Stripe)
+                  </button>
+                </form>
+              </div>
+
+              <div className="flex items-center justify-center gap-2 text-[11px] text-[#B5C2B9] border-t border-[#1C3328] pt-3">
+                <Lock className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Inscripción segura con garantía y soporte de All-In Chess.</span>
+              </div>
             </div>
           </div>
         </div>
