@@ -148,8 +148,14 @@ export default async function HomePage() {
                     MI Roberto Martín del Campo Cárdenas
                   </h3>
                   <p className="text-xs text-[#C4CBD4]">
-                    FIDE ID: 5100046 • Campeón Nacional Absoluto
+                    FIDE ID: 5100046 • Peak Elo 2485 • Oro Olímpico Novi Sad 1990
                   </p>
+                  <Link
+                    href="/la-academia/director"
+                    className="text-[11px] text-[#C5A46D] hover:underline font-bold inline-block mt-2"
+                  >
+                    Ver Currículum Deportivo Completo →
+                  </Link>
                 </div>
               </div>
             </div>
@@ -211,6 +217,16 @@ export default async function HomePage() {
                 Nuestra plataforma tecnológica oficial permite resolver ejercicios diarios, analizar partidas con módulos y acceder a grabaciones sin costo adicional.
               </p>
             </div>
+          </div>
+
+          <div className="text-center pt-2">
+            <Link
+              href="/la-academia/director"
+              className="text-xs sm:text-sm text-[#C5A46D] hover:underline font-bold inline-flex items-center gap-1.5 p-2 rounded-xl hover:bg-[#172B46] transition"
+            >
+              <span>Conoce la trayectoria y currículum deportivo completo del MI Roberto Martín del Campo</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>

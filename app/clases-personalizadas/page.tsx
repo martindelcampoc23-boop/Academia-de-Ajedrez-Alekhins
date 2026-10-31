@@ -169,6 +169,13 @@ Moneda del solicitante: ${currency}
                 <MessageCircle className="w-4 h-4" />
                 Contactar al Maestro por WhatsApp
               </a>
+
+              <Link
+                href="/la-academia/director"
+                className="text-center text-xs text-[#C5A46D] hover:underline block font-semibold pt-1"
+              >
+                Consultar Currículum Deportivo &amp; Trayectoria Completa →
+              </Link>
             </div>
           </div>
 

@@ -80,6 +80,7 @@ export function Footer() {
           <ul className="space-y-2 text-xs text-[#9CA3AF]">
             <li><Link href="/" className="hover:text-[#C5A46D] transition">Inicio</Link></li>
             <li><Link href="/la-academia" className="hover:text-[#C5A46D] transition">La Academia</Link></li>
+            <li><Link href="/la-academia/director" className="hover:text-[#C5A46D] transition font-semibold text-[#C5A46D]">Currículum del Director (MI)</Link></li>
             <li><Link href="/programas" className="hover:text-[#C5A46D] transition">Programas Académicos</Link></li>
             <li><Link href="/clases-personalizadas" className="hover:text-[#C5A46D] transition">Clases Personalizadas</Link></li>
             <li><Link href="/entrenadores" className="hover:text-[#C5A46D] transition">Cuerpo Técnico</Link></li>

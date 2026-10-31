@@ -383,32 +383,39 @@ export const COACHES: CoachProfile[] = [
   {
     id: 'coach-roberto-martin-del-campo',
     slug: 'roberto-martin-del-campo',
-    name: 'MI Roberto Martín del Campo Cárdenas',
-    fideTitle: 'Maestro Internacional FIDE',
+    name: 'MI Roberto Abel Martín del Campo Cárdenas',
+    fideTitle: 'Maestro Internacional & Entrenador FIDE (FIDE Trainer)',
     fideId: '5100046',
     role: 'Director Académico & Fundador',
     nationality: 'México (FIDE)',
-    avatarUrl: '/maestro-roberto.jpg',
-    ratingPeak: 2470,
+    avatarUrl: '/maestro-roberto-partida.jpg',
+    ratingPeak: 2485,
     ratingCurrent: 2360,
-    experienceYears: 30,
+    experienceYears: 38,
     bio:
-      'Una de las figuras más emblemáticas y respetadas en la historia del ajedrez mexicano y latinoamericano. Maestro Internacional FIDE, 4 veces representante olímpico de México, Campeón Nacional Absoluto y formador de múltiples Maestros FIDE y campeones nacionales.',
+      'Una de las leyendas vivientes más laureadas del ajedrez mexicano e internacional. Maestro Internacional FIDE y Entrenador Oficial FIDE (FIDE Trainer). Medalla de Oro en la Olimpiada Mundial de Novi Sad 1990, Campeón Panamericano Juvenil, múltiple Campeón Nacional Abierto y formador de decenas de maestros y medallistas mundiales infantiles y juveniles.',
     achievements: [
-      'Maestro Internacional de la FIDE con ID oficial 5100046.',
-      '4 veces integrante del Equipo Olímpico Mexicano en Olimpiadas Mundiales de Ajedrez.',
-      'Campeón Nacional Absoluto de México.',
-      'Vencedor ante múltiples Grandes Maestros internacionales de élite.',
-      'Más de 3 décadas dedicado a la alta pedagogía y entrenamiento de alto rendimiento.'
+      'Maestro Internacional FIDE y Entrenador Certificado FIDE (FIDE Trainer).',
+      'Rating FIDE más alto alcanzado: 2485 puntos Elo.',
+      'Medalla de Oro en la Olimpiada Mundial de Ajedrez celebrada en Novi Sad 1990.',
+      '4 veces representante olímpico de México: Salónica 1988, Novi Sad 1990, Manila 1992 y Elista 1998.',
+      'Campeón Panamericano Juvenil en Asunción, Paraguay (1987).',
+      'Medalla de Plata individual en el Campeonato Mundial Sub-26 en Curitiba, Brasil (1993).',
+      'Campeón Nacional Abierto de México (1994, 1995, 2005 Copa Cinco de Mayo).',
+      'Bicampeón del Torneo Internacional "Carlos Torre Repetto" (1987, 1996).',
+      'Bicampeón del Torneo US Masters Senior en Charlotte, Estados Unidos (2021, 2022).',
+      'Entrenador de Matías Martínez Flores (3er Lugar en el Campeonato Mundial Escolar Sub-12 Panamá 2022).',
+      'Entrenador de las Selecciones de Chihuahua (múltiple campeón nacional), Tabasco (Campeón Nacional 2005) y de la UNAM.'
     ],
     specialties: [
-      'Cálculo de variantes y toma de decisiones tácticas.',
-      'Laboratorio de aperturas con enfoque magistral.',
-      'Estrategia posicional soviética y técnica de finales.',
-      'Psicología competitiva y preparación para torneos de titulación.'
+      'Cálculo profundo de variantes y visualización forzada.',
+      'Construcción y depuración de repertorio magistral con blancas y negras.',
+      'Estrategia de la Escuela Soviética y técnica posicional depurada.',
+      'Técnica de finales prácticos y teóricos.',
+      'Psicología competitiva y preparación específica frente a rivales de élite.'
     ],
     teachingStyle:
-      'Riguroso, analítico, profundamente didáctico y motivador. Adapta los principios clásicos de la Escuela Soviética a las exigencias modernas del ajedrez contemporáneo.',
+      'Metódico, riguroso, de alta exigencia analítica pero sumamente cercano y motivador. Aplica la disciplina clásica de la Escuela Soviética complementada con herramientas de análisis moderno y bases de datos.',
     programsTaught: [
       'Entrenamiento Personalizado 1 a 1',
       'Grupo de Alto Rendimiento & Maestría',

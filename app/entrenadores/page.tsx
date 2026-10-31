@@ -159,7 +159,16 @@ export default function EntrenadoresPage() {
                     </div>
                   </div>
 
-                  <div className="pt-2">
+                  <div className="pt-2 flex flex-wrap items-center gap-4">
+                    {idx === 0 && (
+                      <Link
+                        href="/la-academia/director"
+                        className="btn-dorado text-xs uppercase tracking-wider font-extrabold py-2.5 px-5 inline-flex items-center gap-1.5 shadow"
+                      >
+                        <span>Ver Currículum Deportivo &amp; Docente Completo</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    )}
                     <Link
                       href="/clases-personalizadas"
                       className="text-xs text-[#C5A46D] hover:underline font-bold inline-flex items-center gap-1.5"

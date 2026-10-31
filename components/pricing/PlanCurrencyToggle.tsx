@@ -57,3 +57,4 @@ export function PlanCurrencyToggle({ className = '' }: PlanCurrencyToggleProps) 
     </div>
   );
 }
+

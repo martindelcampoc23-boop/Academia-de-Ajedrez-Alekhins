@@ -526,3 +526,4 @@ export function getStoreProductBySlug(slug: string): ProductItem | undefined {
 export function getFeaturedStoreProducts(limit = 4): ProductItem[] {
   return STORE_PRODUCTS.filter((p) => p.isAcademyRecommended).slice(0, limit);
 }
+

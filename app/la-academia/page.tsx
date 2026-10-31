@@ -108,11 +108,12 @@ export default function LaAcademiaPage() {
             </div>
 
             <div className="pt-2 flex flex-wrap gap-4">
-              <Link href="/programas" className="btn-dorado text-xs uppercase tracking-wider font-bold">
-                Explorar Programas Académicos
+              <Link href="/la-academia/director" className="btn-dorado text-xs uppercase tracking-wider font-extrabold flex items-center gap-1.5 shadow">
+                <span>Ver Currículum Completo del Maestro</span>
+                <ArrowRight className="w-4 h-4" />
               </Link>
               <Link href="/clases-personalizadas" className="btn-navy-outline text-xs uppercase tracking-wider font-bold">
-                Clases Personalizadas
+                Clases Personalizadas 1 a 1
               </Link>
             </div>
           </div>
