@@ -516,6 +516,465 @@ export const STORE_PRODUCTS: ProductItem[] = [
       { id: 'v-bag-blk', sku: 'ACC-BAG-001-BLK', name: 'Negro Azabache con Bordado Dorado', price: 550, stock: 35 }
     ],
     reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+
+  // --- PRODUCTOS ADICIONALES AMPLIADOS ---
+
+  // Sets de Ajedrez Adicionales
+  {
+    id: 'prod-set-palo-rosa',
+    name: 'Set de Ajedrez de Lujo Staunton Madera Palo de Rosa 3.75"',
+    slug: 'set-ajedrez-lujo-staunton-madera-palo-rosa',
+    sku: 'SET-ROSE-LUX',
+    price: 3890,
+    compareAtPrice: 4500,
+    isAcademyRecommended: true,
+    masterComment: 'Piezas talladas a mano con maderas nobles seleccionadas. El set definitivo para el coleccionista y el estudio en casa.',
+    category: { id: 'cat-sets', name: 'Sets de Ajedrez', slug: 'sets' },
+    images: [
+      { url: '/tablero-de-ajedrez-con-logotipo-de-la-uscf-escaques-de-57-cms (1).jpg', alt: 'Set de Lujo Palo de Rosa' },
+      { url: '/plasticpieces_blackwhite_2.jpg', alt: 'Detalle de piezas talladas' }
+    ],
+    shortDescription: 'Piezas artesanales de palo de rosa y boj natural de 3.75" plomadas con tablero de madera noble.',
+    description: 'Juego de colección para los amantes de la ebanistería ajedrecística. Cada pieza ha sido pulida a mano con paño verde esmeralda y contrapeso de latón para un deslizamiento silencioso y distinguido.',
+    variants: [
+      { id: 'v-rose-std', sku: 'SET-ROSE-LUX-375', name: 'Madera Palo de Rosa y Boj 3.75"', price: 3890, stock: 6 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-set-silicona-escolar',
+    name: 'Set Escolar de Ajedrez con Tablero de Silicona Ultra Flexible',
+    slug: 'set-escolar-ajedrez-tablero-silicona-flexible',
+    sku: 'SET-SIL-ESC',
+    price: 390,
+    compareAtPrice: 480,
+    isAcademyRecommended: true,
+    masterComment: 'El tablero de silicona puede doblarse, estrujarse o lavarse con agua y jabón; jamás pierde su forma.',
+    category: { id: 'cat-sets', name: 'Sets de Ajedrez', slug: 'sets' },
+    images: [
+      { url: '/tablero-de-ajedrez-con-logotipo-de-la-uscf-escaques-de-57-cms.jpg', alt: 'Set de Silicona Escolar' }
+    ],
+    shortDescription: 'Set irrompible para niños y escuelas con tablero de silicona lavable y piezas plásticas sólidas.',
+    description: 'Ideal para los pequeños que inician su aventura en el ajedrez. No se resbala, es resistente a líquidos y alimentos, y las piezas soportan el uso rudo diario.',
+    variants: [
+      { id: 'v-sil-grn', sku: 'SET-SIL-ESC-GRN', name: 'Silicona Verde y Marfil', price: 390, stock: 40, color: 'Verde' },
+      { id: 'v-sil-blu', sku: 'SET-SIL-ESC-BLU', name: 'Silicona Azul y Marfil', price: 390, stock: 30, color: 'Azul' }
+    ],
+    reviews: [{ rating: 5 }, { rating: 4 }]
+  },
+  {
+    id: 'prod-set-aleman-knight',
+    name: 'Set de Ajedrez Clásico Alemán Knight Staunton #5 en Madera de Boj',
+    slug: 'set-ajedrez-aleman-knight-staunton-5-madera-boj',
+    sku: 'SET-GER-KNI',
+    price: 2190,
+    compareAtPrice: 2600,
+    isAcademyRecommended: true,
+    masterComment: 'El diseño German Knight es el caballo más representativo de los torneos de la Copa del Mundo en Europa.',
+    category: { id: 'cat-sets', name: 'Sets de Ajedrez', slug: 'sets' },
+    images: [
+      { url: '/tablero-de-ajedrez-con-logotipo-de-la-uscf-escaques-de-57-cms (1).jpg', alt: 'Set German Knight' }
+    ],
+    shortDescription: 'Caballos tallados al estilo clásico alemán de una sola pieza en boj alemán y nogal.',
+    description: 'La silueta del caballo German Knight es legendaria por su durabilidad en blitz y su estética limpia. Altura de rey 8.9 cm con base plomada reforzada.',
+    variants: [
+      { id: 'v-ger-std', sku: 'SET-GER-KNI-STD', name: 'Boj Natural y Ébano Sintético #5', price: 2190, stock: 14 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+
+  // Relojes Adicionales
+  {
+    id: 'prod-dgt-3000-rojo',
+    name: 'Reloj Digital DGT 3000 Edición Carmesí / Rojo Oficial',
+    slug: 'reloj-digital-dgt-3000-edicion-carmesi-rojo',
+    sku: 'REL-DGT-3000-RED',
+    price: 3100,
+    compareAtPrice: 3450,
+    isAcademyRecommended: true,
+    masterComment: 'Edición especial de alto contraste para torneos de gala y retransmisiones en vivo.',
+    category: { id: 'cat-relojes', name: 'Relojes', slug: 'relojes' },
+    images: [
+      { url: '/D_NQ_NP_682553-CBT69004443717_042023-O-reloj-de-ajedrez-dgt-3000-temporizador-color-rojo.webp', alt: 'Reloj DGT 3000 Rojo' }
+    ],
+    shortDescription: 'Acabado en rojo deportivo con todas las funciones del DGT 3000 oficial FIDE.',
+    description: 'El reloj con mayor presencia visual en el tablero. Permite conectar con e-Boards de retransmisión oficial y visualizar segundos desde la primera jugada.',
+    variants: [
+      { id: 'v-dgt-red', sku: 'REL-DGT-3000-RED-STD', name: 'Carcasa Roja Brillante FIDE', price: 3100, stock: 9 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-dgt-1500',
+    name: 'Reloj Digital DGT 1500 Grey-Blue para Club y Entrenamiento',
+    slug: 'reloj-digital-dgt-1500-grey-blue-club',
+    sku: 'REL-DGT-1500',
+    price: 1490,
+    compareAtPrice: 1750,
+    isAcademyRecommended: true,
+    masterComment: 'Sencillo de programar, display espacioso y excelente durabilidad para clubes escolares.',
+    category: { id: 'cat-relojes', name: 'Relojes', slug: 'relojes' },
+    images: [
+      { url: '/dgt1500-grey-blue-chess-clock-home.avif', alt: 'Reloj DGT 1500 Grey-Blue' }
+    ],
+    shortDescription: 'Reloj digital accesible con incrementos oficiales de torneo FIDE.',
+    description: 'La opción predilecta para jugadores que buscan la precisión DGT a un precio más contenido. Permite configurar ritmos con incremento por jugada y periodos múltiples.',
+    variants: [
+      { id: 'v-dgt-1500', sku: 'REL-DGT-1500-BLU', name: 'Gris y Azul Marino', price: 1490, stock: 22 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 4 }]
+  },
+
+  // Tableros Adicionales
+  {
+    id: 'prod-tablero-dgt-centaur',
+    name: 'Tablero Electrónico DGT Centaur Autónomo con IA Adaptativa',
+    slug: 'tablero-electronico-dgt-centaur-ia-adaptativa',
+    sku: 'TAB-DGT-CENTAUR',
+    price: 9800,
+    compareAtPrice: 10900,
+    isAcademyRecommended: true,
+    masterComment: 'El compañero de entrenamiento definitivo. Se adapta automáticamente a tu nivel de juego gracias a su inteligencia artificial integrada sin pantallas.',
+    category: { id: 'cat-tableros', name: 'Tableros', slug: 'tableros' },
+    images: [
+      { url: '/DGT-Centaur-1.jpg', alt: 'DGT Centaur Tablero Autónomo' },
+      { url: '/DGT-Centaur-Bag-1.jpg', alt: 'Bolso Oficial DGT Centaur' }
+    ],
+    shortDescription: 'Tablero e-board con IA adaptativa e iluminación de jugadas por led en los escaques.',
+    description: 'Sin cables a la computadora ni necesidad de mirar una pantalla. Sus sensores ópticos y luces LED circulares en cada escaque indican las jugadas de la máquina con total fluidez.',
+    variants: [
+      { id: 'v-centaur-std', sku: 'TAB-DGT-CENTAUR-SYS', name: 'DGT Centaur + Maletín Oficial', price: 9800, stock: 4 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-tablero-caoba',
+    name: 'Tablero de Torneo de Caoba y Sicomoro Artesanal 55mm',
+    slug: 'tablero-torneo-caoba-sicomoro-artesanal-55mm',
+    sku: 'TAB-CAO-055',
+    price: 2650,
+    compareAtPrice: 3100,
+    isAcademyRecommended: true,
+    masterComment: 'Contrastes visuales cálidos que reducen la fatiga ocular durante partidas prolongadas de torneo.',
+    category: { id: 'cat-tableros', name: 'Tableros', slug: 'tableros' },
+    images: [
+      { url: '/tablero-de-ajedrez-con-logotipo-de-la-uscf-escaques-de-57-cms (1).jpg', alt: 'Tablero de Caoba y Sicomoro' }
+    ],
+    shortDescription: 'Tablero macizo de maderas finas con escaques de 55 mm homologados para piezas Staunton #6.',
+    description: 'Acabado poliuretano mate antirreflejos de cinco capas con bordes biselados. Fabricación artesanal de alta durabilidad para salas de estudio y bibliotecas personales.',
+    variants: [
+      { id: 'v-cao-std', sku: 'TAB-CAO-055-STD', name: 'Escaques de 55 mm para Torneo', price: 2650, stock: 8 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+
+  // Piezas Adicionales
+  {
+    id: 'prod-piezas-cuatro-reinas',
+    name: 'Juego de Reinas de Repuesto para Coronación (2 Blancas, 2 Negras)',
+    slug: 'juego-reinas-repuesto-coronacion-staunton-6',
+    sku: 'PIE-QUE-SET4',
+    price: 180,
+    compareAtPrice: 240,
+    isAcademyRecommended: true,
+    masterComment: 'Indispensables para coronar en finales complejos de peones sin tener que voltear una torre al revés.',
+    category: { id: 'cat-piezas', name: 'Piezas', slug: 'piezas' },
+    images: [
+      { url: '/juego-de-reinas.jpg', alt: 'Juego de 4 Reinas Staunton para Coronación' }
+    ],
+    shortDescription: '4 damas extra reglamentarias Staunton #6 pesadas con base de paño.',
+    description: 'Juego reglamentario para complementar sets que no cuentan con doble dama. Compatibles en proporción y peso con cualquier juego Staunton #5 y #6.',
+    variants: [
+      { id: 'v-que-set4', sku: 'PIE-QUE-SET4-STD', name: '4 Damas Extra (2 Blancas + 2 Negras)', price: 180, stock: 50 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-piezas-escolares',
+    name: 'Piezas Staunton Plástico Reglamentario Peso Simple Escolar',
+    slug: 'piezas-staunton-plastico-peso-simple-escolar',
+    sku: 'PIE-ESC-SMP',
+    price: 260,
+    compareAtPrice: 320,
+    isAcademyRecommended: false,
+    masterComment: 'Económicas y ultrarresistentes para aulas escolares multitudinarias y talleres comunitarios.',
+    category: { id: 'cat-piezas', name: 'Piezas', slug: 'piezas' },
+    images: [
+      { url: '/plasticpieces_blackwhite_2.jpg', alt: 'Piezas Escolares Peso Simple' }
+    ],
+    shortDescription: 'Juego de 32 piezas Staunton de polietileno irrompible con altura de rey 9.5 cm.',
+    description: 'La opción más accesible para dotar tableros en escuelas y clubes comunitarios. Lavables, sin aristas cortantes y con fieltro en la base.',
+    variants: [
+      { id: 'v-esc-smp', sku: 'PIE-ESC-SMP-STD', name: 'Juego 32 Piezas Escolar', price: 260, stock: 75 }
+    ],
+    reviews: [{ rating: 4 }, { rating: 5 }]
+  },
+
+  // Libros y Literatura Adicionales
+  {
+    id: 'prod-libro-momento-critico',
+    name: 'Libro: El Momento Crítico - Mark Dvoretsky',
+    slug: 'libro-el-momento-critico-mark-dvoretsky',
+    sku: 'LIB-DVO-002',
+    price: 780,
+    compareAtPrice: 880,
+    isAcademyRecommended: true,
+    masterComment: 'Dvoretsky enseña cómo detectar el instante exacto en que una jugada decide el desenlace de la partida.',
+    category: { id: 'cat-libros', name: 'Libros', slug: 'libros' },
+    images: [
+      { url: '/Libros/715-EL-MOMENTO-CRITICO.jpg', alt: 'El Momento Crítico Mark Dvoretsky' }
+    ],
+    shortDescription: 'El legendario entrenador ruso desglosa la toma de decisiones y el cálculo en momentos cruciales.',
+    description: 'Obra cumbre de la pedagogía de élite. Explica cómo identificar jugadas candidatas clave, manejar el tiempo en apuros de reloj y mantener la sangre fría en posiciones de doble filo.',
+    variants: [
+      { id: 'v-dvo-std', sku: 'LIB-DVO-002-ESP', name: 'Edición en Español', price: 780, stock: 16 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-libro-piezas-atacan',
+    name: 'Libro: Todas las Piezas Atacan - GM Lev Alburt',
+    slug: 'libro-todas-las-piezas-atacan-lev-alburt',
+    sku: 'LIB-ALB-001',
+    price: 720,
+    compareAtPrice: 800,
+    isAcademyRecommended: true,
+    masterComment: 'Excelente tratado sobre cómo coordinar el ataque coordinado contra el enroque enemigo.',
+    category: { id: 'cat-libros', name: 'Libros', slug: 'libros' },
+    images: [
+      { url: '/Libros/719-TODAS-LAS-PIEZAS-ATACAN-Vol.-2.jpg', alt: 'Todas las piezas atacan Lev Alburt' }
+    ],
+    shortDescription: 'Modelos de ataque directo, sacrificios temáticos y aperturas agresivas para ganar rápido.',
+    description: 'El tricampeón de los Estados Unidos Lev Alburt enseña el arte de la iniciativa agresiva y la coordinación de piezas para lanzar ofensivas imparables.',
+    variants: [
+      { id: 'v-alb-std', sku: 'LIB-ALB-001-ESP', name: 'Volumen 2 Didáctico', price: 720, stock: 18 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-libro-viaje-reino',
+    name: 'Libro: Viaje al Reino del Ajedrez - Yuri Averbaj y M. Beilin',
+    slug: 'libro-viaje-al-reino-del-ajedrez-averbaj',
+    sku: 'LIB-AVE-001',
+    price: 580,
+    compareAtPrice: 650,
+    isAcademyRecommended: true,
+    masterComment: 'El libro clásico con el que aprendieron Kasparov y Karpov. Narrativa literaria y rigor didáctico.',
+    category: { id: 'cat-libros', name: 'Libros', slug: 'libros' },
+    images: [
+      { url: '/Libros/1198-Viaje-al-reino-del-Ajedrez.jpg', alt: 'Viaje al reino del ajedrez Averbaj' }
+    ],
+    shortDescription: 'El curso clásico de la Escuela Rusa para adentrarse en la belleza del pensamiento ajedrecístico.',
+    description: 'Combina historias fascinantes, anécdotas de campeones mundiales y explicaciones progresivas desde las reglas básicas hasta los primeros sacrificios brillantes.',
+    variants: [
+      { id: 'v-ave-std', sku: 'LIB-AVE-001-ESP', name: 'Edición Ilustrada en Español', price: 580, stock: 25 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-libro-modelos-finales',
+    name: 'Libro: 112 Ejercicios de Modelos de Finales',
+    slug: 'libro-112-ejercicios-modelos-de-finales',
+    sku: 'LIB-FIN-112',
+    price: 520,
+    compareAtPrice: 600,
+    isAcademyRecommended: true,
+    masterComment: 'Finales típicos de torres y peones con soluciones comentadas para fijar conceptos clave.',
+    category: { id: 'cat-libros', name: 'Libros', slug: 'libros' },
+    images: [
+      { url: '/Libros/112-ejercicios-de-modelos-de-finales.jpg', alt: '112 Ejercicios de Modelos de Finales' }
+    ],
+    shortDescription: 'Cuaderno práctico de ejercicios de finales esenciales para jugadores de 1400 a 2000 Elo.',
+    description: 'Un compendio selecto con posiciones de finales de peones, torres y piezas menores que todo jugador de torneo debe conocer de memoria para no dejar escapar medio punto.',
+    variants: [
+      { id: 'v-fin-std', sku: 'LIB-FIN-112-ESP', name: 'Edición en Español', price: 520, stock: 20 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 4 }]
+  },
+  {
+    id: 'prod-libro-decisiones-tecnicas',
+    name: 'Libro: La Toma de Decisiones Técnicas en Ajedrez - Boris Gelfand',
+    slug: 'libro-toma-de-decisiones-tecnicas-boris-gelfand',
+    sku: 'LIB-GEL-001',
+    price: 850,
+    compareAtPrice: 950,
+    isAcademyRecommended: true,
+    masterComment: 'El subcampeón mundial Boris Gelfand revela el proceso de cálculo de la élite en posiciones cerradas.',
+    category: { id: 'cat-libros', name: 'Libros', slug: 'libros' },
+    images: [
+      { url: '/1636-LA-TOMA-DE-DECISIONES-TECNICAS-EN-AJEDREZ.png', alt: 'La Toma de Decisiones Técnicas Boris Gelfand' }
+    ],
+    shortDescription: 'Tratado de estrategia posicional avanzada con prólogo de Jacob Aagaard.',
+    description: 'Gelfand comparte su experiencia personal en matches por la corona mundial contra Anand y Carlsen. Profundiza en el juego posicional, estructura de peones y cómo explotar microventajas.',
+    variants: [
+      { id: 'v-gel-std', sku: 'LIB-GEL-001-ESP', name: 'Edición Oficial Tapa Blanda', price: 850, stock: 12 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-libro-zlotnik',
+    name: 'Libro: Manual de Ajedrez Posicional - Boris Zlotnik',
+    slug: 'libro-manual-de-ajedrez-posicional-zlotnik',
+    sku: 'LIB-ZLO-001',
+    price: 790,
+    compareAtPrice: 890,
+    isAcademyRecommended: true,
+    masterComment: 'El manual con el que se formaron Fabiano Caruana y cientos de titulados internacionales.',
+    category: { id: 'cat-libros', name: 'Libros', slug: 'libros' },
+    images: [
+      { url: '/Libros/zlotnik_web-3_U6YKWrD.jpg', alt: 'Manual de Ajedrez Posicional Zlotnik' }
+    ],
+    shortDescription: 'Curso sistemático sobre cómo transformar una posición pasiva en una victoria técnica.',
+    description: 'El célebre entrenador de la Escuela de Moscú Boris Zlotnik estructuró este método pedagógico para comprender las dinámicas de casillas débiles, iniciativa y ruptura central.',
+    variants: [
+      { id: 'v-zlo-std', sku: 'LIB-ZLO-001-ESP', name: 'Edición Completa en Español', price: 790, stock: 14 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-libro-rival-al-frente',
+    name: 'Libro: Nunca olvides que tienes un rival al frente - GM Mark Taimanov',
+    slug: 'libro-nunca-olvides-que-tienes-un-rival-al-frente-taimanov',
+    sku: 'LIB-TAI-001',
+    price: 680,
+    compareAtPrice: 760,
+    isAcademyRecommended: true,
+    masterComment: 'Psicología en el tablero y profilaxis activa de la mano de uno de los 10 mejores jugadores del siglo XX.',
+    category: { id: 'cat-libros', name: 'Libros', slug: 'libros' },
+    images: [
+      { url: '/Nuncaolvidesquetienesunrivalalfrente.webp', alt: 'Nunca olvides que tienes un rival al frente' }
+    ],
+    shortDescription: 'Lecciones magistrales sobre profilaxis, psicología del adversario y resiliencia en la partida.',
+    description: 'El legendario Gran Maestro Mark Taimanov expone las trampas de jugar en solitario y cómo anticiparse a los recursos ocultos del contrincante en partidas tensas.',
+    variants: [
+      { id: 'v-tai-std', sku: 'LIB-TAI-001-ESP', name: 'Edición en Español', price: 680, stock: 17 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-libro-lecciones-medio-juego',
+    name: 'Libro: Lecciones Magistrales de Medio Juego: Teoría y Práctica',
+    slug: 'libro-lecciones-magistrales-de-medio-juego-teoria-practica',
+    sku: 'LIB-MED-003',
+    price: 710,
+    compareAtPrice: 790,
+    isAcademyRecommended: true,
+    masterComment: 'Planes estratégicos de ataque, peón aislado y estructuras Carlsbad explicados minuciosamente.',
+    category: { id: 'cat-libros', name: 'Libros', slug: 'libros' },
+    images: [
+      { url: '/Libros/1730-Lecciones-magistrales-de-medio-juego.-Teoria-y-Practica.jpg', alt: 'Lecciones Magistrales de Medio Juego' }
+    ],
+    shortDescription: 'Un puente sólido entre el fin de la apertura y el inicio del remate técnico.',
+    description: 'Analiza más de 100 partidas modelo comentadas en torno a los temas medulares del medio juego moderno: la lucha por la columna abierta, el sacrificio posicional de calidad y la ventaja de espacio.',
+    variants: [
+      { id: 'v-med-std', sku: 'LIB-MED-003-ESP', name: 'Edición Ilustrada', price: 710, stock: 15 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 4 }]
+  },
+
+  // Clubes & Escuelas Adicionales
+  {
+    id: 'prod-pack-aula-20',
+    name: 'Paquete Magistral de Aula (20 Sets de Ajedrez + Tablero Mural)',
+    slug: 'paquete-magistral-aula-20-sets-mural',
+    sku: 'PAK-AUL-020',
+    price: 16500,
+    compareAtPrice: 19800,
+    isAcademyRecommended: true,
+    masterComment: 'La dotación definitiva para escuelas que buscan equipar un salón completo para 40 alumnos.',
+    category: { id: 'cat-clubes', name: 'Clubes & Escuelas', slug: 'clubes-y-escuelas' },
+    images: [
+      { url: '/ajedrez-club-special-ligero-con-tablero-de-vinil-y-bolso.jpg', alt: 'Paquete de Aula 20 Sets' }
+    ],
+    shortDescription: '20 sets de torneo completos + 1 tablero mural demostrativo gigante de 100x100 cm magnético.',
+    description: 'Paquete diseñado para centros educativos, universidades y casas de la cultura. Incluye 20 tableros de vinil, 20 juegos de piezas plásticas pesadas Staunton #6, 20 bolsos y 1 tablero mural con piezas magnéticas para el profesor.',
+    variants: [
+      { id: 'v-aul-20', sku: 'PAK-AUL-020-STD', name: 'Paquete 20 Sets + Mural Magnético', price: 16500, stock: 6 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-pack-torneo-club',
+    name: 'Paquete Torneo Club (10 Relojes Digitales DGT + 10 Sets Triples)',
+    slug: 'paquete-torneo-club-10-relojes-dgt-10-sets-triples',
+    sku: 'PAK-TOR-CLUB',
+    price: 25900,
+    compareAtPrice: 29500,
+    isAcademyRecommended: true,
+    masterComment: 'Equipamiento de grado olímpico para organizar torneos de norma y festivales homologados FIDE.',
+    category: { id: 'cat-clubes', name: 'Clubes & Escuelas', slug: 'clubes-y-escuelas' },
+    images: [
+      { url: '/10104-DGT-Easy-Plus-with-Gift-Box-2014-fill-400x284-1-300x284.jpg', alt: 'Paquete 10 Relojes DGT y 10 Sets' }
+    ],
+    shortDescription: '10 relojes digitales DGT oficiales + 10 sets Staunton #6 triples pesados con doble reina.',
+    description: 'El combo indispensable para clubes que organizan circuitos oficiales con rating FIDE. Los relojes cuentan con todos los ritmos con incremento Fischer y los sets disponen de doble dama reglamentaria.',
+    variants: [
+      { id: 'v-tor-club', sku: 'PAK-TOR-CLUB-STD', name: 'Combo 10 Relojes DGT + 10 Sets', price: 25900, stock: 5 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+
+  // Accesorios Adicionales
+  {
+    id: 'prod-funda-reloj-dgt',
+    name: 'Funda Acolchada de Protección para Reloj Digital DGT',
+    slug: 'funda-acolchada-proteccion-reloj-digital-dgt',
+    sku: 'ACC-CAS-DGT',
+    price: 320,
+    compareAtPrice: 390,
+    isAcademyRecommended: true,
+    masterComment: 'Evita rayaduras en la pantalla LCD del reloj durante el transporte en la mochila.',
+    category: { id: 'cat-accesorios', name: 'Accesorios', slug: 'accesorios' },
+    images: [
+      { url: '/2025sn-bag-01.webp', alt: 'Funda Acolchada para Reloj DGT' }
+    ],
+    shortDescription: 'Funda de neopreno con cierre reforzado diseñada a medida para relojes DGT 2010 y DGT 3000.',
+    description: 'Protege tu reloj de torneo de golpes, caídas accidentales y polvo. Interior afelpado suave y exterior repelente a salpicaduras.',
+    variants: [
+      { id: 'v-cas-dgt', sku: 'ACC-CAS-DGT-STD', name: 'Funda Neopreno Negro Alekhins', price: 320, stock: 40 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-libreta-anotacion',
+    name: 'Libreta Oficial de Planillas de Anotación FIDE (100 Partidas)',
+    slug: 'libreta-oficial-planillas-anotacion-fide-100-partidas',
+    sku: 'ACC-NOT-100',
+    price: 140,
+    compareAtPrice: 180,
+    isAcademyRecommended: true,
+    masterComment: 'Papel autocopiante de calidad con espacio para hasta 80 jugadas y diagrama para posición final.',
+    category: { id: 'cat-accesorios', name: 'Accesorios', slug: 'accesorios' },
+    images: [
+      { url: '/2025sn-bag-01.webp', alt: 'Libreta de Planillas de Anotación FIDE' }
+    ],
+    shortDescription: 'Libreta espiral con 100 planillas reglamentarias con membrete de Academia Alekhins.',
+    description: 'Diseñada según las normas de arbitraje de la FIDE. Cada hoja cuenta con casillas claras para número de ronda, mesa, contendientes, Elo, resultado y firmas de ambos jugadores.',
+    variants: [
+      { id: 'v-not-100', sku: 'ACC-NOT-100-STD', name: 'Libreta Espiral 100 Partidas', price: 140, stock: 80 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
+  },
+  {
+    id: 'prod-pack-5-libretas',
+    name: 'Paquete de 5 Libretas de Anotación de Torneo Alekhins',
+    slug: 'paquete-5-libretas-anotacion-torneo-alekhins',
+    sku: 'ACC-NOT-PAK5',
+    price: 590,
+    compareAtPrice: 700,
+    isAcademyRecommended: true,
+    masterComment: 'El pack más conveniente para toda la temporada de torneos del año.',
+    category: { id: 'cat-accesorios', name: 'Accesorios', slug: 'accesorios' },
+    images: [
+      { url: '/2025sn-bag-01.webp', alt: 'Pack 5 Libretas de Anotación' }
+    ],
+    shortDescription: '5 libretas de 100 partidas (500 partidas en total) con descuento especial.',
+    description: 'Equípate para todo el calendario competitivo con el paquete de 5 libretas oficiales de anotación. Formato compacto de bolsillo fácil de llevar al salón de juego.',
+    variants: [
+      { id: 'v-not-pak5', sku: 'ACC-NOT-PAK5-STD', name: 'Pack de 5 Libretas', price: 590, stock: 25 }
+    ],
+    reviews: [{ rating: 5 }, { rating: 5 }]
   }
 ];
 

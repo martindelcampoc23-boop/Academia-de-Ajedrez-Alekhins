@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/db';
 import { ACADEMIC_PROGRAMS, COACHES } from '@/lib/academicData';
+import { STORE_PRODUCTS } from '@/lib/storeData';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.ajedrezprofesional.com';
@@ -23,6 +24,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     articles = articleList;
   } catch (error) {
     console.warn('⚠️ [Sitemap] Could not query database during sitemap build:', error);
+  }
+
+  if (products.length === 0) {
+    products = STORE_PRODUCTS.map((p) => ({ slug: p.slug, updatedAt: new Date() }));
   }
 
   const productUrls: MetadataRoute.Sitemap = products.map((p) => ({
