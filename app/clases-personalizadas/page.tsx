@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { submitLeadAction } from '@/lib/actions';
 import { useLocaleCurrency } from '@/components/providers/LocaleCurrencyProvider';
+import { PlanCurrencyToggle } from '@/components/pricing/PlanCurrencyToggle';
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '529991020078';
 
@@ -173,6 +174,8 @@ Moneda del solicitante: ${currency}
 
           {/* Opciones de Paquetes */}
           <div className="lg:col-span-7 space-y-6">
+            <PlanCurrencyToggle />
+
             <span className="text-xs font-bold uppercase tracking-wider text-[#C5A46D] block">
               Inversión & Paquetes Disponibles
             </span>
@@ -199,7 +202,7 @@ Moneda del solicitante: ${currency}
                   {formatPrice(5000)}
                 </span>
                 <span className="text-xs text-[#9CA3AF]">
-                  total ($500 MXN / sesión)
+                  total ({currency === 'USD' ? '$28 USD' : '$500 MXN'} / sesión)
                 </span>
               </div>
 

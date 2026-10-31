@@ -7,6 +7,8 @@ import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import { FloatingBanner } from '@/components/ui/FloatingBanner';
 import { WishlistButton } from '@/components/ui/WishlistButton';
 import { AulaVirtualSection } from '@/components/home/AulaVirtualSection';
+import { ModalidadesSection } from '@/components/home/ModalidadesSection';
+import { getFeaturedStoreProducts } from '@/lib/storeData';
 import {
   Crown,
   ChevronRight,
@@ -55,36 +57,7 @@ export default async function HomePage() {
 
   // Fallback de productos si la base de datos está offline
   if (!featuredProducts || featuredProducts.length === 0) {
-    featuredProducts = [
-      {
-        id: 'p1',
-        name: 'Set de Torneo Profesional Alekhins Staunton #6',
-        slug: 'set-torneo-profesional-alekhins-staunton-6',
-        price: 899,
-        images: [{ url: '/tablero-de-ajedrez-con-logotipo-de-la-uscf-escaques-de-57-cms.jpg' }],
-      },
-      {
-        id: 'p2',
-        name: 'Reloj Digital de Ajedrez DGT 2010 Oficial FIDE',
-        slug: 'reloj-digital-ajedrez-dgt-2010-oficial-fide',
-        price: 1850,
-        images: [{ url: '/10104-DGT-Easy-Plus-with-Gift-Box-2014-fill-400x284-1-300x284.jpg' }],
-      },
-      {
-        id: 'p3',
-        name: 'Libro: El Método Yusupov 1 - Fundamentos',
-        slug: 'libro-el-metodo-yusupov-1-fundamentos',
-        price: 680,
-        images: [{ url: '/-El-M-todo-Yusupov-Fundamentos-4-Revisi-n-.jpg' }],
-      },
-      {
-        id: 'p4',
-        name: 'Paquete Escolar / Club (10 Sets de Ajedrez Completos)',
-        slug: 'paquete-escolar-club-10-sets',
-        price: 7990,
-        images: [{ url: '/ajedrez-club-special-ligero-con-tablero-de-vinil-y-bolso.jpg' }],
-      },
-    ];
+    featuredProducts = getFeaturedStoreProducts(4);
   }
 
   return (
@@ -243,100 +216,9 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================================
-          3. PROGRAMAS ACADÉMICOS DESTACADOS
+          3. MODALIDADES FORMATIVAS CON SWITCH DE MONEDA (MXN / USD)
       ========================================================= */}
-      <section className="py-16 md:py-24 bg-[#172B46] border-b border-[#233F65]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#C5A46D] block">
-                Formación Continua
-              </span>
-              <h2 className="font-serif-editorial text-2xl sm:text-4xl font-bold text-white mt-1">
-                Programas Académicos Destacados
-              </h2>
-            </div>
-            <Link
-              href="/programas"
-              className="text-xs text-[#C5A46D] hover:underline font-bold inline-flex items-center gap-1.5 uppercase tracking-wider"
-            >
-              <span>Ver todos los programas</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Tarjeta 1: Iniciación */}
-            <div className="p-6 rounded-3xl bg-[#0F1D30] border border-[#233F65] flex flex-col justify-between space-y-6 hover:border-[#C5A46D] transition group">
-              <div className="space-y-4">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#C5A46D] block">
-                  Principiantes (0 - 1000 Elo)
-                </span>
-                <h3 className="font-serif-editorial text-xl font-bold text-white group-hover:text-[#C5A46D] transition">
-                  Grupo de Ajedrez Inicial
-                </h3>
-                <p className="text-xs text-[#C4CBD4] leading-relaxed">
-                  Aprende desde los fundamentos con metodología amena. Lunes, miércoles y jueves de 6:00 a 7:00 p. m.
-                </p>
-                <div className="border-t border-[#233F65] pt-3 flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-[#C5A46D]">$500 MXN</span>
-                  <span className="text-xs text-[#9CA3AF]">/ mes (12 hrs)</span>
-                </div>
-              </div>
-              <Link href="/programas#iniciacion" className="btn-dorado w-full text-center text-xs uppercase font-bold py-3 block">
-                Ver Detalles del Grupo
-              </Link>
-            </div>
-
-            {/* Tarjeta 2: Competitivo (Popular) */}
-            <div className="p-6 rounded-3xl bg-gradient-to-b from-[#1C3454] to-[#0F1D30] border-2 border-[#C5A46D] flex flex-col justify-between space-y-6 shadow-xl relative">
-              <div className="absolute top-4 right-4 bg-[#C5A46D] text-[#0F1D30] text-[10px] font-black uppercase tracking-wider px-3 py-0.5 rounded-full">
-                Más Elegido
-              </div>
-              <div className="space-y-4">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#C5A46D] block">
-                  Menos de 2000 Elo
-                </span>
-                <h3 className="font-serif-editorial text-xl font-bold text-white">
-                  Entrenamiento Competitivo
-                </h3>
-                <p className="text-xs text-[#C4CBD4] leading-relaxed">
-                  4 días de entrenamiento a la semana (Martes a viernes de 6:00 a 7:00 p. m.). Cálculo, aperturas y estrategia.
-                </p>
-                <div className="border-t border-[#233F65] pt-3 flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-[#C5A46D]">$699 MXN</span>
-                  <span className="text-xs text-[#9CA3AF]">/ mes (16 hrs)</span>
-                </div>
-              </div>
-              <Link href="/programas#desarrollo" className="btn-dorado w-full text-center text-xs uppercase font-bold py-3 block">
-                Inscribirme al Grupo
-              </Link>
-            </div>
-
-            {/* Tarjeta 3: Personalizado */}
-            <div className="p-6 rounded-3xl bg-[#0F1D30] border border-[#233F65] flex flex-col justify-between space-y-6 hover:border-[#C5A46D] transition group">
-              <div className="space-y-4">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#C5A46D] block">
-                  Atención Individual 1 a 1
-                </span>
-                <h3 className="font-serif-editorial text-xl font-bold text-white group-hover:text-[#C5A46D] transition">
-                  Entrenamiento Personalizado
-                </h3>
-                <p className="text-xs text-[#C4CBD4] leading-relaxed">
-                  Sesiones individuales de 60 minutos con el MI Roberto Martín del Campo. Agenda a convenir y análisis PGN.
-                </p>
-                <div className="border-t border-[#233F65] pt-3 flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-[#C5A46D]">$5,000 MXN</span>
-                  <span className="text-xs text-[#9CA3AF]">10 sesiones ($600 indiv.)</span>
-                </div>
-              </div>
-              <Link href="/clases-personalizadas" className="btn-navy-outline w-full text-center text-xs uppercase font-bold py-3 block">
-                Solicitar Entrenamiento
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ModalidadesSection />
 
       {/* =========================================================
           4. TIENDA DE MATERIAL ESPECIALIZADO DE AJEDREZ

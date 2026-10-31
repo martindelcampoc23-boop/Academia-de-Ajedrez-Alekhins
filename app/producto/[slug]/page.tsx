@@ -5,16 +5,27 @@ import { ProductDetailClient } from '@/components/product/ProductDetailClient';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { buildProductLD, buildBreadcrumbLD } from '@/lib/jsonld';
+import { getStoreProductBySlug } from '@/lib/storeData';
 
 export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   try {
     const slug = decodeURIComponent(params.slug);
-    const product = await prisma.product.findUnique({
-      where: { slug },
-      include: { images: true, category: true },
-    });
+    let product = null;
+    try {
+      product = await prisma.product.findUnique({
+        where: { slug },
+        include: { images: true, category: true },
+      });
+    } catch {}
+
+    if (!product) {
+      const fallback = getStoreProductBySlug(slug);
+      if (fallback) {
+        product = fallback as any;
+      }
+    }
 
     if (!product) return { title: 'Producto no encontrado | Tienda Alekhins' };
 
@@ -60,7 +71,14 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
       },
     });
   } catch (error) {
-    console.error('❌ [ProductDetailPage] Database error:', error);
+    console.warn('⚠️ [ProductDetailPage] Fallback a catálogo local:', error);
+  }
+
+  if (!product) {
+    const fallback = getStoreProductBySlug(slug);
+    if (fallback) {
+      product = fallback as any;
+    }
   }
 
   if (!product) {

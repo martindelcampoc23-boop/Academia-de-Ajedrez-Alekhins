@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { prisma } from '@/lib/db';
 import { Filter, ShoppingBag, Star, CheckCircle, Search, ShieldCheck } from 'lucide-react';
 import { WishlistButton } from '@/components/ui/WishlistButton';
+import { STORE_PRODUCTS, STORE_CATEGORIES } from '@/lib/storeData';
 
 export const metadata = {
   title: 'Tienda Oficial de Ajedrez | Academia Alekhins',
@@ -13,84 +14,7 @@ export const metadata = {
 
 export const revalidate = 60;
 
-const OFFICIAL_CATEGORIES = [
-  { slug: 'sets', name: 'Sets de Ajedrez' },
-  { slug: 'tableros', name: 'Tableros' },
-  { slug: 'piezas', name: 'Piezas' },
-  { slug: 'relojes', name: 'Relojes' },
-  { slug: 'libros', name: 'Libros' },
-  { slug: 'accesorios', name: 'Accesorios' },
-  { slug: 'clubes-y-escuelas', name: 'Equipamiento para Clubes & Escuelas' },
-];
-
-const FALLBACK_PRODUCTS = [
-  {
-    id: 'prod-set-6',
-    name: 'Set de Torneo Profesional Alekhins Staunton #6',
-    slug: 'set-torneo-profesional-alekhins-staunton-6',
-    price: 899,
-    compareAtPrice: 1199,
-    category: { name: 'Sets de Ajedrez', slug: 'sets' },
-    images: [{ url: '/tablero-de-ajedrez-con-logotipo-de-la-uscf-escaques-de-57-cms.jpg' }],
-    masterComment: 'El set indispensable para cualquier jugador de competición. Equilibrio y peso reglamentario.',
-    isAcademyRecommended: true,
-  },
-  {
-    id: 'prod-dgt-2010',
-    name: 'Reloj Digital de Ajedrez DGT 2010 Oficial FIDE',
-    slug: 'reloj-digital-ajedrez-dgt-2010-oficial-fide',
-    price: 1850,
-    compareAtPrice: 2100,
-    category: { name: 'Relojes', slug: 'relojes' },
-    images: [{ url: '/10104-DGT-Easy-Plus-with-Gift-Box-2014-fill-400x284-1-300x284.jpg' }],
-    masterComment: 'El reloj avalado por la FIDE para torneos de norma y campeonatos mundiales.',
-    isAcademyRecommended: true,
-  },
-  {
-    id: 'prod-yusupov',
-    name: 'Libro: El Método Yusupov 1 - Fundamentos',
-    slug: 'libro-el-metodo-yusupov-1-fundamentos',
-    price: 680,
-    compareAtPrice: 750,
-    category: { name: 'Libros', slug: 'libros' },
-    images: [{ url: '/-El-M-todo-Yusupov-Fundamentos-4-Revisi-n-.jpg' }],
-    masterComment: 'La mejor obra formativa para consolidar las bases tácticas y posicionales.',
-    isAcademyRecommended: true,
-  },
-  {
-    id: 'prod-pack-escolar',
-    name: 'Paquete Escolar / Club (10 Sets de Ajedrez Completos)',
-    slug: 'paquete-escolar-club-10-sets',
-    price: 7990,
-    compareAtPrice: 9500,
-    category: { name: 'Equipamiento para Clubes & Escuelas', slug: 'clubes-y-escuelas' },
-    images: [{ url: '/ajedrez-club-special-ligero-con-tablero-de-vinil-y-bolso.jpg' }],
-    masterComment: 'Equipamiento duradero para 20 jugadores en colegios y clubes de entrenamiento.',
-    isAcademyRecommended: true,
-  },
-  {
-    id: 'prod-piezas-madera',
-    name: 'Piezas de Ajedrez de Madera Staunton Clásicas',
-    slug: 'piezas-ajedrez-madera-staunton-clasicas',
-    price: 1450,
-    compareAtPrice: 1750,
-    category: { name: 'Piezas', slug: 'piezas' },
-    images: [{ url: '/plasticpieces_blackwhite_2.jpg' }],
-    masterComment: 'Elegancia y textura artesanal con paño de fieltro en la base.',
-    isAcademyRecommended: false,
-  },
-  {
-    id: 'prod-tablero-madera',
-    name: 'Tablero de Nogal y Arce Escaques 50mm',
-    slug: 'tablero-nogal-arce-escaques-50mm',
-    price: 2200,
-    compareAtPrice: 2600,
-    category: { name: 'Tableros', slug: 'tableros' },
-    images: [{ url: '/tablero-de-ajedrez-con-logotipo-de-la-uscf-escaques-de-57-cms (1).jpg' }],
-    masterComment: 'Madera de grano fino pulida para estudio en casa y partidas de gala.',
-    isAcademyRecommended: true,
-  },
-];
+const OFFICIAL_CATEGORIES = STORE_CATEGORIES.filter((c) => c.slug !== 'todos');
 
 export default async function StorePage({
   searchParams,
@@ -132,13 +56,27 @@ export default async function StorePage({
     console.warn('⚠️ [StorePage] Usando catálogo de respaldo para la tienda:', error);
   }
 
-  // Fallback si DB no retorna productos
+  // Fallback con catálogo completo de la tienda (20+ productos)
   if (!products || products.length === 0) {
-    products = FALLBACK_PRODUCTS.filter((p) => {
-      if (selectedCategory && p.category.slug !== selectedCategory) return false;
-      if (searchQuery && !p.name.toLowerCase().includes(searchQuery)) return false;
+    let list = STORE_PRODUCTS.filter((p) => {
+      if (selectedCategory && selectedCategory !== 'todos' && p.category.slug !== selectedCategory) return false;
+      if (
+        searchQuery &&
+        !p.name.toLowerCase().includes(searchQuery) &&
+        !p.description.toLowerCase().includes(searchQuery)
+      ) {
+        return false;
+      }
       return true;
     });
+
+    if (sortOrder === 'precio-asc') {
+      list = [...list].sort((a, b) => a.price - b.price);
+    } else if (sortOrder === 'precio-desc') {
+      list = [...list].sort((a, b) => b.price - a.price);
+    }
+
+    products = list;
   }
 
   return (

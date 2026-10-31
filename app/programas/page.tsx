@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { ACADEMIC_PROGRAMS } from '@/lib/academicData';
 import { useLocaleCurrency } from '@/components/providers/LocaleCurrencyProvider';
+import { PlanCurrencyToggle } from '@/components/pricing/PlanCurrencyToggle';
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '529991020078';
 
@@ -95,6 +96,9 @@ export default function ProgramasAcademicosPage() {
             </button>
           ))}
         </div>
+
+        {/* Selector de Moneda para Alumnos Internacionales */}
+        <PlanCurrencyToggle className="max-w-4xl mx-auto" />
 
         {/* Grid de Programas Académicos */}
         <section className="space-y-12">
