@@ -84,3 +84,4 @@ export function LocaleCurrencyProvider({ children }: { children: React.ReactNode
 export function useLocaleCurrency() {
   return useContext(LocaleCurrencyContext);
 }
+

@@ -6,6 +6,7 @@ import { AnimatedLogoHero } from '@/components/ui/AnimatedLogoHero';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import { FloatingBanner } from '@/components/ui/FloatingBanner';
 import { WishlistButton } from '@/components/ui/WishlistButton';
+import { AulaVirtualSection } from '@/components/home/AulaVirtualSection';
 import {
   Crown,
   ChevronRight,
@@ -124,6 +125,13 @@ export default async function HomePage() {
                 >
                   Clases Personalizadas 1 a 1
                 </Link>
+                <a
+                  href="#aula-virtual"
+                  className="text-xs sm:text-sm text-[#C5A46D] hover:text-white font-bold inline-flex items-center gap-2 py-3 px-4 rounded-xl bg-[#172B46]/80 border border-[#233F65] hover:border-[#C5A46D] transition"
+                >
+                  <Laptop className="w-4 h-4 text-[#C5A46D]" />
+                  <span>Aula Virtual Chessgora</span>
+                </a>
               </div>
 
               {/* Sellos de Confianza */}
@@ -331,56 +339,7 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================================
-          4. SECCIÓN DESTACADA: CHESSGORA.COM INCLUIDO
-      ========================================================= */}
-      <section className="py-16 md:py-24 bg-[#0F1D30] border-b border-[#1C3454]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-3xl bg-gradient-to-r from-[#172B46] via-[#1C3454] to-[#172B46] border-2 border-[#C5A46D] p-8 sm:p-12 md:p-16 text-center space-y-6 shadow-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0F1D30] border border-[#C5A46D] text-[#C5A46D] text-xs font-black uppercase tracking-widest shadow">
-              <Laptop className="w-4 h-4" />
-              <span>PLATAFORMA ASOCIADA • AULA VIRTUAL</span>
-            </div>
-
-            <h2 className="font-serif-editorial text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-wide">
-              CHESSGORA.COM INCLUIDO
-            </h2>
-
-            <p className="text-sm sm:text-base md:text-lg text-[#E5DFD1] max-w-3xl mx-auto font-light leading-relaxed">
-              Una plataforma de entrenamiento ajedrecístico donde podrás reforzar tus conocimientos, resolver ejercicios, practicar posiciones y continuar trabajando fuera de las clases en vivo.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto pt-4 text-xs text-left">
-              <div className="p-4 rounded-xl bg-[#0F1D30]/80 border border-[#233F65] space-y-1">
-                <strong className="text-white block font-bold">1. Práctica Diaria</strong>
-                <span className="text-[#C4CBD4]">Ejercicios tácticos adaptados a tu nivel para resolver todos los días.</span>
-              </div>
-              <div className="p-4 rounded-xl bg-[#0F1D30]/80 border border-[#233F65] space-y-1">
-                <strong className="text-white block font-bold">2. Análisis de Partidas</strong>
-                <span className="text-[#C4CBD4]">Tableros interactivos para revisar las lecciones trabajadas en clase.</span>
-              </div>
-              <div className="p-4 rounded-xl bg-[#0F1D30]/80 border border-[#233F65] space-y-1">
-                <strong className="text-white block font-bold">3. 100% Sin Costo Extra</strong>
-                <span className="text-[#C4CBD4]">Tu inscripción en cualquier modalidad de Alekhins incluye acceso completo.</span>
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <a
-                href="https://chessgora.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-dorado text-xs uppercase tracking-wider font-extrabold py-3.5 px-8 inline-flex items-center gap-2"
-              >
-                <span>Acceder a Chessgora.com</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================
-          5. TIENDA DE MATERIAL ESPECIALIZADO DE AJEDREZ
+          4. TIENDA DE MATERIAL ESPECIALIZADO DE AJEDREZ
       ========================================================= */}
       <section className="py-16 md:py-24 bg-[#172B46] border-b border-[#233F65]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -445,7 +404,7 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================================
-          6. ESCUELAS, CLUBES Y CONVENIOS INSTITUCIONALES
+          5. ESCUELAS, CLUBES Y CONVENIOS INSTITUCIONALES
       ========================================================= */}
       <section className="py-16 md:py-24 bg-[#0F1D30] border-b border-[#1C3454]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -472,6 +431,11 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* =========================================================
+          6. AULA VIRTUAL & BENEFICIOS PARA ALUMNOS (CHESSGORA.COM)
+      ========================================================= */}
+      <AulaVirtualSection />
 
       {/* =========================================================
           7. PREGUNTAS FRECUENTES (FAQ)

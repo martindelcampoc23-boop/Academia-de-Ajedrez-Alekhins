@@ -384,3 +384,4 @@ Moneda del solicitante: ${currency}
     </div>
   );
 }
+
