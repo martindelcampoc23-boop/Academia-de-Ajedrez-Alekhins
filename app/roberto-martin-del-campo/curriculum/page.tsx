@@ -234,6 +234,34 @@ export default function CurriculumPage() {
         </div>
       </section>
 
+      {/* Featured Master Chessboard Portrait Card */}
+      <div className="bg-gradient-to-r from-[#172B46] via-[#1C3454] to-[#0F1D30] rounded-2xl border-2 border-[#D8B155]/60 p-6 sm:p-8 shadow-2xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+        <div className="md:col-span-5 relative aspect-[16/10] sm:aspect-[4/3] rounded-xl overflow-hidden border-2 border-[#D8B155] shadow-xl bg-[#080E0B]">
+          <Image
+            src="/maestro-roberto-tablero.jpg"
+            alt="MI Roberto Martín del Campo frente al tablero de ajedrez oficial"
+            fill
+            className="object-cover object-center hover:scale-105 transition-transform duration-700"
+          />
+        </div>
+        <div className="md:col-span-7 space-y-3 text-left">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-[#D8B155] block">
+            Cátedra Magistral &amp; Competición
+          </span>
+          <h3 className="font-serif-editorial text-xl sm:text-2xl font-bold text-white">
+            La Maestría Forjada en Más de Cuatro Décadas de Ajedrez
+          </h3>
+          <p className="text-xs sm:text-sm text-[#C2CCC0] leading-relaxed font-light">
+            Desde la obtención del título de Maestro Internacional en el Panamericano Juvenil de Asunción 1987 hasta los triunfos en el US Masters en Charlotte (2021 y 2022) y el Winter Invitational de Nueva York (2024), el MI Roberto Martín del Campo personifica la excelencia competitiva y la vocación pedagógica.
+          </p>
+          <div className="pt-1">
+            <span className="inline-flex items-center gap-2 text-xs text-[#D8B155] font-semibold">
+              <Crown className="w-3.5 h-3.5" /> FIDE ID: 5100046 • Peak Elo 2485 • FIDE Trainer
+            </span>
+          </div>
+        </div>
+      </div>
+
       {/* 3. TORNEOS INTERNACIONALES Y MAGISTRALES GANADOS */}
       <section className="space-y-6">
         <div className="flex items-center gap-3 border-b border-[#2B3E34] pb-4">

@@ -219,14 +219,58 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="text-center pt-2">
-            <Link
-              href="/la-academia/director"
-              className="text-xs sm:text-sm text-[#C5A46D] hover:underline font-bold inline-flex items-center gap-1.5 p-2 rounded-xl hover:bg-[#172B46] transition"
-            >
-              <span>Conoce la trayectoria y currículum deportivo completo del MI Roberto Martín del Campo</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+          {/* Spotlight Magistral con Fotografía Oficial en Tablero */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-[#172B46] rounded-3xl p-6 sm:p-8 md:p-10 border border-[#233F65] shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[#C5A46D]/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="lg:col-span-5 relative aspect-[16/10] sm:aspect-[4/3] rounded-2xl overflow-hidden border-2 border-[#C5A46D] shadow-xl bg-[#0F1D30] group">
+              <Image
+                src="/maestro-roberto-tablero.jpg"
+                alt="MI Roberto Martín del Campo Cárdenas frente al tablero oficial de ajedrez"
+                fill
+                className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0F1D30] via-[#0F1D30]/85 to-transparent p-4 text-center">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#C5A46D] block">
+                  Cátedra &amp; Concentración Magistral
+                </span>
+                <p className="text-xs text-white font-semibold">
+                  MI Roberto Martín del Campo Cárdenas
+                </p>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7 space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0F1D30] border border-[#C5A46D]/50 text-[#C5A46D] text-[11px] font-bold uppercase tracking-wider">
+                <Crown className="w-3.5 h-3.5" />
+                <span>Director Académico &amp; Medallista Olímpico</span>
+              </div>
+
+              <h3 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-white leading-tight">
+                Entrena Bajo la Cátedra Directa de un Maestro Internacional
+              </h3>
+
+              <p className="text-xs sm:text-sm text-[#C4CBD4] leading-relaxed font-light">
+                Con más de 35 años compitiendo en la élite mundial y representando a México en 4 Olimpiadas Mundiales de la FIDE, el MI Roberto Martín del Campo (Oro Olímpico en Novi Sad 1990 y Peak Elo 2485) supervisa personalmente el método pedagógico y el avance de cada estudiante en Academia Alekhins.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-4 pt-2">
+                <Link
+                  href="/la-academia/director"
+                  className="btn-dorado text-xs uppercase font-bold py-3 px-5 shadow-lg inline-flex items-center gap-2"
+                >
+                  <Trophy className="w-4 h-4" />
+                  <span>Ver Currículum y Palmarés Completo</span>
+                </Link>
+                <Link
+                  href="/evaluacion"
+                  className="btn-navy-outline text-xs uppercase font-bold py-3 px-5 inline-flex items-center gap-2"
+                >
+                  <span>Evaluar Mi Nivel de Juego</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

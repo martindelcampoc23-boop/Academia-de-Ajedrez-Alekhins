@@ -26,6 +26,27 @@ const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '529991020078
 
 export default function DirectorCurriculumPage() {
   const [activeTab, setActiveTab] = useState<'JUGADOR' | 'ENTRENADOR' | 'PALMARES'>('JUGADOR');
+  const [selectedPhoto, setSelectedPhoto] = useState<string>('/maestro-roberto-tablero.jpg');
+
+  const photos = [
+    {
+      src: '/maestro-roberto-tablero.jpg',
+      label: 'Frente al Tablero',
+      caption: 'MI Roberto Martín del Campo — Cátedra y Maestría en Tablero',
+    },
+    {
+      src: '/maestro-roberto-partida.jpg',
+      label: 'En Torneo',
+      caption: 'MI Roberto Martín del Campo en plena concentración competitiva',
+    },
+    {
+      src: '/maestro-roberto.jpg',
+      label: 'Retrato FIDE',
+      caption: 'Director Académico de Academia Alekhins (FIDE ID: 5100046)',
+    },
+  ];
+
+  const currentPhoto = photos.find((p) => p.src === selectedPhoto) || photos[0];
 
   const whatsappDirectUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
     'Hola Maestro Roberto Martín del Campo, he revisado su currículum y deseo solicitar información para entrenar con usted en Academia Alekhins.'
@@ -44,24 +65,43 @@ export default function DirectorCurriculumPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
             
-            {/* Foto del Maestro en Torneo */}
+            {/* Foto del Maestro en Torneo & Tablero */}
             <div className="lg:col-span-5 space-y-4">
               <div className="relative aspect-[3/4] max-w-md mx-auto rounded-3xl overflow-hidden border-2 border-[#C5A46D] shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_40px_rgba(197,164,109,0.3)] bg-[#0F1D30] group">
                 <Image
-                  src="/maestro-roberto-partida.jpg"
-                  alt="MI Roberto Abel Martín del Campo Cárdenas en plena partida de torneo internacional"
+                  key={currentPhoto.src}
+                  src={currentPhoto.src}
+                  alt={currentPhoto.caption}
                   fill
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                   priority
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0F1D30] via-[#0F1D30]/85 to-transparent p-5 text-center">
                   <span className="text-[11px] uppercase font-bold tracking-widest text-[#C5A46D] block">
-                    Cátedra &amp; Competición en Tablero
+                    Fotografía Oficial
                   </span>
                   <p className="text-xs text-[#FAF8F2] font-semibold">
-                    MI Roberto Martín del Campo en plena concentración magistral
+                    {currentPhoto.caption}
                   </p>
                 </div>
+              </div>
+
+              {/* Selector de Fotografía */}
+              <div className="flex items-center justify-center gap-2">
+                {photos.map((p) => (
+                  <button
+                    key={p.src}
+                    type="button"
+                    onClick={() => setSelectedPhoto(p.src)}
+                    className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                      selectedPhoto === p.src
+                        ? 'bg-[#C5A46D] text-[#0F1D30] shadow'
+                        : 'bg-[#172B46] text-[#C4CBD4] hover:text-white border border-[#233F65]'
+                    }`}
+                  >
+                    <span>{p.label}</span>
+                  </button>
+                ))}
               </div>
 
               {/* Ficha Rápida FIDE */}
