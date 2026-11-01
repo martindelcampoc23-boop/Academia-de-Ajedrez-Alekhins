@@ -368,6 +368,29 @@ export function ModalidadesSection() {
 
         </div>
 
+        {/* Banner de Ayuda & Test Diagnóstico */}
+        <div className="max-w-4xl mx-auto p-5 sm:p-6 rounded-3xl bg-[#0F1D30] border-2 border-[#233F65] flex flex-col sm:flex-row items-center justify-between gap-5 shadow-xl">
+          <div className="space-y-1 text-center sm:text-left">
+            <span className="text-[10px] uppercase font-bold tracking-widest text-[#C5A46D] block">
+              ¿Dudas sobre cuál modalidad elegir?
+            </span>
+            <h4 className="font-serif-editorial text-lg sm:text-xl font-bold text-white">
+              Realiza nuestro Test Diagnóstico de Nivel en 60 segundos
+            </h4>
+            <p className="text-xs text-[#C4CBD4] font-light">
+              Responde 5 preguntas breves y recibe la recomendación pedagógica exacta para ti o tu familia.
+            </p>
+          </div>
+
+          <Link
+            href="/evaluacion"
+            className="btn-dorado text-xs uppercase font-extrabold tracking-wider py-3.5 px-6 shrink-0 flex items-center gap-2 shadow"
+          >
+            <span>Iniciar Test Diagnóstico</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
       </div>
     </section>
   );

@@ -57,6 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/la-academia`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/la-academia/director`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/programas`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.95 },
+    { url: `${baseUrl}/evaluacion`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/clases-personalizadas`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.95 },
     { url: `${baseUrl}/entrenadores`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.85 },
     { url: `${baseUrl}/tienda`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },

@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { prisma } from '@/lib/db';
-import { Filter, ShoppingBag, Star, CheckCircle, Search, ShieldCheck } from 'lucide-react';
+import { Filter, ShoppingBag, Star, CheckCircle, Search, ShieldCheck, Truck, Zap, CreditCard, Award, Flame, PackageCheck } from 'lucide-react';
 import { WishlistButton } from '@/components/ui/WishlistButton';
 import { STORE_PRODUCTS, STORE_CATEGORIES } from '@/lib/storeData';
 
@@ -96,6 +96,49 @@ export default async function StorePage({
           </p>
         </div>
 
+        {/* Banner de Garantías & Beneficios Comerciales */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 p-4 sm:p-5 rounded-2xl bg-[#172B46] border border-[#233F65] text-xs shadow-lg">
+          <div className="flex items-center gap-3 p-2 rounded-xl bg-[#0F1D30]/60 border border-[#233F65]/50">
+            <div className="w-9 h-9 rounded-xl bg-[#0F1D30] border border-[#C5A46D]/60 flex items-center justify-center text-[#C5A46D] shrink-0">
+              <Truck className="w-4 h-4" />
+            </div>
+            <div>
+              <strong className="text-white block font-bold text-[11px] sm:text-xs">Envío Gratis</strong>
+              <span className="text-[10px] text-[#9CA3AF]">En compras desde $1,500 MXN</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 p-2 rounded-xl bg-[#0F1D30]/60 border border-[#233F65]/50">
+            <div className="w-9 h-9 rounded-xl bg-[#0F1D30] border border-[#C5A46D]/60 flex items-center justify-center text-[#C5A46D] shrink-0">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <div>
+              <strong className="text-white block font-bold text-[11px] sm:text-xs">Material Homologado</strong>
+              <span className="text-[10px] text-[#9CA3AF]">Estándar FIDE y FENAMAC</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 p-2 rounded-xl bg-[#0F1D30]/60 border border-[#233F65]/50">
+            <div className="w-9 h-9 rounded-xl bg-[#0F1D30] border border-[#C5A46D]/60 flex items-center justify-center text-[#C5A46D] shrink-0">
+              <CreditCard className="w-4 h-4" />
+            </div>
+            <div>
+              <strong className="text-white block font-bold text-[11px] sm:text-xs">Pago 100% Seguro</strong>
+              <span className="text-[10px] text-[#9CA3AF]">Stripe, Débito y Crédito</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 p-2 rounded-xl bg-[#0F1D30]/60 border border-[#233F65]/50">
+            <div className="w-9 h-9 rounded-xl bg-[#0F1D30] border border-[#C5A46D]/60 flex items-center justify-center text-[#C5A46D] shrink-0">
+              <PackageCheck className="w-4 h-4" />
+            </div>
+            <div>
+              <strong className="text-white block font-bold text-[11px] sm:text-xs">Despacho Express</strong>
+              <span className="text-[10px] text-[#9CA3AF]">Envíos en 24 a 48 hrs hábiles</span>
+            </div>
+          </div>
+        </div>
+
         {/* Buscador & Categorías */}
         <div className="space-y-4 border-y border-[#233F65] py-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -156,6 +199,13 @@ export default async function StorePage({
                 product.images?.[0]?.url ||
                 '/tablero-de-ajedrez-con-logotipo-de-la-uscf-escaques-de-57-cms.jpg';
 
+              const discountPct =
+                product.compareAtPrice && product.compareAtPrice > product.price
+                  ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
+                  : null;
+              const qualifiesFreeShipping = product.price >= 1500;
+              const isUrgent = (discountPct && discountPct >= 15) || product.price >= 3000;
+
               return (
                 <div
                   key={product.id}
@@ -170,18 +220,48 @@ export default async function StorePage({
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                         className="object-cover group-hover:scale-105 transition duration-300"
                       />
-                      {product.isAcademyRecommended && (
-                        <span className="absolute top-2 left-2 bg-[#0F1D30]/90 border border-[#C5A46D] text-[#C5A46D] text-[9px] font-extrabold uppercase px-2 py-0.5 rounded shadow">
-                          Recomendado Alekhins
-                        </span>
+                      
+                      {/* Insignias superiores */}
+                      <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
+                        {product.isAcademyRecommended && (
+                          <span className="bg-[#0F1D30]/95 border border-[#C5A46D] text-[#C5A46D] text-[9px] font-extrabold uppercase px-2 py-0.5 rounded shadow">
+                            Recomendado Alekhins
+                          </span>
+                        )}
+                        {discountPct && (
+                          <span className="bg-emerald-600 text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded shadow flex items-center gap-0.5 w-fit">
+                            <Flame className="w-2.5 h-2.5" /> -{discountPct}% AHORRO
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Distintivo de Envío Gratis */}
+                      {qualifiesFreeShipping && (
+                        <div className="absolute bottom-2 left-2 right-2 z-10">
+                          <span className="bg-[#0F1D30]/95 backdrop-blur-xs border border-emerald-500/50 text-emerald-400 text-[9px] font-bold px-2 py-1 rounded shadow flex items-center gap-1 justify-center">
+                            <Truck className="w-3 h-3 text-emerald-400" /> Envío Gratis a todo México
+                          </span>
+                        </div>
                       )}
+
                       <WishlistButton productId={product.id} productName={product.name} />
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-[#9CA3AF] uppercase font-bold tracking-wider block">
-                        {product.category?.name || 'Ajedrez Oficial'}
-                      </span>
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <span className="text-[10px] text-[#9CA3AF] uppercase font-bold tracking-wider block">
+                          {product.category?.name || 'Ajedrez Oficial'}
+                        </span>
+                        {isUrgent ? (
+                          <span className="text-[10px] text-amber-400 font-semibold flex items-center gap-1 shrink-0">
+                            <Zap className="w-2.5 h-2.5" /> Pocas unidades
+                          </span>
+                        ) : (
+                          <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 shrink-0">
+                            <CheckCircle className="w-2.5 h-2.5" /> En stock
+                          </span>
+                        )}
+                      </div>
                       <h3 className="font-serif-editorial text-sm font-bold text-white group-hover:text-[#C5A46D] transition line-clamp-2 min-h-[38px]">
                         {product.name}
                       </h3>
@@ -196,12 +276,19 @@ export default async function StorePage({
 
                   <div className="pt-3 border-t border-[#233F65] flex items-center justify-between">
                     <div>
-                      <span className="text-base font-extrabold text-[#C5A46D]">
-                        ${product.price.toFixed(0)} MXN
-                      </span>
-                      {product.compareAtPrice && (
-                        <span className="text-xs text-[#9CA3AF] line-through block">
-                          ${product.compareAtPrice.toFixed(0)} MXN
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-base font-extrabold text-[#C5A46D]">
+                          ${product.price.toFixed(0)} MXN
+                        </span>
+                        {product.compareAtPrice && (
+                          <span className="text-xs text-[#9CA3AF] line-through">
+                            ${product.compareAtPrice.toFixed(0)}
+                          </span>
+                        )}
+                      </div>
+                      {discountPct && product.compareAtPrice && (
+                        <span className="text-[10px] text-emerald-400 font-semibold block">
+                          Ahorras ${(product.compareAtPrice - product.price).toFixed(0)} MXN
                         </span>
                       )}
                     </div>

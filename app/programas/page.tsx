@@ -100,6 +100,24 @@ export default function ProgramasAcademicosPage() {
         {/* Selector de Moneda para Alumnos Internacionales */}
         <PlanCurrencyToggle className="max-w-4xl mx-auto" />
 
+        {/* Banner de Test Diagnóstico */}
+        <div className="max-w-4xl mx-auto p-4 rounded-2xl bg-[#172B46] border border-[#233F65] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs shadow-md">
+          <div className="flex items-center gap-2.5 text-center sm:text-left">
+            <span className="text-xl">🎯</span>
+            <div>
+              <strong className="text-white block font-bold">¿No estás seguro de qué nivel elegir?</strong>
+              <span className="text-[#C4CBD4]">Realiza nuestra evaluación pedagógica en 60 segundos y recibe la recomendación del Maestro.</span>
+            </div>
+          </div>
+          <Link
+            href="/evaluacion"
+            className="btn-dorado text-[11px] uppercase font-extrabold tracking-wider py-2 px-4 shrink-0 flex items-center gap-1.5 shadow"
+          >
+            <span>Hacer Test de Nivel</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
         {/* Grid de Programas Académicos */}
         <section className="space-y-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
