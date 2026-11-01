@@ -26,6 +26,16 @@ const checkoutSchema = z.object({
     )
     .min(1, 'El carrito no puede estar vacío.'),
   couponCode: z.string().optional().nullable(),
+  shippingMethod: z
+    .object({
+      id: z.string().optional(),
+      carrier: z.string().optional(),
+      service: z.string().optional(),
+      cost: z.number().optional(),
+      estimatedDays: z.string().optional(),
+    })
+    .optional()
+    .nullable(),
 });
 
 export async function POST(req: Request) {
@@ -38,7 +48,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: errorMsg }, { status: 400 });
     }
 
-    const { customer, cartItems, couponCode } = parsed.data;
+    const { customer, cartItems, couponCode, shippingMethod } = parsed.data;
 
     // 1. Obtener variantes reales de la base de datos
     const variantIds = cartItems.map((item) => item.variantId);
@@ -134,17 +144,26 @@ export async function POST(req: Request) {
     }
 
     const subtotalAfterDiscount = Math.max(0, subtotal - discountAmount);
-    const shippingCost = subtotalAfterDiscount >= 1500 || subtotalAfterDiscount === 0 ? 0 : 150;
+    const isFreeBaseEligible = subtotalAfterDiscount >= 1500 || subtotalAfterDiscount === 0;
+
+    let shippingCost = isFreeBaseEligible ? 0 : 150;
+    if (shippingMethod && typeof shippingMethod.cost === 'number') {
+      shippingCost = Math.max(0, shippingMethod.cost);
+    }
     const totalAmount = subtotalAfterDiscount + shippingCost;
 
     // Agregar costo de envío como línea si aplica
     if (shippingCost > 0) {
+      const carrierDisplay = shippingMethod?.carrier ? `${shippingMethod.carrier} (vía DrEnvío)` : 'Envío DrEnvío Nacional Asegurado';
+      const serviceDisplay = shippingMethod?.service ? ` - ${shippingMethod.service}` : '';
+      const daysDisplay = shippingMethod?.estimatedDays ? ` • Entrega estimada: ${shippingMethod.estimatedDays}` : '';
+
       lineItems.push({
         price_data: {
           currency: 'mxn',
           product_data: {
-            name: 'Envío Nacional Asegurado (FedEx / Estafeta / DHL)',
-            description: 'Entrega en toda la República Mexicana',
+            name: `${carrierDisplay}${serviceDisplay}`,
+            description: `Logística DrEnvío con guía rastreable nacional${daysDisplay}`,
           },
           unit_amount: Math.round(shippingCost * 100),
         },
@@ -156,6 +175,10 @@ export async function POST(req: Request) {
     const count = await prisma.order.count();
     const orderNumber = `ALE-2026-${String(count + 1).padStart(6, '0')}`;
 
+    const carrierNameFinal = shippingMethod?.carrier
+      ? `DrEnvío (${shippingMethod.carrier} ${shippingMethod.service || ''})`.trim()
+      : 'DrEnvío (Estafeta / DHL Express)';
+
     const shippingAddressJson = JSON.stringify({
       recipientName: `${customer.firstName.trim()} ${customer.lastName.trim()}`,
       street: customer.street.trim(),
@@ -166,6 +189,12 @@ export async function POST(req: Request) {
       country: customer.country?.trim() || 'México',
       phone: customer.phone.trim(),
       references: customer.references?.trim() || '',
+      shippingProvider: 'DrEnvío Logistics Hub',
+      shippingMethod: shippingMethod || {
+        carrier: 'Estafeta',
+        service: 'Terrestre Asegurado',
+        estimatedDays: '3 a 5 días hábiles',
+      },
     });
 
     // 4. Crear la orden en la BD en estado PENDING_PAYMENT
@@ -186,7 +215,7 @@ export async function POST(req: Request) {
       },
     });
 
-    console.log(`[Stripe Checkout] Orden #${orderNumber} creada en BD con estado PENDING_PAYMENT.`);
+    console.log(`[Stripe Checkout] Orden #${orderNumber} creada en BD con estado PENDING_PAYMENT (Logística: ${carrierNameFinal}).`);
 
     // 5. Modo Mock / Desarrollo (si no se tienen claves de Stripe configuradas)
     if (isStripeMockMode) {
@@ -200,14 +229,14 @@ export async function POST(req: Request) {
           stripePaymentIntentId: `mock_pi_${Date.now()}`,
           shipments: {
             create: {
-              carrier: 'Estafeta / DHL Express',
-              trackingNumber: `MOCK-${Math.floor(100000000 + Math.random() * 900000000)}`,
+              carrier: carrierNameFinal,
+              trackingNumber: `DR-MX-${Math.floor(100000000 + Math.random() * 900000000)}`,
               status: 'PREPARING',
               shippingCost,
               events: {
                 create: {
                   status: 'PREPARING',
-                  description: 'Pedido confirmado en modo de demostración.',
+                  description: 'Pedido confirmado con DrEnvío Logistics Hub (modo demostración).',
                   location: 'Almacén Central CDMX',
                 },
               },

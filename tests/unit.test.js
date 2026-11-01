@@ -124,6 +124,23 @@ describe('Academia Alekhins - Core E-Commerce & Stripe Checkout Unit Tests', () 
     assert.strictEqual(sanitizeEmail('Alumno@Gmail.com'), 'alumno@gmail.com');
     assert.strictEqual(sanitizeEmail(''), '');
   });
+
+  test('Validates DrEnvio shipping method selection and free shipping subsidy logic', () => {
+    const calculateDrEnvioFinalCost = (baseCost, subtotal) => {
+      const isFreeEligible = subtotal >= 1500;
+      return isFreeEligible ? Math.max(0, baseCost - 150) : baseCost;
+    };
+
+    // Standard Estafeta ($150) under threshold -> $150
+    assert.strictEqual(calculateDrEnvioFinalCost(150, 800), 150);
+    // Standard Estafeta ($150) with subtotal >= $1500 -> $0 (FREE)
+    assert.strictEqual(calculateDrEnvioFinalCost(150, 1600), 0);
+    // Express DHL ($220) with subtotal >= $1500 -> $70 upgrade
+    assert.strictEqual(calculateDrEnvioFinalCost(220, 1800), 70);
+    // FedEx ($175) with subtotal >= $1500 -> $25 upgrade
+    assert.strictEqual(calculateDrEnvioFinalCost(175, 1500), 25);
+  });
 });
+
 
 
